@@ -1,0 +1,3 @@
+Binary file src/main/java/signatureAddition/basicCommandLine.class matches
+equitas/assets/apps/com.iexceed.equitas.consumer/app/scripts/container/plugins.js://NikhilChanges for monitor network
+equitas/assets/apps/com.iexceed.equitas.consumer/app/scripts/container/plugins.js://NikhilChanges for download notifier
