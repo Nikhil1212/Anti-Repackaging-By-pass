@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class fileForCodeInjection {
+public class ValidFilesForCodeInjection {
 	static HashSet <String> libraryList;
 	static {
 		libraryList = new HashSet<String>();

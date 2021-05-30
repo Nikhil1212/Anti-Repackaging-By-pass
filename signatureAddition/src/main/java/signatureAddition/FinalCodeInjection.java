@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class fetchingRegisterValue {
+public class FinalCodeInjection {
 
 	public static void codeInjection(String filePath, String key) throws IOException {
 

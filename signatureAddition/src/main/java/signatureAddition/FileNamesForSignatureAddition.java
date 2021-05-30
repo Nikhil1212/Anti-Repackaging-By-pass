@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class ListofFiles {
+public class FileNamesForSignatureAddition {
 	
 
 	public static void codeInjectionProcess(String key, String absolutePathAppFolder) throws IOException, InterruptedException {
@@ -42,7 +42,7 @@ public class ListofFiles {
 	        {
 	        	//count++;
 	        	String filePath=i.next();
-	        	fetchingRegisterValue.codeInjection(filePath, key);
+	        	FinalCodeInjection.codeInjection(filePath, key);
 	        }
 		//fileForCodeInjection.codeInjection(validFiles);
 
@@ -60,7 +60,7 @@ public class ListofFiles {
 		while(line!=null)
 		{
 			//System.out.println(line);
-			if(fileForCodeInjection.fileCheck(line))
+			if(ValidFilesForCodeInjection.fileCheck(line))
 			{
 				validFiles.add(line);
 			}

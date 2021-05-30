@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-public class basicCommandLine {
+public class StartingPoint {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -38,7 +38,7 @@ public class basicCommandLine {
 				String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
 				System.out.println(signCertificateKey);
 				
-				ListofFiles.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
 				//fetchCertificateKey.codeInjection();
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
