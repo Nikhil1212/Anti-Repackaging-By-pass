@@ -1,6 +1,6 @@
 package signatureAddition;
 
-public class hello {
+public class fetchingRegisterNameWithExample {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
