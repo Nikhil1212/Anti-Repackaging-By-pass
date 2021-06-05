@@ -13,7 +13,8 @@ public class StartingPoint {
 		int i=0;
 		//String fileNamePath="/home/nikhil/Documents/apks/equitas.apk";
 		//basicGrepCommand();
-		String pathToApk="/home/nikhil/Documents/apps/pathToApps_1.txt";
+		//String pathToApk="/home/nikhil/Documents/apps/pathToApps_1.txt";
+		String pathToApk="/home/nikhil/Documents/apks/appsHaveAntiRepackagingCheck/fileName.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -43,6 +44,7 @@ public class StartingPoint {
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
 				fileNameFetch(packageName);
+				removeDirectory(pathToDisAssembleCode);
 
 			}
 			catch (Exception e)
@@ -52,6 +54,18 @@ public class StartingPoint {
 			
 		}
 			}
+
+	private static void removeDirectory(String pathToDisAssembleCode) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		String command="rm -r "+pathToDisAssembleCode;
+		Process pr=commandExecution(command);
+		BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+		String line = "";
+		while((line=buf.readLine())!=null)
+		{
+			System.out.println(line);
+		}
+	}
 
 	private static void basicGrepCommand() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub

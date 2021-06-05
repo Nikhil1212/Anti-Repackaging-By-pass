@@ -13,8 +13,10 @@ public class FileNamesForSignatureAddition {
 
 	public static void codeInjectionProcess(String key, String absolutePathAppFolder) throws IOException, InterruptedException {
 		
-		
-		Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l 'Landroid/content/pm/Signature;->toByteArray' "+ absolutePathAppFolder});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
+		String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
+		String patternToCharArray="Landroid/content/pm/Signature;->toCharArray()";
+		String patternToHashCode="Landroid/content/pm/Signature;->hashCode()";
+		Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l 'Landroid/content/pm/Signature;->toByteArray\\|Landroid/content/pm/Signature;->hashCode' "+ absolutePathAppFolder});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
 		
 		process.waitFor();
 		
@@ -42,7 +44,9 @@ public class FileNamesForSignatureAddition {
 	        {
 	        	//count++;
 	        	String filePath=i.next();
-	        	FinalCodeInjection.codeInjection(filePath, key);
+	        	FinalCodeInjection.codeInjection(filePath, key,patternToByteArray);
+	        	FinalCodeInjection.codeInjection(filePath, key,patternToCharArray);
+	        	FinalCodeInjection.codeInjection(filePath, key,patternToHashCode);
 	        }
 		//fileForCodeInjection.codeInjection(validFiles);
 

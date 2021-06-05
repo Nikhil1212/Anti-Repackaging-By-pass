@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 public class FinalCodeInjection {
 
-	public static void codeInjection(String filePath, String key) throws IOException {
+	public static void codeInjection(String filePath, String key, String pattern) throws IOException {
 
 		int i=0;
 
@@ -17,18 +17,20 @@ public class FinalCodeInjection {
 		
 		File file=new File(filePath);
 
-		String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
+		//String pattern="Landroid/content/pm/Signature;->toByteArray()";
 		String codeInjection=new String(Files.readAllBytes(Paths.get(filePath)));
 
 		/**
 		 *Storing the file contents to the String variable
 		 **/
 
-		int indextoByteArray=codeInjection.indexOf(patternToByteArray);
-		int lastIndextoByteArray=codeInjection.lastIndexOf(patternToByteArray);
+		int indextoByteArray=codeInjection.indexOf(pattern);
+		if(indextoByteArray==-1)
+			return;
+		int lastIndextoByteArray=codeInjection.lastIndexOf(pattern);
 		if(indextoByteArray != lastIndextoByteArray)
 		{
-			lastCodeInjection(filePath,key);
+			lastCodeInjection(filePath,key,pattern);
 		}
 		codeInjection=new String(Files.readAllBytes(Paths.get(filePath)));
 		String codeFromStartingTillToByteArray=codeInjection.substring(0,indextoByteArray);
@@ -92,7 +94,7 @@ public class FinalCodeInjection {
 
 		System.out.println("Register name is :"+registerName);
 		String signRelatedCode=modifyingCode(registerName, localsCountInteger, key);
-		String finalcode=insertSignCode(codeToWrite,signRelatedCode);
+		String finalcode=insertSignCode(codeToWrite,signRelatedCode,pattern);
 
 		
 		System.out.println("For the file :"+filePath +" this is the code which we have generated \n ------------------\n");
@@ -107,7 +109,7 @@ public class FinalCodeInjection {
 		//System.out.println(registerName);
 	}
 
-	private static void lastCodeInjection(String filePath, String key) throws IOException {
+	private static void lastCodeInjection(String filePath, String key, String pattern) throws IOException {
 		// TODO Auto-generated method stub
 		int i=0;
 
@@ -116,14 +118,14 @@ public class FinalCodeInjection {
 		
 		File file=new File(filePath);
 
-		String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
+		//String patternToByte="Landroid/content/pm/Signature;->toByteArray()";
 		String codeInjection=new String(Files.readAllBytes(Paths.get(filePath)));
 
 		/**
 		 *Storing the file contents to the String variable
 		 **/
 
-		int indextoByteArray=codeInjection.lastIndexOf(patternToByteArray);
+		int indextoByteArray=codeInjection.lastIndexOf(pattern);
 		
 		String codeFromStartingTillToByteArray=codeInjection.substring(0,indextoByteArray);
 
@@ -184,7 +186,7 @@ public class FinalCodeInjection {
 		System.out.println(fromLocaltoByteArray.substring(0, fromLocaltoByteArray.length()-22));
 
 		String signRelatedCode=modifyingCode(registerName, localsCountInteger, key);
-		String finalcode=insertSignCodeLast(codeToWrite,signRelatedCode);
+		String finalcode=insertSignCodeLast(codeToWrite,signRelatedCode,pattern);
 
 		
 		System.out.println("For the file :"+filePath +" this is the code which we have generated \n ------------------\n");
@@ -200,16 +202,16 @@ public class FinalCodeInjection {
 
 	}
 
-	private static String insertSignCode(String codeToWrite, String signRelatedCode) {
+	private static String insertSignCode(String codeToWrite, String signRelatedCode, String pattern) {
 
 		/**
 		 * We have updated the locals register count
 		 * Now just insert the signature related code
 		 */
 
-		String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
+	//	String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 
-		int indextoByteArray=codeToWrite.indexOf(patternToByteArray);
+		int indextoByteArray=codeToWrite.indexOf(pattern);
 
 		String beforeSignInjection=codeToWrite.substring(0,indextoByteArray-22);
 		/**
@@ -219,16 +221,16 @@ public class FinalCodeInjection {
 
 		return res;
 	}
-	private static String insertSignCodeLast(String codeToWrite, String signRelatedCode) {
+	private static String insertSignCodeLast(String codeToWrite, String signRelatedCode, String pattern) {
 
 		/**
 		 * We have updated the locals register count
 		 * Now just insert the signature related code
 		 */
 
-		String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
+		//String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 
-		int indextoByteArray=codeToWrite.lastIndexOf(patternToByteArray);
+		int indextoByteArray=codeToWrite.lastIndexOf(pattern);
 
 		String beforeSignInjection=codeToWrite.substring(0,indextoByteArray-22);
 		/**
