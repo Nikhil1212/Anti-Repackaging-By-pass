@@ -14,7 +14,7 @@ public class StartingPoint {
 		//String fileNamePath="/home/nikhil/Documents/apks/equitas.apk";
 		//basicGrepCommand();
 		//String pathToApk="/home/nikhil/Documents/apps/pathToApps_1.txt";
-		String pathToApk="/home/nikhil/Documents/apks/appsHaveAntiRepackagingCheck/fileName.txt";
+		String pathToApk="/home/nikhil/Documents/apps/pathtoApps_2.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
