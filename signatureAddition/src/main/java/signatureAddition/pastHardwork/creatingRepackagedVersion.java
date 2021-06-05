@@ -11,7 +11,7 @@ public class creatingRepackagedVersion {
 
 	public static void main(String[] args) throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
-		String filePathRePackageNameList="D:\\Apps\\newApps\\com.icici.ismartcity\\repackaged\\filename.txt";
+		String filePathRePackageNameList="/home/Nikhil/Downloads/Softwares/googleplay-api-master/dataset/snapwork.txt";
 		File file=new File(filePathRePackageNameList);
 		Scanner scanner= new Scanner(file);
 		while(scanner.hasNext())
@@ -23,12 +23,13 @@ public class creatingRepackagedVersion {
 	}
 	private static void signApk(String apkPath) throws  InterruptedException, IOException {
 		// TODO Auto-generated method stub
-		String pathToJks="D:\\keyFolder\\v1.jks ";
+		String pathToJks="/home/Nikhil/Documents/keystore/hello.jks";
+		String pattern="/home/Nikhil/Downloads/Softwares/googleplay-api-master/dataset/";
+		String packageNameApk=apkPath.substring(pattern.length());
 		//String passwordPath="/home/nikhil/Documents/key/password";
-		String apksigner="D:\\AndroidStudio\\build-tools\\28.0.3\\apksigner.bat sign --ks "+pathToJks + "--ks-pass pass:123456 " + apkPath ;
-		
+		String apksigner="/usr/bin/apksigner sign --ks "+pathToJks + "--ks-pass pass:123456 --in" + apkPath+" --out /home/Nikhil/Downloads/Softwares/googleplay-api-master/repackaged/"+packageNameApk;		
 		System.out.println(apksigner);//String apktoolBuildCommand="apktool b /home/nikhil/Documents/apps/"+packageName+" -o /home/nikhil/Documents/apps/modified_"+packageName+".apk";
-		//System.out.println(apktoolBuildCommand);
+		
 		Process pr=commandExecution(apksigner);
 		BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 		String line = "";
