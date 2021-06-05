@@ -24,7 +24,7 @@ public class StartingPoint {
 				String fileNamePath=scanner.next();
 				//below few lines are the code which is used to generate the final package name
 				String packageName=getPackageName(fileNamePath);
-
+				//System.out.println("Checking whehther you can see me over github");
 				
 				String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 				
