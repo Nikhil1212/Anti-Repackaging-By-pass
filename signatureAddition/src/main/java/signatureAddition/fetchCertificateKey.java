@@ -33,6 +33,7 @@ public class fetchCertificateKey {
 	}*/
 	public static String getCertificateInHex(String pathToRSA, String packageName) throws IOException, InterruptedException {
 		//	String certificate="";
+		//simple modification
 		String pathToCert="/home/nikhil/Documents/apps/certificates/"+packageName+"_cert.pem";
 		//file creation is required otherwise it will throw no file found exception
 		File file=new File(pathToCert);
