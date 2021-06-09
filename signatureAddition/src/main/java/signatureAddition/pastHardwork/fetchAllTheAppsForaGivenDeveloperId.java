@@ -26,6 +26,8 @@ public class fetchAllTheAppsForaGivenDeveloperId {
 
 	public static void main(String[] args) throws SQLException, IOException {  
 
+		Statement statement=initialization();
+
 		String filePathDeveloper="D:\\Apps\\developerId.txt";
 		File file=new File(filePathDeveloper);
 		Scanner scanner=new Scanner(file);
@@ -37,8 +39,7 @@ public class fetchAllTheAppsForaGivenDeveloperId {
 
 
 		//connecting to the database;
-		Statement statement=initialization();
-
+		
 
 		//trying for a basic CEdge Techno	
 		while(scanner.hasNext())

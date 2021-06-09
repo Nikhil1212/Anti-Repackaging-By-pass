@@ -55,7 +55,7 @@ public class StartingPoint {
 		}
 			}
 
-	private static void removeDirectory(String pathToDisAssembleCode) throws IOException, InterruptedException {
+	public static void removeDirectory(String pathToDisAssembleCode) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String command="rm -r "+pathToDisAssembleCode;
 		Process pr=commandExecution(command);
@@ -84,7 +84,7 @@ public class StartingPoint {
 		}
 		}
 
-	private static void fileNameFetch(String packageName) throws IOException, InterruptedException {
+	public static void fileNameFetch(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String pathToDisAssembleCode="/home/nikhil/Documents/"+packageName;
 		String commandToFindPatterns="grep -rwn -l \"Landroid/content/pm/Signature;->toByteArray\" "+pathToDisAssembleCode;
@@ -98,7 +98,7 @@ public class StartingPoint {
 
 	}
 
-	private static String fetchRSAName(String packageName) throws InterruptedException, IOException {
+	public static String fetchRSAName(String packageName) throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
 		String fullRSAfetch="/home/nikhil/Documents/apps/"+packageName+"/original/META-INF/";
 		System.out.println(fullRSAfetch);
@@ -125,7 +125,7 @@ public class StartingPoint {
 		return fullRSAfetch;
 	}
 
-	private static Process commandExecution(String string) throws IOException, InterruptedException {
+	public static Process commandExecution(String string) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		Process pr = Runtime.getRuntime().exec(string);
 		
@@ -142,7 +142,7 @@ public class StartingPoint {
 
 	}
 
-	private static String getPackageName(String fileNamePath) throws IOException, InterruptedException {
+	public static String getPackageName(String fileNamePath) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		int i=15;
 		System.out.println("Filename path:"+fileNamePath);
@@ -172,7 +172,7 @@ public class StartingPoint {
 
 	}
 
-	private static void disassembleApk(String fileNamePath, String packageName) throws IOException, InterruptedException {
+	public static void disassembleApk(String fileNamePath, String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String apktoolCommand="apktool d -r "+fileNamePath+" -f -o /home/nikhil/Documents/apps/"+packageName;
 		System.out.println(apktoolCommand);
@@ -181,7 +181,7 @@ public class StartingPoint {
 		//pr1.waitFor();
 
 	}
-	private static String buildApk(String packageName) throws IOException, InterruptedException {
+	public static String buildApk(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Inside the buildAPK process");
@@ -202,7 +202,7 @@ public class StartingPoint {
 
 	}
 
-	private static void signApk(String packageName, String apkPath) throws IOException, InterruptedException {
+	public static void signApk(String packageName, String apkPath) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String pathToJks="/home/nikhil/Documents/key/hello.jks ";
 		//String passwordPath="/home/nikhil/Documents/key/password";
@@ -222,7 +222,7 @@ public class StartingPoint {
 
 	}
 
-	private static String input() {
+	public static String input() {
 		// TODO Auto-generated method stub
 
 		System.out.println("Enter the absolute path to the apk:");
