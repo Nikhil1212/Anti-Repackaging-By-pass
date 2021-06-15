@@ -15,7 +15,7 @@ public class resignedApp {
 		
 		String pathToJks="/home/nikhil/Documents/key/hello.jks ";
 		//String passwordPath="/home/nikhil/Documents/key/password";
-		String apksigner="apksigner sign --ks "+pathToJks + "--ks-pass pass:123456 --in " + apkPath+" --out "+destinationPath;
+		String apksigner=StartingPoint.apksigner+" sign --ks "+pathToJks + "--ks-pass pass:123456 --in " + apkPath+" --out "+destinationPath;
 		//String apktoolBuildCommand="apktool b /home/nikhil/Documents/apps/"+packageName+" -o /home/nikhil/Documents/apps/modified_"+packageName+".apk";
 		//System.out.println(apktoolBuildCommand);
 		Process pr=CommandExecute.commandExecution(apksigner);
