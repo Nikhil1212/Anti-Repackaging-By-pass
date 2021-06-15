@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class StartingPoint {
+	public static String apksigner="/home/nikhil/Android/Sdk/build-tools/30.0.2/apksigner";
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -206,7 +207,7 @@ public class StartingPoint {
 		// TODO Auto-generated method stub
 		String pathToJks="/home/nikhil/Documents/key/hello.jks ";
 		//String passwordPath="/home/nikhil/Documents/key/password";
-		String apksigner="apksigner sign --ks "+pathToJks + "--ks-pass pass:123456 " + apkPath;
+		String apksigner=StartingPoint.apksigner+" sign --ks "+pathToJks + "--ks-pass pass:123456 " + apkPath;
 		//String apktoolBuildCommand="apktool b /home/nikhil/Documents/apps/"+packageName+" -o /home/nikhil/Documents/apps/modified_"+packageName+".apk";
 		//System.out.println(apktoolBuildCommand);
 		Process pr=commandExecution(apksigner);
