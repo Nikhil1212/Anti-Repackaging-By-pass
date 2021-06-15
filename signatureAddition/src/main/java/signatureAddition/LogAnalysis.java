@@ -13,8 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import signatureAddition.pastHardwork.printLogsThroughPID;
+
 public class LogAnalysis {
-	static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
+	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 
 	public static void main(String[] args) throws IOException, InterruptedException, SQLException {
@@ -38,14 +40,20 @@ public class LogAnalysis {
 			//String pathToModifiedApk="/home/nikhil/Documents/apps/ModifiedApks/"+packageName+".apk";
 
 			String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
-			String logPathForOriginalApp="/home/nikhil/Documents/apps/logOutput/original_"+packageName+".txt";
-			String logPathForResignedApp="/home/nikhil/Documents/apps/logOutput/resigned_"+packageName+".txt";
-			String logPathForModifiedApp="/home/nikhil/Documents/apps/logOutput/modifed_"+packageName+".txt";
+			String logPathForOriginalApp="/home/nikhil/Documents/apps/logOutputNew/original_"+packageName+".txt";
+			String logPathForResignedApp="/home/nikhil/Documents/apps/logOutputNew/resigned_"+packageName+".txt";
+			String logPathForModifiedApp="/home/nikhil/Documents/apps/logOutputNew/modifed_"+packageName+".txt";
 
 
 			int originalCount=apkLogAnalysis(pathToOriginalApk,logPathForOriginalApp);
+			printLogsThroughPID.initializationADB();
+			
 			int resignedCount=apkLogAnalysis(pathToResignedApk,logPathForResignedApp);
+			printLogsThroughPID.initializationADB();
+
 			int modifedCount=apkLogAnalysis(pathToModifiedApk,logPathForModifiedApp);
+			printLogsThroughPID.initializationADB();
+
 
 			System.out.println("original count: "+originalCount);
 			System.out.println("resigned count: "+resignedCount);
@@ -189,14 +197,15 @@ public class LogAnalysis {
 
 
 			String str1=new String(Files.readAllBytes(Paths.get(filePath1)));
-
-			String str2=new String(Files.readAllBytes(Paths.get(filePath2)));;
+			System.out.println(str1);
+			String str2=new String(Files.readAllBytes(Paths.get(filePath2)));
 			String str3=str1+str2;
+			System.out.println(str2);
 			//String outputFilePath="/home/nikhil/Documents/logs/universal_"+packageName+".txt";
 			FileWriter fileWriter=new FileWriter(logPathForOutput);
 			fileWriter.write(str3);
 			fileWriter.close();
-			System.out.println("Command executed successfully");
+			System.out.println("Successfully wrote to the file");
 
 
 			String removeFile1="rm "+filePath1;
@@ -260,7 +269,7 @@ public class LogAnalysis {
 
 	}
 
-	private static void launchTheApp(String packageName, String pathToApk) throws IOException, InterruptedException {
+	public static void launchTheApp(String packageName, String pathToApk) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 
 		String fetchLauncherActivity= pathToadb+" shell \"cmd package resolve-activity --brief ";	//packageName | tail -n 1\";
@@ -304,9 +313,12 @@ public class LogAnalysis {
 		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
 
 		String phoneDirectory_1="/data/local/tmp/fromProgrampid.txt";
-
-		String analysingLogsUsingPID=pathToadb+" shell logcat --pid "+pid+" -d";// > "+phoneDirectory_1;
-
+		String testFilePath="/data/local/tmp/myfile.txt";
+		String analysingLogsUsingPID=pathToadb+" logcat -d --pid "+pid+" -f "+testFilePath;// > "+phoneDirectory_1;
+		
+		/**
+		 * Pull this file to PC and save it to the  
+		 */
 
 		String filePath=directoryLocationForStoringLogs+"logs_"+packageName+"_PID.txt";
 		File file=new File(filePath);
@@ -319,10 +331,15 @@ public class LogAnalysis {
 		/**
 		 * Let's pull this file 
 		 */
-		String pullCommand=pathToadb+" pull "+phoneDirectory_1+" "+filePath;
-		//Process process=CommandExecute.commandExecution(pullCommand);
+		String pullCommand=pathToadb+" pull "+testFilePath+" "+filePath;
+		Process process=CommandExecute.commandExecution(pullCommand);
 
-
+		/**
+		 * Remove the file
+		 */
+		String removeTxtFileCommand=LogAnalysis.pathToadb+" shell rm "+testFilePath;
+		CommandExecute.commandExecution(removeTxtFileCommand);
+/*
 		BufferedReader buf1 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
 		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		String line="";
@@ -332,7 +349,7 @@ public class LogAnalysis {
 			Files.write(Paths.get(filePath), (line+"\n").getBytes(),  StandardOpenOption.APPEND);
 			System.out.println(line);
 		}
-		buf1.close();
+		buf1.close();*/
 
 	}
 
