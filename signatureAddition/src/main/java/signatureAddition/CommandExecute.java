@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class CommandExecute {
 
-	static Process commandExecution(String string) throws IOException, InterruptedException {
+	public static Process commandExecution(String string) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		Process pr = Runtime.getRuntime().exec(string);
 		
