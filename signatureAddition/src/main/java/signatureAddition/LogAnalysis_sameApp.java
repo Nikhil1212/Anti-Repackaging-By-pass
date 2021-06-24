@@ -18,13 +18,13 @@ import java.util.Scanner;
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.printLogsThroughPID;
 
-public class LogAnalysis {
+public class LogAnalysis_sameApp {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
 	public static void main(String[] args) throws FileNotFoundException {
 
-		String FilePath="/home/nikhil/Downloads/ATADetector-master/apks/pathToApps.txt";
+		String FilePath="/home/nikhil/Documents/apks/cedgeTechno/absolutePaths.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -33,102 +33,75 @@ public class LogAnalysis {
 			{
 				String pathToOriginalApk=scanner.next();
 				String packageName=StartingPoint.getPackageName(pathToOriginalApk);
-				String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
+			//	String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
 
 				/**
 				 * Creating resigned version
 				 */
-
-				resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
+				
+				//resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
 
 				//String pathToModifiedApk="/home/nikhil/Documents/apps/ModifiedApks/"+packageName+".apk";
 
-				String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
-				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/original_"+packageName+".txt";
-				String logPathForResignedApp="/home/nikhil/Documents/apps/logcatOutput/resigned_"+packageName+".txt";
-				String logPathForModifiedApp="/home/nikhil/Documents/apps/logcatOutput/modifed_"+packageName+".txt";
-
-
-				int originalCount=appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
+				//String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
+				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/sameApp/original_"+packageName+".txt";
+				String logPathForOriginalApp2="/home/nikhil/Documents/apps/logcatOutput/sameApp/original2_"+packageName+".txt";
+					
+				//String logPathForResignedApp="/home/nikhil/Documents/apps/logcatOutput/resigned_"+packageName+".txt";
+				//String logPathForModifiedApp="/home/nikhil/Documents/apps/logcatOutput/modifed_"+packageName+".txt";
+				
+				
+				appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
 				printLogsThroughPID.initializationADB();
-
-				int resignedCount=appLogGeneration(pathToResignedApk,logPathForResignedApp);
-				printLogsThroughPID.initializationADB();
-
-				int modifedCount=appLogGeneration(pathToModifiedApk,logPathForModifiedApp);
-				checkToastLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
-				checkActiviyNameLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
-
-				//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
-				String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
+				
+				appLogGeneration(pathToOriginalApk,logPathForOriginalApp2);
+				
+				System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
+				/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
 				System.out.println(fileContents);
 				if(modifedCount==-1)
 					continue;
 				printLogsThroughPID.initializationADB();
-				//	System.exit(0);
-
+				*/
+				
 				String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
-				String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForResignedApp);
-				String modifiedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForModifiedApp);
+				String orignalLogJSONPath2=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp2);
+				//String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForResignedApp);
+				//String modifiedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForModifiedApp);
+				AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);
 
-				AnalysingJSON.analyseJSON(orignalLogJSONPath, resignedLogJSONPath, modifiedLogJSONPath);
-
-				/*System.out.println("original count: "+originalCount);
-				System.out.println("resigned count: "+resignedCount);
-				System.out.println("modified count: "+modifedCount);
-
-				if(originalCount==resignedCount)
-					System.out.println(packageName+" seems to launch in the same way as the original version. So, there is a chance that no anti-repackaging check is present");
-				else
-				{
-					System.out.println(packageName+" seems to have anti-repackaging check present");
-					if(originalCount==modifedCount)
-					{
-						System.out.println(packageName+" For this app, we are successful in by-passing the check");
-					}
-					else
-						System.out.println(packageName+": We are not successful in by-passing the anti-repackaging check !!");	
-				}
-
-				/**
-				 * Let's update the table with the values fetched
-				 */
-				//updateTable(packageName,originalCount,resignedCount,modifedCount);
 			}
 			catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-
+			
 		}
 
 	}
 
-	public static String checkActiviyNameLogs(String packageName, String logPathForOriginalApp,
+	private static void checkActiviyNameLogs(String packageName, String logPathForOriginalApp,
 			String logPathForResignedApp) throws FileNotFoundException, SQLException {
-		System.out.println("\n***************************** \n \n fetching activity names");
+		
+	HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
+	System.out.println("from original app : "+activiyOriginalHashSet);
+	HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
+	System.out.println("from repackaged app : "+activiyRepckagedHashSet);
 
-		HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
-		System.out.println("from original app : "+activiyOriginalHashSet);
-		
-		HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
-		System.out.println("from repackaged app : "+activiyRepckagedHashSet);
-		
-		String fileContents=packageName+":\noriginal:"+activiyOriginalHashSet+"\nResigned:"+activiyRepckagedHashSet+"\n";
-		if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet) && activiyOriginalHashSet.containsAll(activiyRepckagedHashSet))
-		{
-			System.out.println("Oh No different activity names has been found on the original and repackaged app");
-		}
-		else
-		{
-			System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
-			updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
-		}
+	if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet))
+	{
+		System.out.println("Oh No different activity names has been found on the original and repackaged app");
+	}
+	else
+	{
+		System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
+		updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
+	}
 		// TODO Auto-generated method stub
-		return fileContents;	
+		
 	}
 
-	public static void checkToastLogs(String packageName,String logPathForOriginalApp, String logPathForResignedApp) throws SQLException, IOException {
+	private static void checkToastLogs(String packageName,String logPathForOriginalApp, String logPathForResignedApp) throws SQLException, IOException {
 		// TODO Auto-generated method stub
 		String originalLogContents=new String(Files.readAllBytes(Paths.get(logPathForOriginalApp))); 
 		String resignedLogContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp))); 
@@ -235,7 +208,7 @@ public class LogAnalysis {
 		line=buf.readLine();
 		if(line==null)
 		{
-
+			
 			System.out.println("The app is currently not running. The app has anti-repacakging check present. There is a high chance that the app is getting crashed.");
 			try {
 				updateAntiRepackagingCheckPresence(packageName,'Y',"App crashed");
@@ -298,9 +271,9 @@ public class LogAnalysis {
 
 	public static void updateAntiRepackagingCheckPresence(String packageName, char c, String remarks) throws SQLException {
 		// TODO Auto-generated method stub
-		String query="Insert ignore into activityCount values ('"+packageName+"','"+c+"','"+remarks+"');";
+		String query="Insert ignore into AntiRepackagingCheckPresence values ('"+packageName+"','"+c+"','"+remarks+"');";
 		System.out.println(query);
-
+		
 		Statement statement=DataBaseConnect.initialization();
 		statement.executeUpdate(query);
 	}
@@ -389,7 +362,7 @@ public class LogAnalysis {
 		String phoneDirectory_1="/data/local/tmp/fromProgrampid.txt";
 		String testFilePath="/data/local/tmp/myfile.txt";
 		String analysingLogsUsingPID=pathToadb+" logcat -v brief -d --pid "+pid+" -f "+testFilePath;// > "+phoneDirectory_1;
-
+		
 		/**
 		 * Pull this file to PC and save it to the  
 		 */
@@ -410,9 +383,9 @@ public class LogAnalysis {
 		/**
 		 * Remove the file
 		 */
-		String removeTxtFileCommand=LogAnalysis.pathToadb+" shell rm "+testFilePath;
+		String removeTxtFileCommand=LogAnalysis_sameApp.pathToadb+" shell rm "+testFilePath;
 		CommandExecute.commandExecution(removeTxtFileCommand);
-		/*
+/*
 		BufferedReader buf1 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
 		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		String line="";

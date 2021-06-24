@@ -1,6 +1,6 @@
 /**
  * This take the already generated log files (we have removed the repeated statements) as an input and finds out the number of times the 
- * particular component like ActivityTaskManager, ActivityManager, NetworkSecurityCOnfig has 
+ * particular component like ActivityTaskManager, ActivityManager, NetworkSecurityConfig has 
  * been called. 
  */
 
@@ -16,13 +16,13 @@ import org.json.JSONObject;
 
 public class componentCount_v2 {
 
-	public static void main(String[] args) throws InterruptedException, IOException {
+	public static String tagCount(String logFilePath) throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
-		String filePath="/home/nikhil/Documents/apps/logOutputNew/filteredLogsRemoveDuplicate/absoluteFilePath.txt";
+	/*	String filePath="/home/nikhil/Documents/apps/logOutputNew/filteredLogsRemoveDuplicate/absoluteFilePath.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 		while (scanner.hasNext()) {
-			String logFilePath=scanner.next();
+			String logFilePath=scanner.next();*/
 			HashMap<String, String> hashMap=new HashMap<String, String>();
 			File file2=new File(logFilePath);
 			Scanner scanner2=new Scanner(file2);
@@ -44,12 +44,13 @@ public class componentCount_v2 {
 			}
 			JSONObject json = new JSONObject(hashMap);
 			System.out.println(json);
-			String jsonFilePath=logFilePath.substring(0,logFilePath.length()-3)+"json";
+			String jsonFilePath="/home/nikhil/Documents/apps/json/"+logFilePath.substring(logFilePath.lastIndexOf('/')+1,logFilePath.length()-3)+"json";
 			System.out.println(jsonFilePath);
 			writingJSONObjectToFile(json,jsonFilePath);
+			return jsonFilePath;
 			//Thread.sleep(1000);
 		}
-	}
+	
 
 	private static void writingJSONObjectToFile(JSONObject json, String filePath) throws IOException {
 		// TODO Auto-generated method stub

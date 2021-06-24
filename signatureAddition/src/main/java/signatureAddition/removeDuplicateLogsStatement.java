@@ -1,5 +1,7 @@
 package signatureAddition;
-
+/**
+ * takes the log generated file as an input and removes the duplicate statements.
+ */
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,18 +11,18 @@ import java.util.Scanner;
 
 public class removeDuplicateLogsStatement {
 
-	public static void main(String[] args) throws IOException {
+	public static String removeduplicateLogs(String inputFilePath) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		//System.out.println("Hello Nikhil");
-		String listOfFilesPath="/home/nikhil/Documents/apps/absolutePaths.txt";
+	/*	String listOfFilesPath="/home/nikhil/Documents/apps/absolutePaths.txt";
 		File file=new File(listOfFilesPath);
 		 Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
 		{
-			String inputFilePath=scanner.next();
+			String inputFilePath=scanner.next();*/
 			System.out.println("Input file path is :"+inputFilePath);
 			String packageNameTxt=getPackageNameFromFileName(inputFilePath);
-			String outputFilePath="/home/nikhil/Documents/apps/logOutputNew/filteredLogsRemoveDuplicate/"+packageNameTxt;
+			String outputFilePath="/home/nikhil/Documents/apps/logsRemovedDuplicates/"+packageNameTxt;
 			File inputFile=new File(inputFilePath);
 			File outputFile=new File(outputFilePath);
 			System.out.println("output file path :"+outputFilePath);
@@ -29,8 +31,6 @@ public class removeDuplicateLogsStatement {
 			Scanner scanner2=new Scanner(inputFile);
 			while (scanner2.hasNext()) {
 				String string =  scanner2.nextLine();
-				//String currentContents=new String (Files.readAllBytes(Paths.get(outputFilePath)));
-				//System.out.println(currentContents);
 				if(outputContents.contains(string))
 					continue;
 				else
@@ -42,7 +42,9 @@ public class removeDuplicateLogsStatement {
 			FileWriter fileWriter=new FileWriter(outputFile);
 			fileWriter.write(outputContents);
 			fileWriter.close();
-		}
+			
+			return componentCount_v2.tagCount(outputFilePath);
+		
 			
 	}
 

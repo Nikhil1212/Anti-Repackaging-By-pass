@@ -11,7 +11,7 @@ public class logsComponentCount {
 
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		System.out.println("Hello Nikhil");
+		//System.out.println("Hello Nikhil");
 		String listOfPackageNames="/home/nikhil/Documents/apps/packageNames.txt";
 		File fileListofPackages=new File(listOfPackageNames);
 		Scanner scanner1=new Scanner(fileListofPackages);
