@@ -1,3 +1,8 @@
+/*
+ * It is trying to fetch the different activities with the help of FetchActivity class an dname from the logcat when we are running the app
+ * for the 20 seconds and then compare it with the resigned version.
+ * And if we observe different activities, then we can say that definitely anti-tampering check is present.
+ */
 package signatureAddition;
 
 import java.io.BufferedReader;
@@ -56,7 +61,7 @@ public class ActivityAnalysis {
 
 				
 				//appLogGeneration(pathToResignedApk,logPathForResignedApp);
-				LogAnalysis.checkActiviyNameLogs(packageName, logPathForOriginalApp, logPathForResignedApp);
+				LogAnalysis.differenceActiviyNameLogs(packageName, logPathForOriginalApp, logPathForResignedApp);
 				
 			//	dataMembers dataMembersResigned=computeCounts(packageName);
 				//updateCounts(packageName,dataMembersOriginal,dataMembersResigned);

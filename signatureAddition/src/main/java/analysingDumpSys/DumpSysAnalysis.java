@@ -55,7 +55,7 @@ public class DumpSysAnalysis {
 
 				
 				appLogGeneration(pathToResignedApk,logPathForResignedApp);
-				LogAnalysis.checkActiviyNameLogs(packageName, logPathForOriginalApp, logPathForResignedApp);
+				LogAnalysis.differenceActiviyNameLogs(packageName, logPathForOriginalApp, logPathForResignedApp);
 				
 				dataMembers dataMembersResigned=computeCounts(packageName);
 				updateCounts(packageName,dataMembersOriginal,dataMembersResigned);

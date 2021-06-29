@@ -10,17 +10,17 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class removeDuplicateLogsStatement {
-
+/**
+ * 
+ * @param inputFilePath
+ * @return
+ * @throws IOException
+ * @throws InterruptedException
+ */
 	public static String removeduplicateLogs(String inputFilePath) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		//System.out.println("Hello Nikhil");
-	/*	String listOfFilesPath="/home/nikhil/Documents/apps/absolutePaths.txt";
-		File file=new File(listOfFilesPath);
-		 Scanner scanner=new Scanner(file);
-		while(scanner.hasNext())
-		{
-			String inputFilePath=scanner.next();*/
-			System.out.println("Input file path is :"+inputFilePath);
+		
+		
+		System.out.println("Input file path is :"+inputFilePath);
 			String packageNameTxt=getPackageNameFromFileName(inputFilePath);
 			String outputFilePath="/home/nikhil/Documents/apps/logsRemovedDuplicates/"+packageNameTxt;
 			File inputFile=new File(inputFilePath);

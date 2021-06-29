@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -132,7 +133,7 @@ public class AnalysingJSON {
 	}
 
 
-	public static void analyseJSONSameApps(String orignalLogJSONPath, String orignalLogJSONPath2, String packageName) throws IOException {
+	public static HashSet<String> analyseJSONSameApps(String orignalLogJSONPath, String orignalLogJSONPath2, String packageName) throws IOException {
 		// TODO Auto-generated method stub
 		File fileTagsNotPresentPath=new File(tagsNotPresentPath);
 		File filetagsShownWithDiffCount=new File(tagsShownWithDiffCount);
@@ -140,7 +141,7 @@ public class AnalysingJSON {
 		String original2=new String (Files.readAllBytes(Paths.get(orignalLogJSONPath2)));
 		JSONObject json1 = new JSONObject(original);  
 		JSONObject json2 = new JSONObject(original2);  
-
+		HashSet<String> hashSet=new HashSet<String>();
 		String countDiff="";
 		String componentDifferent="";
 		 
@@ -170,6 +171,7 @@ public class AnalysingJSON {
 			else
 			{
 				componentDifferent=componentDifferent+"\n"+key;
+				hashSet.add(key);
 			}
 			System.out.println(key+" : "+value);
 			//Thread.sleep(1000);
@@ -181,6 +183,7 @@ public class AnalysingJSON {
 			if(!json1.has(key))
 			{
 				componentDifferent=componentDifferent+"\n"+key;
+				hashSet.add(key);
 			}
 		}
 		
@@ -193,7 +196,7 @@ public class AnalysingJSON {
 		
 		Files.write(Paths.get(tagsNotPresentPath), fileContentsTagsNotPresentPath.getBytes(),  StandardOpenOption.APPEND);
 		Files.write(Paths.get(tagsShownWithDiffCount), fileContentsTagsShownWithDiffCount.getBytes(),  StandardOpenOption.APPEND);
-		
+		return hashSet;
 
 	}
 

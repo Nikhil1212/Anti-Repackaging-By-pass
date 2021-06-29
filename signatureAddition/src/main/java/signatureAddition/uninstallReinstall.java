@@ -15,7 +15,7 @@ public class uninstallReinstall {
 
 	private static void uninstallApp() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String filePathRepackaged="/home/nikhil/Documents/apks/SBIApps/sbiApps.txt";
+		String filePathRepackaged="/home/nikhil/Documents/apps/packageNames.txt";
 		File file=new File(filePathRepackaged);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())

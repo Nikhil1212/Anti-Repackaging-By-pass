@@ -1,3 +1,7 @@
+/**
+ * It fetches the different names of the Activity by analysing the logs of the app,
+ * given in the filePath.
+ */
 package signatureAddition;
 
 import java.io.BufferedReader;

@@ -13,6 +13,7 @@ import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import signatureAddition.pastHardwork.AnalysingJSON;
@@ -24,7 +25,7 @@ public class LogAnalysis {
 	public static String toastKilled="Toast already killed"; 
 	public static void main(String[] args) throws FileNotFoundException {
 
-		String FilePath="/home/nikhil/Downloads/ATADetector-master/apks/pathToApps.txt";
+		String FilePath="/home/nikhil/Documents/apps/pathToApps_1.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -43,7 +44,6 @@ public class LogAnalysis {
 
 				//String pathToModifiedApk="/home/nikhil/Documents/apps/ModifiedApks/"+packageName+".apk";
 
-				String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
 				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/original_"+packageName+".txt";
 				String logPathForResignedApp="/home/nikhil/Documents/apps/logcatOutput/resigned_"+packageName+".txt";
 				String logPathForModifiedApp="/home/nikhil/Documents/apps/logcatOutput/modifed_"+packageName+".txt";
@@ -51,19 +51,35 @@ public class LogAnalysis {
 
 				int originalCount=appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
 				printLogsThroughPID.initializationADB();
-
+				
 				int resignedCount=appLogGeneration(pathToResignedApk,logPathForResignedApp);
 				printLogsThroughPID.initializationADB();
 
-				int modifedCount=appLogGeneration(pathToModifiedApk,logPathForModifiedApp);
-				checkToastLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
-				checkActiviyNameLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
 
 				//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
 				String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
-				System.out.println(fileContents);
-				if(modifedCount==-1)
+
+				boolean result=checkAntiTamperingPresence(packageName,pathToOriginalApk,logPathForOriginalApp,logPathForResignedApp);
+				if(result==true)
+				{
+					/**
+					 * The check is present, we are trying to by-pass it.
+					 */
+					String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
+					int modifedCount=appLogGeneration(pathToModifiedApk,logPathForModifiedApp);
+				}
+				else
+				{
+					/**
+					 * Simply uninstall the app and continue.
+					 * 
+					 */
+					updateAntiRepackagingCheckPresence(packageName, 'N', "Could not find the check.");
+					CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
 					continue;
+				}
+				System.out.println(fileContents);
+
 				printLogsThroughPID.initializationADB();
 				//	System.exit(0);
 
@@ -72,28 +88,8 @@ public class LogAnalysis {
 				String modifiedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForModifiedApp);
 
 				AnalysingJSON.analyseJSON(orignalLogJSONPath, resignedLogJSONPath, modifiedLogJSONPath);
+				//break;
 
-				/*System.out.println("original count: "+originalCount);
-				System.out.println("resigned count: "+resignedCount);
-				System.out.println("modified count: "+modifedCount);
-
-				if(originalCount==resignedCount)
-					System.out.println(packageName+" seems to launch in the same way as the original version. So, there is a chance that no anti-repackaging check is present");
-				else
-				{
-					System.out.println(packageName+" seems to have anti-repackaging check present");
-					if(originalCount==modifedCount)
-					{
-						System.out.println(packageName+" For this app, we are successful in by-passing the check");
-					}
-					else
-						System.out.println(packageName+": We are not successful in by-passing the anti-repackaging check !!");	
-				}
-
-				/**
-				 * Let's update the table with the values fetched
-				 */
-				//updateTable(packageName,originalCount,resignedCount,modifedCount);
 			}
 			catch (Exception e) {
 				// TODO: handle exception
@@ -104,16 +100,96 @@ public class LogAnalysis {
 
 	}
 
-	public static String checkActiviyNameLogs(String packageName, String logPathForOriginalApp,
+	private static boolean checkAntiTamperingPresence(String packageName, String pathToOriginalApk, String logPathForOriginalApp, String logPathForResignedApp) throws Exception, IOException {
+		/**
+		 * This method will find out whether an app has anti-tampering check present or not by analysing the logs from the logcat.
+		 * 
+		 */
+		boolean appCrash=methodAppCrash(packageName);
+		if(appCrash==true)
+		{
+			updateAntiRepackagingCheckPresence(packageName, 'Y', "App Crashed");
+			return true;
+		}
+		boolean resultActivity=differenceActiviyNameLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
+		if(resultActivity==true)
+		{
+			updateAntiRepackagingCheckPresence(packageName, 'Y', "Different Activity Observed");
+			return true;
+		}
+
+		boolean resultToast=checkDifferenceToastLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
+		if(resultToast==true)
+		{
+			updateAntiRepackagingCheckPresence(packageName, 'Y', "Toast Message");
+			return true;
+		}
+		//	boolean appCrash=methodAppCrash(packageName);
+		boolean finalResult=resultToast|resultActivity;
+
+		if(finalResult==true)
+			return finalResult;
+		else
+		{
+			/**
+			 * It means, it's not that trivial to identify the check. So, we have to perform the tag analysis of the log
+			 */
+			HashSet<String> disjointTagsOriginalApps=LogAnalysis_sameApp.sameAppTwoTimesLogAnalysis(pathToOriginalApk);
+			System.out.println("The output of disjoint tags same app run two times:"+disjointTagsOriginalApps);
+			String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
+			String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForResignedApp);
+
+			HashSet<String>disjointTagsOriginalResigned=AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, resignedLogJSONPath, packageName);
+
+			if(disjointTagsOriginalApps.containsAll(disjointTagsOriginalResigned))
+				return true;
+			String remarks="Tag Difference: ";
+			Iterator<String> i = disjointTagsOriginalResigned.iterator();
+			int flag=0;
+			while (i.hasNext())
+			{
+				String element=i.next();
+				if(disjointTagsOriginalApps.contains(element))
+					continue;
+				else
+				{
+					flag=1;
+					remarks=remarks+","+element;
+				}
+					
+			}
+			if(flag==1)
+			{
+				updateAntiRepackagingCheckPresence(packageName, 'Y', remarks);
+				return true;
+			}
+			
+				return false;
+			
+		}
+		//return false;
+	}
+
+	private static boolean methodAppCrash(String packageName) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		Process pr=CommandExecute.commandExecution(pathToadb+" shell pidof "+packageName);
+		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(pr.getInputStream()));
+		String pid=bufferedReader.readLine();
+		if(pid==null)
+			return true;
+		return false;
+	}
+
+	public static boolean differenceActiviyNameLogs(String packageName, String logPathForOriginalApp,
 			String logPathForResignedApp) throws FileNotFoundException, SQLException {
 		System.out.println("\n***************************** \n \n fetching activity names");
 
 		HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
 		System.out.println("from original app : "+activiyOriginalHashSet);
-		
+
 		HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
 		System.out.println("from repackaged app : "+activiyRepckagedHashSet);
-		
+
 		String fileContents=packageName+":\noriginal:"+activiyOriginalHashSet+"\nResigned:"+activiyRepckagedHashSet+"\n";
 		if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet) && activiyOriginalHashSet.containsAll(activiyRepckagedHashSet))
 		{
@@ -122,20 +198,28 @@ public class LogAnalysis {
 		else
 		{
 			System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
-			updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
+			//updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
+			return true;
 		}
+		return false;
 		// TODO Auto-generated method stub
-		return fileContents;	
+		//return fileContents;	
 	}
 
-	public static void checkToastLogs(String packageName,String logPathForOriginalApp, String logPathForResignedApp) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+	public static boolean checkDifferenceToastLogs(String packageName,String logPathForOriginalApp, String logPathForResignedApp) throws SQLException, IOException {
+		/**
+		 * This method checks whether an app is showing an error message through the Toast message 
+		 * on the resigned version.
+		 */
+
 		String originalLogContents=new String(Files.readAllBytes(Paths.get(logPathForOriginalApp))); 
 		String resignedLogContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp))); 
 		if(!originalLogContents.contains(toastKilled) && resignedLogContents.contains(toastKilled))
 		{
-			updateAntiRepackagingCheckPresence(packageName,'Y',"Toast Message");
+			//updateAntiRepackagingCheckPresence(packageName,'Y',"Toast Message");
+			return true; //it means yes, there is a difference in the Toast message
 		}
+		return false;
 	}
 
 	private static String generatingModifiedApk(String packageName, String pathToOriginalApk) throws IOException, InterruptedException {
@@ -171,7 +255,7 @@ public class LogAnalysis {
 		statement.executeUpdate(query);
 	}
 
-	private static int appLogGeneration(String pathToApkFromPC, String logPathForOutput) throws IOException, InterruptedException {
+	private static int appLogGeneration(String pathToApkFromPC, String logPathForOutput) throws IOException, InterruptedException, SQLException {
 		// TODO Auto-generated method stub
 		System.out.println("let's try to fetch the pid of an app from its packagename");
 		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
@@ -237,13 +321,9 @@ public class LogAnalysis {
 		{
 
 			System.out.println("The app is currently not running. The app has anti-repacakging check present. There is a high chance that the app is getting crashed.");
-			try {
-				updateAntiRepackagingCheckPresence(packageName,'Y',"App crashed");
-				return -1;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			updateAntiRepackagingCheckPresence(packageName, 'Y', "App Crashed");
+
+			return -1;
 		}
 		else
 		{
@@ -281,7 +361,7 @@ public class LogAnalysis {
 			 */
 			CommandExecute.commandExecution(removeFile1);
 			CommandExecute.commandExecution(removeFile2);
-			CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
+			//CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
 			CommandExecute.commandExecution(clearLogcat);
 
 
@@ -293,12 +373,12 @@ public class LogAnalysis {
 
 
 		}
-		return -1;
+		//return -1;
 	}
 
 	public static void updateAntiRepackagingCheckPresence(String packageName, char c, String remarks) throws SQLException {
 		// TODO Auto-generated method stub
-		String query="Insert ignore into activityCount values ('"+packageName+"','"+c+"','"+remarks+"');";
+		String query="Insert ignore into antiTamperingCheck values ('"+packageName+"','"+c+"','"+remarks+"');";
 		System.out.println(query);
 
 		Statement statement=DataBaseConnect.initialization();
@@ -439,21 +519,6 @@ public class LogAnalysis {
 		String pullFromPhoneToPC=pathToadb+" pull "+phoneDirectory+" "+devicePCDirectory;
 		CommandExecute.commandExecution(pullFromPhoneToPC);
 
-	}
-	private static String fetchPackageNamefromapkPath(String apkPath) {
-
-		String packageName="";
-		int len=apkPath.length();
-		/**
-		 * fetch the position of the last / or \
-		 */
-		int index=apkPath.lastIndexOf('/');
-		if(index==-1)
-		{
-			index=apkPath.lastIndexOf('\\');
-		}
-		packageName=apkPath.substring(index+1, len-4);
-		return packageName;
 	}
 
 

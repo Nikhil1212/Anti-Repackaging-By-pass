@@ -1,5 +1,7 @@
 package signatureAddition;
-
+/**
+ * This class has a method that launches the app two times, and finds out the disjoint tags with the help of other methods
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,41 +24,21 @@ public class LogAnalysis_sameApp {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
-	public static void main(String[] args) throws FileNotFoundException {
+	
+	public static HashSet<String> sameAppTwoTimesLogAnalysis(String pathToOriginalApk) throws Exception, InterruptedException {
 
-		String FilePath="/home/nikhil/Documents/apks/cedgeTechno/absolutePaths.txt";
-		File file=new File(FilePath);
-		Scanner scanner=new Scanner(file);
-		while(scanner.hasNext())
-		{
-			try
-			{
-				String pathToOriginalApk=scanner.next();
+		HashSet<String> hsDisjointTagsFromOriginalApps;
 				String packageName=StartingPoint.getPackageName(pathToOriginalApk);
-			//	String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
 
-				/**
-				 * Creating resigned version
-				 */
-				
-				//resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
-
-				//String pathToModifiedApk="/home/nikhil/Documents/apps/ModifiedApks/"+packageName+".apk";
-
-				//String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
 				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/sameApp/original_"+packageName+".txt";
 				String logPathForOriginalApp2="/home/nikhil/Documents/apps/logcatOutput/sameApp/original2_"+packageName+".txt";
-					
-				//String logPathForResignedApp="/home/nikhil/Documents/apps/logcatOutput/resigned_"+packageName+".txt";
-				//String logPathForModifiedApp="/home/nikhil/Documents/apps/logcatOutput/modifed_"+packageName+".txt";
-				
 				
 				appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
 				printLogsThroughPID.initializationADB();
 				
 				appLogGeneration(pathToOriginalApk,logPathForOriginalApp2);
 				
-				System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
+				//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
 				/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
 				System.out.println(fileContents);
 				if(modifedCount==-1)
@@ -66,19 +48,16 @@ public class LogAnalysis_sameApp {
 				
 				String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
 				String orignalLogJSONPath2=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp2);
-				//String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForResignedApp);
-				//String modifiedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForModifiedApp);
-				AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);
-
-			}
-			catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
+				
+				hsDisjointTagsFromOriginalApps=AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);
+				
+				return hsDisjointTagsFromOriginalApps;
 			}
 			
-		}
+			
+		
 
-	}
+	
 
 	private static void checkActiviyNameLogs(String packageName, String logPathForOriginalApp,
 			String logPathForResignedApp) throws FileNotFoundException, SQLException {
@@ -145,7 +124,10 @@ public class LogAnalysis_sameApp {
 	}
 
 	private static int appLogGeneration(String pathToApkFromPC, String logPathForOutput) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+		/**
+		 * It first installs the app in such a way that it has being given all the permissions
+		 * and then, the app gets launched. 
+		 */
 		System.out.println("let's try to fetch the pid of an app from its packagename");
 		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
 
@@ -160,7 +142,7 @@ public class LogAnalysis_sameApp {
 		CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
 
 		/**
-		 * If the app is already being used in the smartphone
+		 * If the app is already being used in the smartphone, so uninstall it.
 		 */
 
 		String apkPathOnSmartphone=" /data/local/tmp/"+packageName+".apk";
@@ -249,9 +231,6 @@ public class LogAnalysis_sameApp {
 			String removeFile1="rm "+filePath1;
 			String removeFile2="rm "+filePath2;
 
-			/*
-			 * Removing the files
-			 */
 			CommandExecute.commandExecution(removeFile1);
 			CommandExecute.commandExecution(removeFile2);
 			CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);

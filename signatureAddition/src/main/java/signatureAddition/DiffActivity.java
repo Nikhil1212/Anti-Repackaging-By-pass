@@ -1,7 +1,6 @@
 package signatureAddition;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -22,7 +21,7 @@ public class DiffActivity {
 				String packageName=scanner.next();
 				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/original_"+packageName+".txt";
 				String logPathForResignedApp="/home/nikhil/Documents/apps/logcatOutput/resigned_"+packageName+".txt";
-				String fileContents=LogAnalysis.checkActiviyNameLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
+				boolean fileContents=LogAnalysis.differenceActiviyNameLogs(packageName,logPathForOriginalApp,logPathForResignedApp);
 				universalContents=universalContents+fileContents+"\n\n";
 				
 				//String packageName=StartingPoint.getPackageName(pathToOriginalApk);
