@@ -173,7 +173,7 @@ public class AnalysingJSON {
 				componentDifferent=componentDifferent+"\n"+key;
 				hashSet.add(key);
 			}
-			System.out.println(key+" : "+value);
+			//System.out.println(key+" : "+value);
 			//Thread.sleep(1000);
 		}
 		keys=json2.names();

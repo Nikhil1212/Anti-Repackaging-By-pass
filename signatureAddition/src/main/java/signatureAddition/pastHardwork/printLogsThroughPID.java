@@ -99,7 +99,7 @@ public class printLogsThroughPID {
 		String commandKillAdb=LogAnalysis.pathToadb+" kill-server";
 		String adbDevices=LogAnalysis.pathToadb+" devices";
 		
-		CommandExecute.commandExecution(commandKillAdb);
+	//	CommandExecute.commandExecution(commandKillAdb);
 		CommandExecute.commandExecution(adbDevices);
 	}
 

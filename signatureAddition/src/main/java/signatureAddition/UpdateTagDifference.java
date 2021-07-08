@@ -16,7 +16,7 @@ public class UpdateTagDifference {
 		Statement statement=DataBaseConnect.initialization();
 		String filePath="/home/nikhil/Documents/apps/VariousTags.txt";
 		String fileContents=new String (Files.readAllBytes(Paths.get(filePath)));
-		String query="Select * from antiTamperingCheck where IsCheckPresent='Y'and Remarks LIKE 'Tag Difference:%';";
+		String query="Select * from antiTamperingCheckModified where Remarks LIKE 'Tag Difference:%';";
 		System.out.println(query);
 		ResultSet resultSet= statement.executeQuery(query);
 		String pattern="Tag Difference: ,";
@@ -41,7 +41,7 @@ public class UpdateTagDifference {
 			}
 			if(flag==0)
 			{
-				String updateQuery="Update antiTamperingCheck set IsCheckPresent='N', Remarks= 'No Tag Difference' where packageName='"+packageName+"';";
+				String updateQuery="Update antiTamperingCheckModified set IsCheckPresent='N', Remarks= 'No Tag Difference on 2nd Pass' where packageName='"+packageName+"';";
 				System.out.println(updateQuery);
 				Statement statement2=DataBaseConnect.initialization();
 				statement2.executeUpdate(updateQuery);

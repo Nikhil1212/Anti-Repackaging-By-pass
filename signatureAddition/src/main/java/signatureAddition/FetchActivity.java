@@ -28,7 +28,6 @@ public class FetchActivity {
 */
 	public static HashSet<String> fetchActivity(String filePath, String packageName) throws FileNotFoundException {
 		 String pattern=packageName+"/";
-		// BufferedReader bufferedReader=new BufferedReader((Reader) Paths.get(filePath));
 		 File file=new File(filePath);    //creates a new file instance  
 		 FileReader fr=new FileReader(file);   //reads the file  
 		 BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
@@ -37,6 +36,8 @@ public class FetchActivity {
 		 try {
 			while((line=br.readLine())!=null)  
 			 {  
+				if(!(line.contains("ActivityTaskManager") || line.contains("ActivityManager")))
+					continue;
 				 int index=line.indexOf(pattern);
 				 if(index!=-1)
 				 {

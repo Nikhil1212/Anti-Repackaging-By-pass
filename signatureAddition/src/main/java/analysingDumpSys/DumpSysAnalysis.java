@@ -1,5 +1,8 @@
 package analysingDumpSys;
-
+/**
+ * It launches the app and after some amount of time, finds out the information related to meminfo of the apps.
+ * So, currently we are launching the same apk two times, and then figuring out the difference in the count of the objects.
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,88 +11,199 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import signatureAddition.*;//StartingPoint;
+import signatureAddition.*;
+import signatureAddition.pastHardwork.ExecutePython;
 import signatureAddition.pastHardwork.printLogsThroughPID;
 
 public class DumpSysAnalysis {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 
-		String FilePath="/home/nikhil/Documents/apks/appsHaveAntiRepackagingCheck/fileName.txt";
+		String FilePath="/home/nikhil/Documents/apps/falseResults.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
+//		ExecutePython.downloadApks(FilePath);
+
 		while(scanner.hasNext())
 		{
 			try
 			{
-				String pathToOriginalApk=scanner.next();
-				String packageName=StartingPoint.getPackageName(pathToOriginalApk);
+				String packageName=scanner.next();
+				String pathToOriginalApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
+				String pathToDumpsysOriginal="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_original.txt";
+				String pathToDumpsysRepackaged="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_repackaged.txt";
+				
+				appLaunch(pathToOriginalApk);
+
+				printLogsThroughPID.initializationADB();
+				dataMembers dataMembersOriginal=computeCounts(packageName,pathToDumpsysOriginal);
+
+				appLaunch(pathToOriginalApk);
+				updateDumpSysObjectAnalysisOriginal(packageName,dataMembersOriginal,"DumpSysObjectAnalysisOriginal");
+
+				//	appLaunch(pathToOriginalApk);
 				String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
+				resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
 
-				/**
-				 * Creating resigned version
-				 */
-			
-			//	resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
+				StartingPoint.signApk(packageName, pathToResignedApk);
 
-				//String pathToModifiedApk="/home/nikhil/Documents/apps/ModifiedApks/"+packageName+".apk";
+				appLaunch(pathToResignedApk);
+				dataMembers dataMembersRepackaged=computeCounts(packageName,pathToDumpsysRepackaged);
 
-				//String pathToModifiedApk=generatingModifiedApk(packageName,pathToOriginalApk);
-				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/sameApp/original_"+packageName+".txt";
-				//String logPathForOriginalApp2="/home/nikhil/Documents/apps/logcatOutput/sameApp/original2_"+packageName+".txt";
-					
-				String logPathForResignedApp="/home/nikhil/Documents/apps/logcatOutput/resigned_"+packageName+".txt";
-				//String logPathForModifiedApp="/home/nikhil/Documents/apps/logcatOutput/modifed_"+packageName+".txt";
-				
-				
-				appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
-				printLogsThroughPID.initializationADB();
-				dataMembers dataMembersOriginal=computeCounts(packageName);
+				//updateCounts(packageName,dataMembersOriginal,dataMembersRepackaged);
+				updateDumpSysObjectAnalysisOriginal(packageName,dataMembersRepackaged,"DumpSysObjectAnalysisRepackaged");
 
-				
-				appLogGeneration(pathToResignedApk,logPathForResignedApp);
-				LogAnalysis.differenceActiviyNameLogs(packageName, logPathForOriginalApp, logPathForResignedApp);
-				
-				dataMembers dataMembersResigned=computeCounts(packageName);
-				updateCounts(packageName,dataMembersOriginal,dataMembersResigned);
-
-				System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
-				/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
-				System.out.println(fileContents);
-				if(modifedCount==-1)
-					continue;
-				printLogsThroughPID.initializationADB();
-				*/
-				/*
-				String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
-				String orignalLogJSONPath2=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp2);
-				//String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForResignedApp);
-				//String modifiedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForModifiedApp);
-				AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);*/
 				CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
+				/**
+				 * Remove the apk from PC
+				 */
+				//CommandExecute.commandExecution("rm "+pathToOriginalApk);
 			}
 			catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-			
+
 		}
 
 	}
 
-	private static void updateCounts(String packageName, dataMembers dataMembersOriginal,
-			dataMembers dataMembersResigned) {
-		String query="Insert into dumpSys values ('"+packageName+"',"+dataMembersOriginal.AppContexts+","+dataMembersResigned.AppContexts+","+dataMembersOriginal.Activities+","+dataMembersResigned.Activities+");";
+	private static void updateDumpSysObjectAnalysisOriginal(String packageName, dataMembers dataMembersOriginal, String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+
+		int AppContexts=dataMembersOriginal.AppContexts;
+
+		int Activities=dataMembersOriginal.Activities;
+		int Views=dataMembersOriginal.Views;
+		int ViewRootImpl=   dataMembersOriginal.ViewRootImpl;
+		int Assets=dataMembersOriginal.Assets;
+		int AssetManagers=     dataMembersOriginal.AssetManagers;   
+		int LocalBinders =dataMembersOriginal.LocalBinders;    
+		int ProxyBinders=  dataMembersOriginal.ProxyBinders;     
+		int Parcelmemory=  dataMembersOriginal.Parcelmemory;    
+		int Parcelcount=   dataMembersOriginal.AppContexts;    
+		int DeathRecipients=    dataMembersOriginal.Parcelcount;
+		int OpenSSLSockets=dataMembersOriginal.OpenSSLSockets;
+		int WebViews=dataMembersOriginal.WebViews;
+
+		String checkQuery="Select * from "+tableName+" where packageName='"+packageName+"';";
+		System.out.println(checkQuery);
+		Statement statement1=DataBaseConnect.initialization();
+		ResultSet  resultSet=statement1.executeQuery(checkQuery);
+		int flag=0;
+		while(resultSet.next())
+		{
+			flag=1;
+			resultSet.getString(1);
+		}
+		if(flag==1)
+		{
+			String deleteQuery="Delete from "+tableName+" where packageName='"+packageName+"';";
+			System.out.println(deleteQuery);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(deleteQuery);
+		}
+		String query="Insert into "+tableName+" values ('"+packageName+"',"+Views+","+ViewRootImpl+","+AppContexts+","+Activities+","+Assets+","+AssetManagers+","+LocalBinders+","+ProxyBinders+","+Parcelmemory+","+Parcelcount+","+DeathRecipients+","+OpenSSLSockets+","+WebViews+");";
+
 		System.out.println(query);
 		Statement statement=DataBaseConnect.initialization();
-		
+
+		try {
+			statement.executeUpdate(query);
+			System.out.println("Successfully updated the database");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
+
+
+	private static void appLaunch(String pathToApkFromPC) throws Exception{
+		// TODO Auto-generated method stub
+		String devices=pathToadb+" devices";
+		CommandExecute.commandExecution(devices);
+
+
+		//String pathToApkFromPC="/home/nikhil/Documents/apks/repackagedAprb.apk";
+
+		String packageName=StartingPoint.getPackageName(pathToApkFromPC);
+
+		CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
+
+		/**
+		 * If the app is already being used in the smartphone
+		 */
+
+		String apkPathOnSmartphone=" /data/local/tmp/"+packageName+".apk";
+
+		String pushApkCommand=pathToadb+" push "+pathToApkFromPC+apkPathOnSmartphone;
+		String installThroughPMCommand=pathToadb+" shell pm install -g"+apkPathOnSmartphone;
+		String removeApkFromDevice=pathToadb+" shell rm"+apkPathOnSmartphone;
+
+		CommandExecute.commandExecution(pushApkCommand);
+
+		CommandExecute.commandExecution(installThroughPMCommand);
+		/**
+		 * We are using pm as we want to give all the permission an app wants during the installation time
+		 */
+
+		CommandExecute.commandExecution(removeApkFromDevice);
+		/**
+		 * As the apk has been installed, so no use of this apk
+		 */
+
+
+		/**
+		 * Let's uninstall the app
+		 */
+
+		String clearLogcat=pathToadb+" shell logcat -c";
+
+
+
+		//CommandExecute.commandExecution(pathToadb+" install "+pathToApk);
+
+		CommandExecute.commandExecution(clearLogcat);
+
+		launchTheApp(packageName,pathToApkFromPC);
+
+	}
+
+	private static void updateCounts(String packageName, dataMembers dataMembersOriginal,
+			dataMembers dataMembersOriginal2) {
+
+		int AppContexts=(int)Math.abs(dataMembersOriginal.AppContexts-dataMembersOriginal2.AppContexts);
+		int Activities=(int)Math.abs(dataMembersOriginal.Activities-dataMembersOriginal2.Activities);
+		int Views=(int)Math.abs(dataMembersOriginal.Views-dataMembersOriginal2.Views);
+		int ViewRootImpl=   (int)Math.abs(dataMembersOriginal.ViewRootImpl-dataMembersOriginal2.ViewRootImpl);
+		int Assets=(int)Math.abs(dataMembersOriginal.Assets-dataMembersOriginal2.Assets);
+		int AssetManagers=     (int)Math.abs(dataMembersOriginal.AssetManagers-dataMembersOriginal2.AssetManagers);   
+		int LocalBinders =(int)Math.abs(dataMembersOriginal.LocalBinders-dataMembersOriginal2.LocalBinders);    
+		int ProxyBinders=  (int)Math.abs(dataMembersOriginal.ProxyBinders-dataMembersOriginal2.ProxyBinders);     
+		int Parcelmemory=  (int)Math.abs(dataMembersOriginal.Parcelmemory-dataMembersOriginal2.Parcelmemory);    
+		int Parcelcount=   (int)Math.abs(dataMembersOriginal.AppContexts-dataMembersOriginal2.AppContexts);    
+		int DeathRecipients=    (int)Math.abs(dataMembersOriginal.Parcelcount-dataMembersOriginal2.Parcelcount);
+		int OpenSSLSockets=(int)Math.abs(dataMembersOriginal.OpenSSLSockets-dataMembersOriginal2.OpenSSLSockets);
+		int WebViews=(int)Math.abs(dataMembersOriginal.WebViews-dataMembersOriginal2.WebViews);
+
+		String query="Insert into DumpSysObjectAnalysis values ('"+packageName+"',"+Views+","+ViewRootImpl+","+AppContexts+","+Activities+","+Assets+","+AssetManagers+","+LocalBinders+","+ProxyBinders+","+Parcelmemory+","+Parcelcount+","+DeathRecipients+","+OpenSSLSockets+","+WebViews+");";
+
+		System.out.println(query);
+		Statement statement=DataBaseConnect.initialization();
+
 		try {
 			statement.executeUpdate(query);
 			System.out.println("Successfully updated the database");
@@ -100,66 +214,122 @@ public class DumpSysAnalysis {
 		}
 	}
 
-	private static dataMembers computeCounts(String packageName) throws IOException, InterruptedException {
+	private static dataMembers computeCounts(String packageName, String pathToDumpsysOutput) throws Exception {
 		// TODO Auto-generated method stub
 		dataMembers dataMembers=new dataMembers();
-		
-		String dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' | grep Activities ";
+
+		String dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' -d > "+pathToDumpsysOutput;
 		Process process= CommandExecute.commandExecution(dumpsysCommand);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String output=bufferedReader.readLine();
 		System.out.println(output);
+		if(output==null)
+			throw new Exception("Dumpsys command not executed properly.");
 		int index=output.indexOf(':');
-		
+
 		dataMembers.AppContexts=fetchValue(output,index);//Integer.parseInt(output.substring(start, i));
 		dataMembers.Activities=fetchValue(output, output.lastIndexOf(':'));
-		
+
+
+		dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' | grep AssetManagers ";
+		process= CommandExecute.commandExecution(dumpsysCommand);
+		bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		output=bufferedReader.readLine();
+		System.out.println(output);
+		index=output.indexOf(':');
+
+		dataMembers.Assets=fetchValue(output,index);//Integer.parseInt(output.substring(start, i));
+		dataMembers.AssetManagers=fetchValue(output, output.lastIndexOf(':'));
+
+
+		dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' | grep ViewRootImpl ";
+		process= CommandExecute.commandExecution(dumpsysCommand);
+		bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		output=bufferedReader.readLine();
+		System.out.println(output);
+		index=output.indexOf(':');
+
+		dataMembers.Views=fetchValue(output,index);//Integer.parseInt(output.substring(start, i));
+		dataMembers.ViewRootImpl=fetchValue(output, output.lastIndexOf(':'));
+
+
+		dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' | grep Binders ";
+		process= CommandExecute.commandExecution(dumpsysCommand);
+		bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		output=bufferedReader.readLine();
+		System.out.println(output);
+		index=output.indexOf(':');
+
+		dataMembers.LocalBinders=fetchValue(output,index);//Integer.parseInt(output.substring(start, i));
+		dataMembers.ProxyBinders=fetchValue(output, output.lastIndexOf(':'));
+
+		dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' | grep Sockets ";
+		process= CommandExecute.commandExecution(dumpsysCommand);
+		bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		output=bufferedReader.readLine();
+		System.out.println(output);
+		index=output.indexOf(':');
+
+		dataMembers.DeathRecipients=fetchValue(output,index);//Integer.parseInt(output.substring(start, i));
+		dataMembers.OpenSSLSockets=fetchValue(output, output.lastIndexOf(':'));
+
+		dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' | grep Parcel ";
+		process= CommandExecute.commandExecution(dumpsysCommand);
+		bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		output=bufferedReader.readLine();
+		System.out.println(output);
+		index=output.indexOf(':');
+
+		dataMembers.Parcelmemory=fetchValue(output,index);//Integer.parseInt(output.substring(start, i));
+		dataMembers.Parcelcount=fetchValue(output, output.lastIndexOf(':'));
+
+
 		/**
 		 * Let's fetch the Activities from the lastIndex
 		 */
-		
+
 		return dataMembers;
 	}
 
-	private static int fetchValue(String output, int index) {
+	private static int fetchValue(String dumpSysObject, int index) {
 		// TODO Auto-generated method stub
 		int i;
-		for(i=index+1;i<output.length();i++)
+		for(i=index+1;i<dumpSysObject.length();i++)
 		{
-			if(output.charAt(i)==' ')
+			if(dumpSysObject.charAt(i)==' ')
 				continue;
 			else 
 				break;
 		}
 		int start=i;
-		for(i=start;i<output.length();i++)
+		for(i=start;i<dumpSysObject.length();i++)
 		{
-			if(output.charAt(i)==' ')
+			if(dumpSysObject.charAt(i)==' ')
 				break;
 		}
-		return Integer.parseInt(output.substring(start, i));
-	
+		return Integer.parseInt(dumpSysObject.substring(start, i));
+
 	}
 
 	private static void checkActiviyNameLogs(String packageName, String logPathForOriginalApp,
 			String logPathForResignedApp) throws FileNotFoundException, SQLException {
-		
-	HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
-	System.out.println("from original app : "+activiyOriginalHashSet);
-	HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
-	System.out.println("from repackaged app : "+activiyRepckagedHashSet);
 
-	if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet))
-	{
-		System.out.println("Oh No different activity names has been found on the original and repackaged app");
-	}
-	else
-	{
-		System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
-		updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
-	}
+		HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
+		System.out.println("from original app : "+activiyOriginalHashSet);
+		HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
+		System.out.println("from repackaged app : "+activiyRepckagedHashSet);
+
+		if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet))
+		{
+			System.out.println("Oh No different activity names has been found on the original and repackaged app");
+		}
+		else
+		{
+			System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
+			updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
+		}
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	/*private static void checkToastLogs(String packageName,String logPathForOriginalApp, String logPathForResignedApp) throws SQLException, IOException {
@@ -269,7 +439,7 @@ public class DumpSysAnalysis {
 		line=buf.readLine();
 		if(line==null)
 		{
-			
+
 			System.out.println("The app is currently not running. The app has anti-repacakging check present. There is a high chance that the app is getting crashed.");
 			try {
 				updateAntiRepackagingCheckPresence(packageName,'Y',"App crashed");
@@ -315,7 +485,7 @@ public class DumpSysAnalysis {
 			 */
 			CommandExecute.commandExecution(removeFile1);
 			CommandExecute.commandExecution(removeFile2);
-//			CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
+			//			CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
 			CommandExecute.commandExecution(clearLogcat);
 
 
@@ -334,7 +504,7 @@ public class DumpSysAnalysis {
 		// TODO Auto-generated method stub
 		String query="Insert ignore into AntiRepackagingCheckPresence values ('"+packageName+"','"+c+"','"+remarks+"');";
 		System.out.println(query);
-		
+
 		Statement statement=DataBaseConnect.initialization();
 		statement.executeUpdate(query);
 	}
@@ -355,25 +525,7 @@ public class DumpSysAnalysis {
 			}
 		}
 		return count;
-		//String grepCommand="/bin/grep -o -i ActivityTaskManager "+outputFilePath+" | /usr/bin/wc -l";
-		/*String grepCommand="grep -wc \"ActivityTaskManager\" "+ outputFilePath;
 
-		System.out.println(grepCommand);
-		String str1=new String(Files.readAllBytes(Paths.get(outputFilePath)));
-
-		Process process=CommandExecute.commandExecution(grepCommand);
-
-		BufferedReader buf2 = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			System.out.println("Before while loop");
-			String line=buf2.readLine();
-			System.out.println("Number of ActivityTaskManager :"+line);
-			if(line==null)
-			{
-				System.out.println("value returned is null");
-				return -1;
-			}
-		 */	
-		//return Integer.parseInt(line);
 
 	}
 
@@ -389,11 +541,13 @@ public class DumpSysAnalysis {
 		Process  process=CommandExecute.commandExecution(fetchOutputOfAapt);
 		String line="";
 		String patternForLaunchableActivity="launchable-activity: name='";
-		String launchableActivityCommand=pathToadb+" shell am start -n "+packageName+"/";
+		// adb shell monkey -p in.amazon.mShop.android.shopping -c android.intent.category.LAUNCHER 1
+		String launchableActivityCommand=pathToadb+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		BufferedReader buf2 = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		System.out.println("Before while loop");
-		while ((line=buf2.readLine())!=null) {
+		CommandExecute.commandExecution(launchableActivityCommand);
+		/*	while ((line=buf2.readLine())!=null) {
 			if(line.contains(patternForLaunchableActivity))
 			{
 				//fetch the launcher activity name
@@ -409,7 +563,7 @@ public class DumpSysAnalysis {
 				continue;
 			//as in the first line only we can get the package name.That's why immeditate break;
 			//	Files.write(Paths.get(filePath), (line+"\n").getBytes(),  StandardOpenOption.APPEND);
-		}
+		}*/
 		buf2.close();
 
 		Thread.sleep(15000);
@@ -423,7 +577,7 @@ public class DumpSysAnalysis {
 		String phoneDirectory_1="/data/local/tmp/fromProgrampid.txt";
 		String testFilePath="/data/local/tmp/myfile.txt";
 		String analysingLogsUsingPID=pathToadb+" logcat -v brief -d --pid "+pid+" -f "+testFilePath;// > "+phoneDirectory_1;
-		
+
 		/**
 		 * Pull this file to PC and save it to the  
 		 */
@@ -446,17 +600,6 @@ public class DumpSysAnalysis {
 		 */
 		String removeTxtFileCommand=DumpSysAnalysis.pathToadb+" shell rm "+testFilePath;
 		CommandExecute.commandExecution(removeTxtFileCommand);
-/*
-		BufferedReader buf1 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
-		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-		String line="";
-
-		while ((line=buf1.readLine())!=null) {
-			//as in the first line only we can get the package name.That's why immeditate break;
-			Files.write(Paths.get(filePath), (line+"\n").getBytes(),  StandardOpenOption.APPEND);
-			System.out.println(line);
-		}
-		buf1.close();*/
 
 	}
 
@@ -474,21 +617,7 @@ public class DumpSysAnalysis {
 		CommandExecute.commandExecution(pullFromPhoneToPC);
 
 	}
-	private static String fetchPackageNamefromapkPath(String apkPath) {
 
-		String packageName="";
-		int len=apkPath.length();
-		/**
-		 * fetch the position of the last / or \
-		 */
-		int index=apkPath.lastIndexOf('/');
-		if(index==-1)
-		{
-			index=apkPath.lastIndexOf('\\');
-		}
-		packageName=apkPath.substring(index+1, len-4);
-		return packageName;
-	}
 
 
 }

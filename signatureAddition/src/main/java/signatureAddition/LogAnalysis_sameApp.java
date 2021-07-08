@@ -19,6 +19,7 @@ import java.util.Scanner;
 
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.printLogsThroughPID;
+import signatureAddition.pastHardwork.restartSmartphone;
 
 public class LogAnalysis_sameApp {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
@@ -33,10 +34,10 @@ public class LogAnalysis_sameApp {
 				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/sameApp/original_"+packageName+".txt";
 				String logPathForOriginalApp2="/home/nikhil/Documents/apps/logcatOutput/sameApp/original2_"+packageName+".txt";
 				
-				appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
+			LogAnalysis.appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
 				printLogsThroughPID.initializationADB();
-				
-				appLogGeneration(pathToOriginalApk,logPathForOriginalApp2);
+			//	restartSmartphone.restart();
+			LogAnalysis.appLogGeneration(pathToOriginalApk,logPathForOriginalApp2);
 				
 				//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
 				/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
@@ -123,7 +124,7 @@ public class LogAnalysis_sameApp {
 		statement.executeUpdate(query);
 	}
 
-	private static int appLogGeneration(String pathToApkFromPC, String logPathForOutput) throws IOException, InterruptedException {
+	private static int appLogGeneration(String pathToApkFromPC, String logPathForOutput, int flag) throws IOException, InterruptedException {
 		/**
 		 * It first installs the app in such a way that it has being given all the permissions
 		 * and then, the app gets launched. 
@@ -215,15 +216,23 @@ public class LogAnalysis_sameApp {
 			String filePath1=directoryLocationForStoringLogs+"logs_"+packageName+"_PID.txt";
 			String filePath2="/home/nikhil/Documents/logs/fromProgram"+packageName+".txt";
 
-
+/**
+ * We are doing a little modification here. So, we are trying to fetch the logs generated only from the pid. So, we are commenting few lines as we don't require filePath2
+ Later down the line, if we want end to end analysis, then we have to find some other way as activity, toast related difference can't be seen using the logs generated on the pid.
+ */
 			String str1=new String(Files.readAllBytes(Paths.get(filePath1)));
-			System.out.println(str1);
+			//System.out.println(str1);
 			String str2=new String(Files.readAllBytes(Paths.get(filePath2)));
-			String str3=str1+str2;
-			System.out.println(str2);
+			String fileContents=str1;
+			if(flag==0)
+			{
+				fileContents=fileContents+str2;
+			}
+			//String str3=str1+str2;
+			//System.out.println(str2);
 			//String outputFilePath="/home/nikhil/Documents/logs/universal_"+packageName+".txt";
 			FileWriter fileWriter=new FileWriter(logPathForOutput);
-			fileWriter.write(str3);
+			fileWriter.write(fileContents);
 			fileWriter.close();
 			System.out.println("Successfully wrote to the file");
 
