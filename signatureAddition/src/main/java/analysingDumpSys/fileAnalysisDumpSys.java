@@ -12,11 +12,10 @@ import signatureAddition.DataBaseConnect;
 
 public class fileAnalysisDumpSys {
 
-	// public static void dumpSysFileAnalysis(String filePath, String flagString packageName)
-	public static void main(String[] args) throws IOException, Exception {
-		String filePath="/home/nikhil/Documents/apps/dumpsys/in.org.npci.upiapp.txt";
-		String packageName="in.org.npci.upiapp";
-		String flag="Original";
+	 public static void dumpSysFileAnalysis(String filePath, String flag,String packageName) throws Exception{
+		//String filePath="/home/nikhil/Documents/apps/dumpsys/in.org.npci.upiapp.txt";
+		//String packageName="in.org.npci.upiapp";
+		//String flag="Original";
 		String fileContents=new String(Files.readAllBytes(Paths.get(filePath)));
 		String object_TableName="DumpSysObjectAnalysis"+flag;
 		
@@ -193,6 +192,8 @@ public class fileAnalysisDumpSys {
 		// TODO Auto-generated method stub
 		int i;
 		int index=fileContents.indexOf(object);
+		if(index==-1)
+			return 0;
 		//System.out.println(fileContents.substring(index+object.length()));
 		for(i=index+object.length();i<fileContents.length();i++)
 		{

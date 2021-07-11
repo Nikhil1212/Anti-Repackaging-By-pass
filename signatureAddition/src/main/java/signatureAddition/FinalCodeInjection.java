@@ -97,7 +97,7 @@ public class FinalCodeInjection {
 		String finalcode=insertSignCode(codeToWrite,signRelatedCode,pattern);
 
 		
-		System.out.println("For the file :"+filePath +" this is the code which we have generated \n ------------------\n");
+	//	System.out.println("For the file :"+filePath +" this is the code which we have generated \n ------------------\n");
 	//	System.out.println(finalcode);
 		
 		FileWriter myWriter = new FileWriter(filePath);
@@ -189,7 +189,7 @@ public class FinalCodeInjection {
 		String finalcode=insertSignCodeLast(codeToWrite,signRelatedCode,pattern);
 
 		
-		System.out.println("For the file :"+filePath +" this is the code which we have generated \n ------------------\n");
+		//System.out.println("For the file :"+filePath +" this is the code which we have generated \n ------------------\n");
 	//	System.out.println(finalcode);
 		
 		FileWriter myWriter = new FileWriter(filePath);

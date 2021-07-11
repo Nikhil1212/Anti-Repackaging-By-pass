@@ -34,7 +34,6 @@ public class StartingPoint {
 				//package name is retrieved using aapt 
 				disassembleApk(fileNamePath,packageName);
 
-				//Successfully disassmeble the apk with ignoring resource
 				String fullRSAfetch= fetchRSAName(packageName);
 
 				String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
@@ -190,7 +189,7 @@ public class StartingPoint {
 		String apktoolBuildCommand="apktool b /home/nikhil/Documents/apps/"+packageName+" -o /home/nikhil/Documents/apps/modified_"+packageName+".apk";
 		System.out.println(apktoolBuildCommand);
 		Process pr=commandExecution(apktoolBuildCommand);
-		pr.waitFor();
+		//pr.waitFor();
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 		String line="";
 		while((line=bufferedReader.readLine())!=null)

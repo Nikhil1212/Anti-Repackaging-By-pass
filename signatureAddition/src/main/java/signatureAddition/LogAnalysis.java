@@ -32,7 +32,7 @@ public class LogAnalysis {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-		String FilePath="/home/nikhil/Documents/apps/AppCrashed.txt";
+		String FilePath="/home/nikhil/Documents/apps/packageNames_2.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		int count=0;
@@ -60,11 +60,12 @@ public class LogAnalysis {
 
 
 				String fileContentsLogsPidOriginal=appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
+			//	printLogsThroughPID.initializationADB();
+				restartSmartphone.restart();
 				printLogsThroughPID.initializationADB();
-				//restartSmartphone.restart();
+				
 				String fileContentsLogsPidRepackaged=appLogGeneration(pathToResignedApk,logPathForResignedApp);
-				printLogsThroughPID.initializationADB();
-
+				
 
 				//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
 				//	String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
@@ -122,7 +123,7 @@ public class LogAnalysis {
 		CommandExecute.commandExecution("/snap/bin/scrcpy");
 	}
 
-	private static void updateDatabaseByPassable(String packageName, String result, String observation) throws SQLException {
+	public static void updateDatabaseByPassable(String packageName, String result, String observation) throws SQLException {
 		// TODO Auto-generated method stub
 		String checkQuery="Select * from ByPassableInfo where packageName='"+packageName+"';";
 		System.out.println(checkQuery);
@@ -153,7 +154,7 @@ public class LogAnalysis {
 
 	}
 
-	private static boolean isItByPassable(String packageName, String pathToOriginalApk, String logPathForOriginalApp,
+	public static boolean isItByPassable(String packageName, String pathToOriginalApk, String logPathForOriginalApp,
 			String logPathForResignedApp, String fileContentsLogsPidOriginal, String fileContentsLogsPidRepackaged,
 			String fileContentsLogsPidModified, String logPathForModifiedApp) throws Exception {
 		String observation=queryToDataBase(packageName);
@@ -546,7 +547,13 @@ public class LogAnalysis {
 		{
 
 			System.out.println("The app is currently not running. The app has anti-repacakging check present. There is a high chance that the app is getting crashed.");
-			updateAntiRepackagingCheckPresence(packageName, 'Y', "App Crashed");
+			if(logPathForOutput.contains("original"))
+			{
+				updateAntiRepackagingCheckPresence(packageName, 'E', "Unable to retrieve the process id of the original app");
+	
+			}
+			else
+				updateAntiRepackagingCheckPresence(packageName, 'Y', "App Crashed");
 
 			return null;
 		}

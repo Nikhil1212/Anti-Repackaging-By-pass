@@ -2,6 +2,7 @@ package databaseUpdate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
@@ -11,9 +12,11 @@ import signatureAddition.StartingPoint;
 
 public class ManualAnalysis {
 
-	public static void main(String[] args) throws SQLException, FileNotFoundException {
+	public static void main(String[] args) throws IOException, Exception {
 		// TODO Auto-generated method stub
 		String FilePath="/home/nikhil/Documents/apps/packageNames_1.txt";
+		String hello[]= {"12","34"};
+		RenameApk.main(hello);
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		Statement statement=DataBaseConnect.initialization();

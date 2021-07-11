@@ -18,19 +18,22 @@ import java.util.HashSet;
 import java.util.Scanner;
 
 import signatureAddition.*;
-import signatureAddition.pastHardwork.ExecutePython;
 import signatureAddition.pastHardwork.printLogsThroughPID;
+import signatureAddition.pastHardwork.restartSmartphone;
 
 public class DumpSysAnalysis {
+
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
+
+
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-		String FilePath="/home/nikhil/Documents/apps/falseResults.txt";
+		String FilePath="/home/nikhil/Documents/apps/packageNames_2.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
-//		ExecutePython.downloadApks(FilePath);
+		//		ExecutePython.downloadApks(FilePath);
 
 		while(scanner.hasNext())
 		{
@@ -38,28 +41,53 @@ public class DumpSysAnalysis {
 			{
 				String packageName=scanner.next();
 				String pathToOriginalApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
-				String pathToDumpsysOriginal="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_original.txt";
-				String pathToDumpsysRepackaged="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_repackaged.txt";
+
+				String pathToDumpsysOriginalPC="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_original.txt";
+				String pathToDumpsysRepackagedPC="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_repackaged.txt";
+				String pathToDumpsysOriginalPC2="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_original2.txt";
+
+				restartSmartphone.restart();
+
+				appLaunch(pathToOriginalApk);
+				String pathToDumpSysOutputSmartphoneOriginal="/data/local/tmp/dumpsysOriginal.txt";
+				String pathToDumpSysOutputSmartphoneRepackaged="/data/local/tmp/dumpsysRepackaged.txt";
+
+				String dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' -d > /data/local/tmp/dumpsysOriginal.txt";//+pathToDumpSysOutputSmartphoneOriginal;
+
+				System.out.println(dumpsysCommand);
+				Process process= CommandExecute.commandExecution(dumpsysCommand);
 				
-				appLaunch(pathToOriginalApk);
-
-				printLogsThroughPID.initializationADB();
-				dataMembers dataMembersOriginal=computeCounts(packageName,pathToDumpsysOriginal);
-
-				appLaunch(pathToOriginalApk);
-				updateDumpSysObjectAnalysisOriginal(packageName,dataMembersOriginal,"DumpSysObjectAnalysisOriginal");
-
-				//	appLaunch(pathToOriginalApk);
 				String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
 				resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
 
-				StartingPoint.signApk(packageName, pathToResignedApk);
+				//StartingPoint.signApk(packageName, pathToResignedApk);
+				restartSmartphone.restart();
+
+				printLogsThroughPID.initializationADB();
 
 				appLaunch(pathToResignedApk);
-				dataMembers dataMembersRepackaged=computeCounts(packageName,pathToDumpsysRepackaged);
 
-				//updateCounts(packageName,dataMembersOriginal,dataMembersRepackaged);
-				updateDumpSysObjectAnalysisOriginal(packageName,dataMembersRepackaged,"DumpSysObjectAnalysisRepackaged");
+				dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' -d > /data/local/tmp/dumpsysRepackaged.txt";//+pathToDumpSysOutputSmartphoneRepackaged;
+				CommandExecute.commandExecution(dumpsysCommand);
+
+				//dataMembers dataMembersRepackaged=computeCounts(packageName,pathToDumpsysRepackaged);
+
+				pullTheFileToPC(pathToDumpsysOriginalPC,pathToDumpSysOutputSmartphoneOriginal);
+				pullTheFileToPC(pathToDumpsysRepackagedPC,pathToDumpSysOutputSmartphoneRepackaged);
+
+
+				fileAnalysisDumpSys.dumpSysFileAnalysis(pathToDumpsysRepackagedPC, "Repackaged", packageName);
+				fileAnalysisDumpSys.dumpSysFileAnalysis(pathToDumpsysOriginalPC, "Original", packageName);
+				restartSmartphone.restart();
+				appLaunch(pathToOriginalApk);
+				dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' -d > /data/local/tmp/dumpsysOriginal.txt";//+pathToDumpSysOutputSmartphoneOriginal;
+
+				System.out.println(dumpsysCommand);
+				process= CommandExecute.commandExecution(dumpsysCommand);
+				pullTheFileToPC(pathToDumpsysOriginalPC2,pathToDumpSysOutputSmartphoneOriginal);
+
+
+				//updateDumpSysObjectAnalysisOriginal(packageName,dataMembersRepackaged,"DumpSysObjectAnalysisRepackaged");
 
 				CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
 				/**
@@ -73,6 +101,21 @@ public class DumpSysAnalysis {
 			}
 
 		}
+
+	}
+
+	private static void pullTheFileToPC(String pathToDumpsysPC, String pathToDumpSysOutputSmartphone) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		String pullCommand=LogAnalysis.pathToadb+" pull "+pathToDumpSysOutputSmartphone+" "+pathToDumpsysPC;
+		System.out.println(pullCommand);
+		Process process=CommandExecute.commandExecution(pullCommand);
+
+		/**
+		 * 
+		 * Let's remove the files...
+		 */
+		String removeFilecommand=LogAnalysis.pathToadb+" shell rm "+pathToDumpSysOutputSmartphone;
+		process=CommandExecute.commandExecution(removeFilecommand);
 
 	}
 
@@ -131,7 +174,7 @@ public class DumpSysAnalysis {
 
 
 
-	private static void appLaunch(String pathToApkFromPC) throws Exception{
+	public static void appLaunch(String pathToApkFromPC) throws Exception{
 		// TODO Auto-generated method stub
 		String devices=pathToadb+" devices";
 		CommandExecute.commandExecution(devices);

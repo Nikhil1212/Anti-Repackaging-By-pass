@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 import signatureAddition.CommandExecute;
 
 public class ExecutePython {
-
+public static String PythonPath="/usr/bin/python3";
 	public static void downloadApk(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String PythonPath="/usr/bin/python3";
+		
 		String pathToDownloadApk="/home/nikhil/Downloads/googleplay-api-master/downloadApkFromPackageName.py";
 	Process process=CommandExecute.commandExecution(PythonPath+" "+pathToDownloadApk+" "+packageName);
 	BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
