@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 public class FileNamesForSignatureAddition {
@@ -13,43 +15,64 @@ public class FileNamesForSignatureAddition {
 
 	public static void codeInjectionProcess(String key, String absolutePathAppFolder) throws IOException, InterruptedException {
 		
-		String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
+		List<String> list  = new ArrayList<String>();
+		list=listInitializationForSignaturePattern(list);
+		for(int i=0;i<list.size();i++)
+		{
+			Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l '"+list.get(i)+"' "+ absolutePathAppFolder});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
+			
+			process.waitFor();
+			
+			/*
+			 * This above command is executed to fetch the file names which are calling signature->toPattern 
+			 * 
+			 */
+			
+			printErrors(process);
+			
+			/**
+			 * This is used to fetch the errors from the grep command, if any.
+			 * 
+			 */
+
+			
+			HashSet <String> validFiles =fetchValidFiles(process);
+			
+			/*
+			 * It will store the files which needs to be considered for the code Injection
+			 */
+			
+			Iterator<String> iterator = validFiles.iterator();
+			    while (iterator.hasNext())
+		        {
+		        	//count++;
+		        	String filePath=iterator.next();
+		        	FinalCodeInjection.codeInjection(filePath, key,list.get(i));
+		        	//FinalCodeInjection.codeInjection(filePath, key,patternToCharArray);
+		        	//FinalCodeInjection.codeInjection(filePath, key,patternToHashCode);
+		        }
+
+		}
+		/*String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 		String patternToCharArray="Landroid/content/pm/Signature;->toCharArray()";
-		String patternToHashCode="Landroid/content/pm/Signature;->hashCode()";
-		Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l 'Landroid/content/pm/Signature;->toByteArray\\|Landroid/content/pm/Signature;->hashCode' "+ absolutePathAppFolder});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
-		
-		process.waitFor();
-		
-		/*
-		 * This above command is executed to fetch the file names which are calling signature->toByteArray 
-		 * 
-		 */
-		
-		printErrors(process);
-		
-		/**
-		 * This is used to fetch the errors from the grep command, if any.
-		 * 
-		 */
+		String patternToHashCode="Landroid/content/pm/Signature;->hashCode()";*/
+				//fileForCodeInjection.codeInjection(validFiles);
 
-		
-		HashSet <String> validFiles =fetchValidFiles(process);
-		
-		/*
-		 * It will store the files which needs to be considered for the code Injection
-		 */
-		
-		Iterator<String> i = validFiles.iterator();
-		    while (i.hasNext())
-	        {
-	        	//count++;
-	        	String filePath=i.next();
-	        	FinalCodeInjection.codeInjection(filePath, key,patternToByteArray);
-	        	FinalCodeInjection.codeInjection(filePath, key,patternToCharArray);
-	        	FinalCodeInjection.codeInjection(filePath, key,patternToHashCode);
-	        }
-		//fileForCodeInjection.codeInjection(validFiles);
+	}
 
+	public static List<String> listInitializationForSignaturePattern(List<String> list) {
+		// TODO Auto-generated method stub
+		list.add("Landroid/content/pm/Signature;->toByteArray()");
+		list.add("Landroid/content/pm/Signature;->toCharArray()");
+		list.add("Landroid/content/pm/Signature;->hashCode()");
+		list.add("Landroid/content/pm/Signature;->getPublicKey()");
+		list.add("Landroid/content/pm/Signature;->toCharsString()");
+		list.add("Landroid/content/pm/Signature;->getFlags()");
+		list.add("Landroid/content/pm/Signature;->toChars()");
+		list.add("Landroid/content/pm/Signature;->getChainSignatures()");
+		list.add("Landroid/content/pm/Signature;->hashCode()");
+		
+		return list;
 	}
 
 	private static HashSet<String> fetchValidFiles(Process process) throws IOException, InterruptedException {
