@@ -35,7 +35,7 @@ public class removeDuplicateLogsStatement {
 					continue;
 				else
 				{
-					System.out.println(string);
+					//System.out.println(string);
 					outputContents=outputContents.concat(string+"\n");
 				}
 			}
