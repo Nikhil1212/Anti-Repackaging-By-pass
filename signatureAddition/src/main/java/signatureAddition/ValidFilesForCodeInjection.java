@@ -37,6 +37,9 @@ public class ValidFilesForCodeInjection {
 		char chArr[]=fileNameAbsolutePath.toCharArray();
 		for(int i=0;i<fileNameAbsolutePath.length();i++)
 		{
+			/**
+			 * Reasons for converting / to . is our library files are present in the form of . e.g com.google, etc.
+			 */
 			if(chArr[i]=='/')
 				chArr[i]='.';
 		}
