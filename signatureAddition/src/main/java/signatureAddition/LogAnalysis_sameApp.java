@@ -25,60 +25,69 @@ public class LogAnalysis_sameApp {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
-	
+
 	public static HashSet<String> sameAppTwoTimesLogAnalysis(String pathToOriginalApk) throws Exception, InterruptedException {
 
 		HashSet<String> hsDisjointTagsFromOriginalApps;
-				String packageName=StartingPoint.getPackageName(pathToOriginalApk);
+		String packageName=StartingPoint.getPackageName(pathToOriginalApk);
 
-				String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/sameApp/original_"+packageName+".txt";
-				String logPathForOriginalApp2="/home/nikhil/Documents/apps/logcatOutput/sameApp/original2_"+packageName+".txt";
-				
-			LogAnalysis.appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
-				printLogsThroughPID.initializationADB();
-			//	restartSmartphone.restart();
-			LogAnalysis.appLogGeneration(pathToOriginalApk,logPathForOriginalApp2);
-				
-				//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
-				/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
+		String logPathForOriginalApp="/home/nikhil/Documents/apps/logcatOutput/sameApp/original_"+packageName+".txt";
+		String logPathForOriginalApp2="/home/nikhil/Documents/apps/logcatOutput/sameApp/original2_"+packageName+".txt";
+
+		String fileContents1=	LogAnalysis.appLogGeneration(pathToOriginalApk,logPathForOriginalApp);
+		printLogsThroughPID.initializationADB();
+		//	restartSmartphone.restart();
+		String fileContents2=	LogAnalysis.appLogGeneration(pathToOriginalApk,logPathForOriginalApp2);
+
+		FileWriter fileWriter=new FileWriter(logPathForOriginalApp);
+		fileWriter.write(fileContents1);
+		fileWriter.close();
+
+
+		fileWriter=new FileWriter(logPathForOriginalApp2);
+		fileWriter.write(fileContents2);
+		fileWriter.close();
+
+		//System.out.println("Checking whether we are able to see AccountInvalidator *******************\n****************\n**************");
+		/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
 				System.out.println(fileContents);
 				if(modifedCount==-1)
 					continue;
 				printLogsThroughPID.initializationADB();
-				*/
-				
-				String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
-				String orignalLogJSONPath2=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp2);
-				
-				hsDisjointTagsFromOriginalApps=AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);
-				
-				return hsDisjointTagsFromOriginalApps;
-			}
-			
-			
-		
+		 */
 
-	
+		String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
+		String orignalLogJSONPath2=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp2);
+
+		hsDisjointTagsFromOriginalApps=AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);
+
+		return hsDisjointTagsFromOriginalApps;
+	}
+
+
+
+
+
 
 	private static void checkActiviyNameLogs(String packageName, String logPathForOriginalApp,
 			String logPathForResignedApp) throws FileNotFoundException, SQLException {
-		
-	HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
-	System.out.println("from original app : "+activiyOriginalHashSet);
-	HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
-	System.out.println("from repackaged app : "+activiyRepckagedHashSet);
 
-	if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet))
-	{
-		System.out.println("Oh No different activity names has been found on the original and repackaged app");
-	}
-	else
-	{
-		System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
-		updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
-	}
+		HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
+		System.out.println("from original app : "+activiyOriginalHashSet);
+		HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
+		System.out.println("from repackaged app : "+activiyRepckagedHashSet);
+
+		if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet))
+		{
+			System.out.println("Oh No different activity names has been found on the original and repackaged app");
+		}
+		else
+		{
+			System.out.println("Different set of activities. There is high chance that anti-tampering check is present.");
+			updateAntiRepackagingCheckPresence(packageName,'Y',"Different Activity Observed");
+		}
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static void checkToastLogs(String packageName,String logPathForOriginalApp, String logPathForResignedApp) throws SQLException, IOException {
@@ -191,7 +200,7 @@ public class LogAnalysis_sameApp {
 		line=buf.readLine();
 		if(line==null)
 		{
-			
+
 			System.out.println("The app is currently not running. The app has anti-repacakging check present. There is a high chance that the app is getting crashed.");
 			try {
 				updateAntiRepackagingCheckPresence(packageName,'Y',"App crashed");
@@ -216,10 +225,10 @@ public class LogAnalysis_sameApp {
 			String filePath1=directoryLocationForStoringLogs+"logs_"+packageName+"_PID.txt";
 			String filePath2="/home/nikhil/Documents/logs/fromProgram"+packageName+".txt";
 
-/**
- * We are doing a little modification here. So, we are trying to fetch the logs generated only from the pid. So, we are commenting few lines as we don't require filePath2
+			/**
+			 * We are doing a little modification here. So, we are trying to fetch the logs generated only from the pid. So, we are commenting few lines as we don't require filePath2
  Later down the line, if we want end to end analysis, then we have to find some other way as activity, toast related difference can't be seen using the logs generated on the pid.
- */
+			 */
 			String str1=new String(Files.readAllBytes(Paths.get(filePath1)));
 			//System.out.println(str1);
 			String str2=new String(Files.readAllBytes(Paths.get(filePath2)));
@@ -261,7 +270,7 @@ public class LogAnalysis_sameApp {
 		// TODO Auto-generated method stub
 		String query="Insert ignore into AntiRepackagingCheckPresence values ('"+packageName+"','"+c+"','"+remarks+"');";
 		System.out.println(query);
-		
+
 		Statement statement=DataBaseConnect.initialization();
 		statement.executeUpdate(query);
 	}
@@ -350,7 +359,7 @@ public class LogAnalysis_sameApp {
 		String phoneDirectory_1="/data/local/tmp/fromProgrampid.txt";
 		String testFilePath="/data/local/tmp/myfile.txt";
 		String analysingLogsUsingPID=pathToadb+" logcat -v brief -d --pid "+pid+" -f "+testFilePath;// > "+phoneDirectory_1;
-		
+
 		/**
 		 * Pull this file to PC and save it to the  
 		 */
@@ -373,7 +382,7 @@ public class LogAnalysis_sameApp {
 		 */
 		String removeTxtFileCommand=LogAnalysis_sameApp.pathToadb+" shell rm "+testFilePath;
 		CommandExecute.commandExecution(removeTxtFileCommand);
-/*
+		/*
 		BufferedReader buf1 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
 		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		String line="";
