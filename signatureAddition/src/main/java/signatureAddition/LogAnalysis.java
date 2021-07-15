@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import org.json.JSONObject;
+
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.ExecutePython;
 import signatureAddition.pastHardwork.printLogsThroughPID;
@@ -51,6 +53,7 @@ public class LogAnalysis {
 				 */
 
 				resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
+				
 
 				//String pathToModifiedApk="/home/nikhil/Documents/apps/ModifiedApks/"+packageName+".apk";
 
@@ -330,17 +333,67 @@ public class LogAnalysis {
 			writeToFile(filePidOriginalPath,filePidRepackagedPath,fileContentsLogsPidOriginal,fileContentsLogsPidRepackaged);
 
 			int flag=1;
-			HashSet<String> disjointTagsOriginalApps=LogAnalysis_sameApp.sameAppTwoTimesLogAnalysis(pathToOriginalApk);
-			System.out.println("The output of disjoint tags same app run two times:"+disjointTagsOriginalApps);
+			//HashSet<String> disjointTagsOriginalApps=LogAnalysis_sameApp.sameAppTwoTimesLogAnalysis(pathToOriginalApk);
+			//System.out.println("The output of disjoint tags same app run two times:"+disjointTagsOriginalApps);
 
 			String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(filePidOriginalPath);
 			String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(filePidRepackagedPath);
-
-			HashSet<String>disjointTagsOriginalResigned=AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, resignedLogJSONPath, packageName);
+			
+			String 	pathToDisAssembleCodeDirectory="/home/nikhil/Documents/apps/"+packageName;
+			
+			
+			
+			//HashSet<String>disjointTagsOriginalResigned=AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, resignedLogJSONPath, packageName);
 
 			//if(disjointTagsOriginalApps.containsAll(disjointTagsOriginalResigned))
 			//return true;
-			String remarks="Tag Difference: ";
+			
+			String originalTags=new String (Files.readAllBytes(Paths.get(orignalLogJSONPath)));
+			String repackagedTags=new String (Files.readAllBytes(Paths.get(resignedLogJSONPath)));
+
+			JSONObject jsonOriginal = new JSONObject(originalTags);  
+			JSONObject jsonRepackaged = new JSONObject(repackagedTags);  
+
+			String outputOriginalTagsAppPath="/home/nikhil/Documents/apps/TagsLogcatAPK/"+packageName+"_original.txt";
+			String outputRepackagedTagsAppPath="/home/nikhil/Documents/apps/TagsLogcatAPK/"+packageName+"_repackaged.txt";
+
+			
+			/**
+			 * Let's disassemble the apk
+			 */
+			
+			StartingPoint.disassembleApk(pathToOriginalApk, packageName);
+			
+			TagDifferenceWithApk.filterTagsFromLogcatAndApk(jsonOriginal,outputOriginalTagsAppPath,pathToDisAssembleCodeDirectory);
+			TagDifferenceWithApk.filterTagsFromLogcatAndApk(jsonRepackaged,outputRepackagedTagsAppPath,pathToDisAssembleCodeDirectory);
+
+			boolean result=TagDifferenceWithApk.finalComparisonLogAnalysis(outputOriginalTagsAppPath,outputRepackagedTagsAppPath);
+			if(result)
+			{
+				System.out.println("There is difference in the orignal and repackaged logs after we make sure that the tags which are coming in the logs are also the part of the apk");
+				/**
+				 * Update the table with the Remarks "Really there is a tag difference"
+				 */
+				String remarks="Really there is a tag difference ";
+				updateAntiRepackagingCheckPresence(packageName, 'Y', remarks);
+				return result;
+			//	MainLogAnalysisTwoTimes.updateTagDifference(packageName,1);
+			}
+			else
+			{
+				System.out.println("Please proceed for the screen capture analysis");
+				String remarks="Need to capture the screen and find the image difference";
+				updateAntiRepackagingCheckPresence(packageName, 'N', remarks);
+				
+				/**
+				 * Complete this function
+				 */
+				return imageAnalysis(packageName);
+			}
+
+			
+			
+/*			String remarks="Tag Difference: ";
 			Iterator<String> i = disjointTagsOriginalResigned.iterator();
 			flag=0;
 			while (i.hasNext())
@@ -365,10 +418,18 @@ public class LogAnalysis {
 			/**
 			 * For false part we are updating inside the main method
 			 */
+			
 
 		}
 		//return false;
 	}
+
+	public static boolean imageAnalysis(String packageName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 
 	private static void writeToFile(String filePidOriginal, String filePidRepackaged,
 			String fileContentsLogsPidOriginal, String fileContentsLogsPidRepackaged) throws IOException {
@@ -523,8 +584,9 @@ public class LogAnalysis {
 		 */
 
 		checkApkInstall(packageName);
+		
 
-		String clearLogcat=pathToadb+" shell logcat -c";
+		String clearLogcat=pathToadb+" shell logcat -b all -c";
 
 
 
@@ -574,10 +636,10 @@ public class LogAnalysis {
 
 
 			String str1=new String(Files.readAllBytes(Paths.get(filePath1)));
-			System.out.println(str1);
+		//	System.out.println(str1);
 			String str2=new String(Files.readAllBytes(Paths.get(filePath2)));
 			String str3=str1+str2;
-			System.out.println(str2);
+			//System.out.println(str2);
 			//String outputFilePath="/home/nikhil/Documents/logs/universal_"+packageName+".txt";
 			FileWriter fileWriter=new FileWriter(logPathForOutput);
 			fileWriter.write(str3);
@@ -593,17 +655,9 @@ public class LogAnalysis {
 			 */
 			//	CommandExecute.commandExecution(removeFile1);
 			CommandExecute.commandExecution(removeFile2);
-			//CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
 			CommandExecute.commandExecution(clearLogcat);
 
-
 			return str1;
-			//File contents of the logs retrieved using the pid
-			/*
-			File file2=new File(directoryLocationForStoringLogs+"_.txt");
-			file2.createNewFile();*/
-			//so let's remove the two files 
-
 
 		}
 		//return -1;
