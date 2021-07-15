@@ -172,11 +172,11 @@ public class StartingPoint {
 
 	}
 
-	public static void disassembleApk(String fileNamePath, String packageName) throws IOException, InterruptedException {
+	public static void disassembleApk(String apkPath, String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String apktoolCommand="apktool d -r "+fileNamePath+" -f -o /home/nikhil/Documents/apps/"+packageName;
+		String apktoolCommand="apktool d -r "+apkPath+" -f -o /home/nikhil/Documents/apps/"+packageName;
 		System.out.println(apktoolCommand);
-		commandExecution(apktoolCommand);
+		 commandExecution(apktoolCommand);
 		//Process pr1 = Runtime.getRuntime().exec(apktoolCommand);
 		//pr1.waitFor();
 
