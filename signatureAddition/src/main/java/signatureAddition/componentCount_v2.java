@@ -55,6 +55,8 @@ public class componentCount_v2 {
 	private static void writingJSONObjectToFile(JSONObject json, String filePath) throws IOException {
 		// TODO Auto-generated method stub
 		//String filePath="";
+		File file=new File(filePath);
+		file.createNewFile();
 		FileWriter fileWriter=new FileWriter(filePath);
 		fileWriter.write(json.toString());
 		fileWriter.close();

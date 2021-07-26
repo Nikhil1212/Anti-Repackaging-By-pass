@@ -15,12 +15,14 @@ import signatureAddition.DataBaseConnect;
 
 public class AccuracyFind {
 
-	public static void main(String[] args) throws SQLException, IOException {
+	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		//Retrieve the packageNames and store it in a file.
 		Statement statement=DataBaseConnect.initialization();
 		//statement.close();
 		File file=fetchPackageNamesFromDataBase(statement);
+		Thread.sleep(10000);
+		
 		String falseResultsPath="/home/nikhil/Documents/apps/falseResults.txt";
 		String falsePositiveResultsPath="/home/nikhil/Documents/apps/falsePositiveResults.txt";
 		String falseNegativeResultsPath="/home/nikhil/Documents/apps/falseNegativeResults.txt";
@@ -73,7 +75,7 @@ public class AccuracyFind {
 
 	private static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String query ="Select packageName from ManualResults;";
+		String query ="Select packageName from FrontEnd_2 where IsCheckPresent ='N';";
 		ResultSet resultSet=statement.executeQuery(query);
 		String FileContents="";
 		while (resultSet.next()) {
@@ -81,7 +83,7 @@ public class AccuracyFind {
 			System.out.println(packageName);
 			FileContents=FileContents+packageName+"\n";
 		}
-		String FilePath="/home/nikhil/Documents/apps/packageNames_2.txt";
+		String FilePath="/home/nikhil/Documents/apps/LastRun.txt";
 
 		File file=new File(FilePath);
 		file.createNewFile();

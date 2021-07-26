@@ -13,9 +13,6 @@ import signatureAddition.DataBaseConnect;
 public class fileAnalysisDumpSys {
 
 	 public static void dumpSysFileAnalysis(String filePath, String flag,String packageName) throws Exception{
-		//String filePath="/home/nikhil/Documents/apps/dumpsys/in.org.npci.upiapp.txt";
-		//String packageName="in.org.npci.upiapp";
-		//String flag="Original";
 		String fileContents=new String(Files.readAllBytes(Paths.get(filePath)));
 		String object_TableName="DumpSysObjectAnalysis"+flag;
 		
@@ -182,7 +179,6 @@ public class fileAnalysisDumpSys {
 			System.out.println("Successfully updated the database");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

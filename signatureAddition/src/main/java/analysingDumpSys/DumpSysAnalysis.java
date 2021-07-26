@@ -19,7 +19,6 @@ import java.util.Scanner;
 
 import signatureAddition.*;
 import signatureAddition.pastHardwork.printLogsThroughPID;
-import signatureAddition.pastHardwork.restartSmartphone;
 
 public class DumpSysAnalysis {
 
@@ -34,7 +33,7 @@ public class DumpSysAnalysis {
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		//		ExecutePython.downloadApks(FilePath);
-
+		int count=0;
 		while(scanner.hasNext())
 		{
 			try
@@ -46,7 +45,7 @@ public class DumpSysAnalysis {
 				String pathToDumpsysRepackagedPC="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_repackaged.txt";
 				String pathToDumpsysOriginalPC2="/home/nikhil/Documents/apps/dumpsys/"+packageName+"_original2.txt";
 
-				restartSmartphone.restart();
+//				restartSmartphone.restart();
 
 				appLaunch(pathToOriginalApk);
 				String pathToDumpSysOutputSmartphoneOriginal="/data/local/tmp/dumpsysOriginal.txt";
@@ -60,9 +59,7 @@ public class DumpSysAnalysis {
 				String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
 				resignedApp.signApk(packageName, pathToOriginalApk, pathToResignedApk);
 
-				//StartingPoint.signApk(packageName, pathToResignedApk);
-				restartSmartphone.restart();
-
+				
 				printLogsThroughPID.initializationADB();
 
 				appLaunch(pathToResignedApk);
@@ -78,14 +75,13 @@ public class DumpSysAnalysis {
 
 				fileAnalysisDumpSys.dumpSysFileAnalysis(pathToDumpsysRepackagedPC, "Repackaged", packageName);
 				fileAnalysisDumpSys.dumpSysFileAnalysis(pathToDumpsysOriginalPC, "Original", packageName);
-				restartSmartphone.restart();
+			//	restartSmartphone.restart();
 				appLaunch(pathToOriginalApk);
 				dumpsysCommand=LogAnalysis.pathToadb+" shell dumpsys meminfo '"+packageName+"' -d > /data/local/tmp/dumpsysOriginal.txt";//+pathToDumpSysOutputSmartphoneOriginal;
 
 				System.out.println(dumpsysCommand);
 				process= CommandExecute.commandExecution(dumpsysCommand);
 				pullTheFileToPC(pathToDumpsysOriginalPC2,pathToDumpSysOutputSmartphoneOriginal);
-
 
 				//updateDumpSysObjectAnalysisOriginal(packageName,dataMembersRepackaged,"DumpSysObjectAnalysisRepackaged");
 
@@ -96,9 +92,12 @@ public class DumpSysAnalysis {
 				//CommandExecute.commandExecution("rm "+pathToOriginalApk);
 			}
 			catch (Exception e) {
-				// TODO: handle exception
+			
 				e.printStackTrace();
 			}
+			
+			if(count>=15)
+				break;
 
 		}
 
@@ -111,7 +110,7 @@ public class DumpSysAnalysis {
 		Process process=CommandExecute.commandExecution(pullCommand);
 
 		/**
-		 * 
+		 *
 		 * Let's remove the files...
 		 */
 		String removeFilecommand=LogAnalysis.pathToadb+" shell rm "+pathToDumpSysOutputSmartphone;
@@ -199,6 +198,7 @@ public class DumpSysAnalysis {
 		CommandExecute.commandExecution(pushApkCommand);
 
 		CommandExecute.commandExecution(installThroughPMCommand);
+		LogAnalysis.checkApkInstall(packageName);
 		/**
 		 * We are using pm as we want to give all the permission an app wants during the installation time
 		 */
@@ -213,7 +213,7 @@ public class DumpSysAnalysis {
 		 * Let's uninstall the app
 		 */
 
-		String clearLogcat=pathToadb+" shell logcat -c";
+		String clearLogcat=pathToadb+" shell logcat -b all -c";
 
 
 
@@ -223,6 +223,7 @@ public class DumpSysAnalysis {
 
 		launchTheApp(packageName,pathToApkFromPC);
 
+		
 	}
 
 	private static void updateCounts(String packageName, dataMembers dataMembersOriginal,
@@ -577,39 +578,15 @@ public class DumpSysAnalysis {
 
 		String fetchLauncherActivity= pathToadb+" shell \"cmd package resolve-activity --brief ";	//packageName | tail -n 1\";
 		fetchLauncherActivity=fetchLauncherActivity + packageName +" | tail -n 1\"";
-		// strcat (fetchLauncherActivity, " | tail -n 1\"");
+		
 		System.out.println(fetchLauncherActivity);
-		//String pathToApk=null;
 		String fetchOutputOfAapt=pathToaapt+" dump badging "+pathToApk;
 		Process  process=CommandExecute.commandExecution(fetchOutputOfAapt);
-		String line="";
-		String patternForLaunchableActivity="launchable-activity: name='";
-		// adb shell monkey -p in.amazon.mShop.android.shopping -c android.intent.category.LAUNCHER 1
+		
 		String launchableActivityCommand=pathToadb+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
-		BufferedReader buf2 = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-		System.out.println("Before while loop");
+		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		/*	while ((line=buf2.readLine())!=null) {
-			if(line.contains(patternForLaunchableActivity))
-			{
-				//fetch the launcher activity name
-				String temp=line.substring(patternForLaunchableActivity.length());
-				//we are trimming it.
-				int index=temp.indexOf("'");
-				launchableActivityCommand=launchableActivityCommand.concat(temp.substring(0,index));
-				System.out.println(launchableActivityCommand);
-				CommandExecute.commandExecution(launchableActivityCommand);
-				break;
-			}
-			else 
-				continue;
-			//as in the first line only we can get the package name.That's why immeditate break;
-			//	Files.write(Paths.get(filePath), (line+"\n").getBytes(),  StandardOpenOption.APPEND);
-		}*/
-		buf2.close();
-
-		Thread.sleep(15000);
+		Thread.sleep(60000);
 	}
 
 	private static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
