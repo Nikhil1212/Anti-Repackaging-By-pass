@@ -30,8 +30,9 @@ public class ClassMethodLogInsertion {
 				temp=logInsertion(temp,codeToBeInserted,pattern);
 			
 				ans=ans+temp.substring(0,temp.indexOf(pattern)+pattern.length());
-				//System.out.println(temp);
+				
 				index=temp.indexOf(pattern);
+				
 				temp=temp.substring(index+pattern.length());
 			}
 		//	System.out.println("value for the count is :"+count);
@@ -99,7 +100,7 @@ public class ClassMethodLogInsertion {
 			//return null;
 		}
 
-		public static String fetchMethodName(String fileContents, String pattern) throws Exception {
+		public static String fetchMethodName(String fileContents, String pattern) {
 
 			/**
 			 * Assuming there is only one pattern in the filecontents Given
@@ -107,13 +108,7 @@ public class ClassMethodLogInsertion {
 
 			//	String fileContents=new String(Files.readAllBytes(Paths.get(filePath)));
 			int index=fileContents.indexOf(pattern);
-			if(index==-1)
-			{
-				throw new Exception("Couldn't find the pattern. Check your logic once more");
-
-			}
-			else
-			{
+			
 				String tempStr=fileContents.substring(0, index);
 				index=tempStr.lastIndexOf(".method");
 				int i;
@@ -130,7 +125,7 @@ public class ClassMethodLogInsertion {
 				}
 				int startPoint=i+1;
 				return tempStr.substring(startPoint,endPoint);
-			}
+			
 
 		}
 

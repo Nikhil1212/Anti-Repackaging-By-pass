@@ -177,9 +177,7 @@ public class StartingPoint {
 		String apktoolCommand="apktool d -r "+apkPath+" -f -o /home/nikhil/Documents/apps/"+packageName;
 		System.out.println(apktoolCommand);
 		 commandExecution(apktoolCommand);
-		//Process pr1 = Runtime.getRuntime().exec(apktoolCommand);
-		//pr1.waitFor();
-
+		
 	}
 	public static String buildApk(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub

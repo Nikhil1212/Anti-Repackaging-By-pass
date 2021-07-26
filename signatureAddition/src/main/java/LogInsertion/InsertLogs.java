@@ -22,6 +22,7 @@ import signatureAddition.DataBaseConnect;
 import signatureAddition.FileNamesForSignatureAddition;
 import signatureAddition.LogAnalysis;
 import signatureAddition.StartingPoint;
+import signatureAddition.ValidFilesForCodeInjection;
 
 public class InsertLogs {
 
@@ -30,25 +31,26 @@ public class InsertLogs {
 		/**
 		 * Take the packageName as an input from the file
 		 */
-		String FilePath="/home/nikhil/Documents/apps/packageNames_2.txt";
+		String FilePath="/home/nikhil/Documents/apps/AppsWithLogInsertion.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		//		ExecutePython.downloadApks(FilePath);
+		int count=0;
 		while(scanner.hasNext())
 		{
 			String packageName="";
 			int numberOfLogsInserted = -1;
 			String pathToDisAssembleCodeDirectory="";
-			try
-			{
+		//	try
+			//{
 				 packageName=scanner.next();
-				String pathToOriginalApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
+				 String pathToOriginalApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
 
-
+				 count++;
 				/**
 				 * Disassemble the apk
 				 */
-
+				 
 				StartingPoint.disassembleApk(pathToOriginalApk, packageName);
 				
 				 pathToDisAssembleCodeDirectory="/home/nikhil/Documents/apps/"+packageName;
@@ -87,16 +89,20 @@ public class InsertLogs {
 				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
 				
 				StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory);
-			}
-			catch (Exception e) {
+		//	}
+			/*catch (Exception e) {
 				// TODO: handle exception
+				System.out.println("Caught inside the catch block");
 				updateLogInsertionTable(packageName,numberOfLogsInserted,-1);
 				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
 				
 				StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory);
 				e.printStackTrace();
-			}
-
+			}*/
+			
+			/*if(count>=5)
+				break;*/
+//			CommandExecute.commandExecution("rm "+pathToOriginalApk);
 		}
 
 	}
@@ -150,8 +156,6 @@ public class InsertLogs {
 		List<String> signatureMethodList=new ArrayList<String>();
 		signatureMethodList=FileNamesForSignatureAddition.listInitializationForSignaturePattern(signatureMethodList);
 
-
-
 		//for each of the signature method fetch the files and then insert the method
 		int count=0;
 		for(int i=0;i<signatureMethodList.size();i++)
@@ -163,6 +167,7 @@ public class InsertLogs {
 			System.out.println(variousFilesPath);
 			
 			Iterator<String> iterator = variousFilesPath.iterator();
+			
 			while (iterator.hasNext())
 			{
 				String filePath=iterator.next();
@@ -183,8 +188,11 @@ public class InsertLogs {
 		while(line!=null)
 		{
 			//System.out.println(line);
-			validFiles.add(line);
-
+			if(ValidFilesForCodeInjection.fileCheck(line))
+			{
+				validFiles.add(line);
+			}
+	
 			line=bufferedReader.readLine();
 		}
 		System.out.println("List of valid files :"+validFiles);

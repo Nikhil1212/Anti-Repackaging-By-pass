@@ -26,6 +26,8 @@ public class ActivityAnalysis {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
+	
+	
 	public static void main(String[] args) throws FileNotFoundException {
 
 		String FilePath="/home/nikhil/Documents/apks/cedgeTechno/packageNames.txt";
@@ -67,19 +69,7 @@ public class ActivityAnalysis {
 				//updateCounts(packageName,dataMembersOriginal,dataMembersResigned);
 
 				System.out.println(" *******************\n****************\n**************");
-				/*String fileContents=new String(Files.readAllBytes(Paths.get(logPathForResignedApp)));
-				System.out.println(fileContents);
-				if(modifedCount==-1)
-					continue;
-				printLogsThroughPID.initializationADB();
-				*/
-				/*
-				String orignalLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp);
-				String orignalLogJSONPath2=removeDuplicateLogsStatement.removeduplicateLogs(logPathForOriginalApp2);
-				//String resignedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForResignedApp);
-				//String modifiedLogJSONPath=removeDuplicateLogsStatement.removeduplicateLogs(logPathForModifiedApp);
-				AnalysingJSON.analyseJSONSameApps(orignalLogJSONPath, orignalLogJSONPath2,packageName);//, modifiedLogJSONPath);*/
-				//CommandExecute.commandExecution(pathToadb+" uninstall "+packageName);
+				
 			}
 			catch (Exception e) {
 				// TODO: handle exception

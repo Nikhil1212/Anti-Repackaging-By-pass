@@ -16,7 +16,7 @@ public class ManualAnalysis {
 		// TODO Auto-generated method stub
 		String FilePath="/home/nikhil/Documents/apps/packageNames_1.txt";
 		String hello[]= {"12","34"};
-		RenameApk.main(hello);
+		SQLJavaInterface.main(hello);
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		Statement statement=DataBaseConnect.initialization();
