@@ -12,13 +12,13 @@ import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.StartingPoint;
 
-public class RenameApk {
+public class SQLJavaInterface {
 
 	public static void main(String[] args) throws IOException, Exception {
 		// TODO Auto-generated method stub
 		//changeApkNameToPackageName();
 		System.out.println("Hi you called me");
-		Thread.sleep(10000);
+	//	Thread.sleep(10000);
 		Statement statement=DataBaseConnect.initialization();
 		fetchPackageNamesFromDataBase(statement);
 		
@@ -40,7 +40,8 @@ public class RenameApk {
 	}
 	public static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String query ="Select packageName from InstallableApps where IsInstallable='N' ;";
+		String query ="Select packageName from antiTamperingCheckModified_v2 where isCheckPresent='N'";
+		
 		ResultSet resultSet=statement.executeQuery(query);
 		String FileContents="";
 		while (resultSet.next()) {
@@ -48,7 +49,7 @@ public class RenameApk {
 			System.out.println(packageName);
 			FileContents=FileContents+packageName+"\n";
 		}
-		String FilePath="/home/nikhil/Documents/apps/InvalidAppsPackageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/DataSet_ImageAnalysis_PackageNames.txt";
 
 		File file=new File(FilePath);
 		file.createNewFile();
