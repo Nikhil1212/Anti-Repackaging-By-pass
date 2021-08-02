@@ -24,7 +24,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		String FilePath="/home/nikhil/Documents/apps/LastRun.txt";
+		String FilePath="/home/nikhil/Downloads/googleplay-api-master/packageNames.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 //		ExecutePython.downloadApks(FilePath);
@@ -33,6 +33,8 @@ public class Main {
 		{
 			String packageName="";
 			String pathToDisAssembleCodeDirectory="";
+			String pathToResignedApk="";
+
 			try
 			{
 				packageName=scanner.next();
@@ -61,7 +63,7 @@ public class Main {
 				 */
 
 
-			/*	DumpSysAnalysis.appLaunch(pathToOriginalApk);
+				DumpSysAnalysis.appLaunch(pathToOriginalApk);
 
 				dumpScreenXml(uiDump_orignal2Path,packageName);
 
@@ -70,11 +72,11 @@ public class Main {
 
 				boolean result=checkTwoUI_XMLSame(uiDump_orignal1Path,uiDump_orignal2Path);
 				if(result)
-				{*/
+				{
 					/**
 					 * Proceed in launching the repackaged version and see the difference
 					 */
-					String pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
+					 pathToResignedApk="/home/nikhil/Documents/apps/ReSignedApks/"+packageName+".apk";
 
 					/**
 					 * Creating resigned version
@@ -93,7 +95,7 @@ public class Main {
 
 					//screenCapture.captureScreen(image_repackagedPath, packageName);
 
-					boolean result=checkTwoUI_XMLSame(uiDump_orignal1Path,uiDump_repackagedPath);
+					 result=checkTwoUI_XMLSame(uiDump_orignal1Path,uiDump_repackagedPath);
 					if(result)
 					{
 						String remarks="No difference in the behaviour of the original and repackaged app atleast from front-end";
@@ -118,19 +120,18 @@ public class Main {
 					}
 
 
-				/*}
+				}
 				else
 				{
 					String remarks="Difference in the two UI xml dump files when the same App was run two times";
 					/**
 					 * Need to change our way of analysis
-					 
+				*/	 
 
 					updateTable(packageName,'E',remarks);
 
-				}*/
-					CommandExecute.commandExecution("rm "+pathToResignedApk);
-					CommandExecute.commandExecution("rm /home/nikhil/Documents/apps/ReSignedApks/*.idsig");
+				}
+					
 
 			}	
 			catch (Exception e) {
@@ -139,7 +140,13 @@ public class Main {
 				updateTable(packageName,'E',"Caught in the catch block");
 
 			}
-			CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
+			finally {
+				CommandExecute.commandExecution("rm "+pathToResignedApk);
+				CommandExecute.commandExecution("rm /home/nikhil/Documents/apps/ReSignedApks/*.idsig");
+				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
+
+			}
+			
 
 			count++;
 		System.out.println("Number of packages Scanned is :"+count);
@@ -148,7 +155,7 @@ public class Main {
 
 	private static void updateTable(String packageName, char c, String remarks) throws Exception{
 
-		String checkQuery="Select * from FrontEnd_3 where packageName='"+packageName+"';";
+		String checkQuery="Select * from pixelAnalysis where packageName='"+packageName+"';";
 		System.out.println(checkQuery);
 		Statement statement1=DataBaseConnect.initialization();
 		ResultSet  resultSet=statement1.executeQuery(checkQuery);
@@ -160,7 +167,7 @@ public class Main {
 		}
 		if(flag==0)
 		{
-			String query="Insert into FrontEnd_3 values ('"+packageName+"','"+c+"','"+remarks+"');";
+			String query="Insert into pixelAnalysis values ('"+packageName+"','"+c+"','"+remarks+"');";
 			System.out.println(query);
 
 			Statement statement=DataBaseConnect.initialization();
@@ -168,7 +175,7 @@ public class Main {
 		}
 		else
 		{
-			String query="Update FrontEnd_3 set IsCheckPresent ='"+c+"', Remarks='"+remarks+"' where packageName='"+packageName+"';";
+			String query="Update pixelAnalysis set IsCheckPresent ='"+c+"', Remarks='"+remarks+"' where packageName='"+packageName+"';";
 			System.out.println(query);
 			Statement statement=DataBaseConnect.initialization();
 			statement.executeUpdate(query);
