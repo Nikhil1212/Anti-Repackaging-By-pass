@@ -586,7 +586,7 @@ public class DumpSysAnalysis {
 		String launchableActivityCommand=pathToadb+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		Thread.sleep(60000);
+		Thread.sleep(90000);
 	}
 
 	private static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
