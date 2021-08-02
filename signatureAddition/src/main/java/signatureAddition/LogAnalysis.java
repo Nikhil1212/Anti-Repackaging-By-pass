@@ -783,7 +783,7 @@ public class LogAnalysis {
 
 		//buf2.close();
 
-		Thread.sleep(20000);
+		Thread.sleep(10000);
 	}
 
 	private static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
