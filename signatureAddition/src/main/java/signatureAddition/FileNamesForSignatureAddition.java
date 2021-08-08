@@ -71,6 +71,9 @@ public class FileNamesForSignatureAddition {
 		list.add("Landroid/content/pm/Signature;->toChars()");
 		list.add("Landroid/content/pm/Signature;->getChainSignatures()");
 		list.add("Landroid/content/pm/Signature;->hashCode()");
+		list.add("Landroid/content/pm/SigningInfo;->hasMultipleSigners()");
+		list.add("Landroid/content/pm/SigningInfo;->getApkContentsSigners()");
+		list.add("Landroid/content/pm/SigningInfo;->getSigningCertificateHistory()");
 		
 		return list;
 	}
