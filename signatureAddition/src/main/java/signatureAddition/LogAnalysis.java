@@ -754,36 +754,19 @@ public class LogAnalysis {
 
 		String fetchLauncherActivity= pathToadb+" shell \"cmd package resolve-activity --brief ";	//packageName | tail -n 1\";
 		fetchLauncherActivity=fetchLauncherActivity + packageName +" | tail -n 1\"";
-		// strcat (fetchLauncherActivity, " | tail -n 1\"");
+		
 		System.out.println(fetchLauncherActivity);
-		//String pathToApk=null;
 		String fetchOutputOfAapt=pathToaapt+" dump badging "+pathToApk;
+		
 		Process  process=CommandExecute.commandExecution(fetchOutputOfAapt);
 		String launchableActivityCommand=pathToadb+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
+		
 		System.out.println(launchableActivityCommand);
 		CommandExecute.commandExecution(launchableActivityCommand);
 
-		BufferedReader buf2 = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-		/*	System.out.println("Before while loop");
-		while ((line=buf2.readLine())!=null) {
-			if(line.contains(patternForLaunchableActivity))
-			{
-				//fetch the launcher activity name
-				String temp=line.substring(patternForLaunchableActivity.length());
-				//we are trimming it.
-				int index=temp.indexOf("'");
-				launchableActivityCommand=launchableActivityCommand.concat(temp.substring(0,index));
-				break;
-			}
-			else 
-				continue;*/
-		//as in the first line only we can get the package name.That's why immeditate break;
-		//	Files.write(Paths.get(filePath), (line+"\n").getBytes(),  StandardOpenOption.APPEND);
+		
 
-		//buf2.close();
-
-		Thread.sleep(10000);
+		Thread.sleep(15000);
 	}
 
 	private static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
@@ -817,17 +800,7 @@ public class LogAnalysis {
 		 */
 		String removeTxtFileCommand=LogAnalysis.pathToadb+" shell rm "+testFilePath;
 		CommandExecute.commandExecution(removeTxtFileCommand);
-		/*
-		BufferedReader buf1 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
-		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-		String line="";
-
-		while ((line=buf1.readLine())!=null) {
-			//as in the first line only we can get the package name.That's why immeditate break;
-			Files.write(Paths.get(filePath), (line+"\n").getBytes(),  StandardOpenOption.APPEND);
-			System.out.println(line);
-		}
-		buf1.close();*/
+	
 
 	}
 
