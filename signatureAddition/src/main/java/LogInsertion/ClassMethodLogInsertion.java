@@ -15,14 +15,29 @@ public class ClassMethodLogInsertion {
 			String ans="";
 			String tag=fetchTagForInsertionClassName(filePath);
 		//	int count=0;
+			String methodName="";
 			while(temp.indexOf(pattern)!=-1)
 			{
 				count++;
 				int index=temp.indexOf(pattern);
 				
 				
-				String methodName=fetchMethodName(temp, pattern);
+				methodName=fetchMethodName(temp, pattern);
 				
+				if(methodName==null)
+				{
+					/**
+					 * It means for this method, already the logs has been inserted.
+					 */
+					int indexScanned=temp.indexOf(pattern)+pattern.length();
+					ans=ans+temp.substring(0,indexScanned);
+					
+					//index=temp.indexOf(pattern);
+					
+					temp=temp.substring(indexScanned);
+					continue;
+	
+				}
 				String codeToBeInserted=logGenerationCode(tag,methodName);
 				
 				System.out.println(codeToBeInserted); //now this is our wordToBeInserted
@@ -111,6 +126,8 @@ public class ClassMethodLogInsertion {
 			
 				String tempStr=fileContents.substring(0, index);
 				index=tempStr.lastIndexOf(".method");
+				if(index==-1)
+					return null;
 				int i;
 				for(i=index;tempStr.charAt(i)!='\n';i++)
 				{
