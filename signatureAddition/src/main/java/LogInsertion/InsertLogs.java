@@ -31,7 +31,7 @@ public class InsertLogs {
 		/**
 		 * Take the packageName as an input from the file
 		 */
-		String FilePath="/home/nikhil/Documents/apps/AppsWithLogInsertion.txt";
+		String FilePath="/home/nikhil/Documents/apps/packageNames_2.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		//		ExecutePython.downloadApks(FilePath);
@@ -40,9 +40,10 @@ public class InsertLogs {
 		{
 			String packageName="";
 			int numberOfLogsInserted = -1;
+			String buildApkPath="";
 			String pathToDisAssembleCodeDirectory="";
-		//	try
-			//{
+			try
+			{
 				 packageName=scanner.next();
 				 String pathToOriginalApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
 
@@ -58,7 +59,7 @@ public class InsertLogs {
 
 				 numberOfLogsInserted =executeGrepForEachPattern(packageName,pathToDisAssembleCodeDirectory);
 
-				String buildApkPath= StartingPoint.buildApk(packageName);
+				 buildApkPath= StartingPoint.buildApk(packageName);
 
 				StartingPoint.signApk(packageName, buildApkPath);
 
@@ -86,23 +87,22 @@ public class InsertLogs {
 				 * Insert into the database
 				 */
 				updateLogInsertionTable(packageName,numberOfLogsInserted,numberOfLogsExexcuted);
-				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
 				
-				StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory);
-		//	}
-			/*catch (Exception e) {
+			}
+			catch (Exception e) {
 				// TODO: handle exception
 				System.out.println("Caught inside the catch block");
 				updateLogInsertionTable(packageName,numberOfLogsInserted,-1);
-				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
-				
-				StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory);
 				e.printStackTrace();
-			}*/
+			}
+			finally {
+				CommandExecute.commandExecution("rm "+buildApkPath);
+				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
+				StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory); 
+				System.out.println("Number of apps scanned is :"+count);
+			}
 			
-			/*if(count>=5)
-				break;*/
-//			CommandExecute.commandExecution("rm "+pathToOriginalApk);
+			
 		}
 
 	}
