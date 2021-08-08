@@ -75,7 +75,7 @@ public class AccuracyFind {
 
 	private static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String query ="Select packageName from FrontEnd_2 where IsCheckPresent ='N';";
+		String query ="Select logsInsertion.packageName  from logsInsertion,ManualResults where logsInsertion.packageName = ManualResults.packageName and logsInsertion.NumberOfLogsExecuted > 0 and ManualResults.IsCheckPresent = 'N';";
 		ResultSet resultSet=statement.executeQuery(query);
 		String FileContents="";
 		while (resultSet.next()) {
@@ -83,7 +83,7 @@ public class AccuracyFind {
 			System.out.println(packageName);
 			FileContents=FileContents+packageName+"\n";
 		}
-		String FilePath="/home/nikhil/Documents/apps/LastRun.txt";
+		String FilePath="/home/nikhil/Documents/apps/FilteredApps.txt";
 
 		File file=new File(FilePath);
 		file.createNewFile();
