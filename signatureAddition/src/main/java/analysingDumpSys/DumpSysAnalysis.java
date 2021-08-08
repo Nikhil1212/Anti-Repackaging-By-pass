@@ -23,7 +23,7 @@ import signatureAddition.pastHardwork.printLogsThroughPID;
 public class DumpSysAnalysis {
 
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
-	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
+	public static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
 	public static String toastKilled="Toast already killed"; 
 
 
@@ -164,7 +164,6 @@ public class DumpSysAnalysis {
 			System.out.println("Successfully updated the database");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -221,7 +220,7 @@ public class DumpSysAnalysis {
 
 		CommandExecute.commandExecution(clearLogcat);
 
-		launchTheApp(packageName,pathToApkFromPC);
+		launchTheApp(packageName);
 
 		
 	}
@@ -470,7 +469,7 @@ public class DumpSysAnalysis {
 
 		CommandExecute.commandExecution(clearLogcat);
 
-		launchTheApp(packageName,pathToApkFromPC);
+		launchTheApp(packageName);
 		/**
 		 * The second arguement required is to fetch the launcher activity of the app
 		 */
@@ -573,20 +572,12 @@ public class DumpSysAnalysis {
 
 	}
 
-	public static void launchTheApp(String packageName, String pathToApk) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-
-		String fetchLauncherActivity= pathToadb+" shell \"cmd package resolve-activity --brief ";	//packageName | tail -n 1\";
-		fetchLauncherActivity=fetchLauncherActivity + packageName +" | tail -n 1\"";
-		
-		System.out.println(fetchLauncherActivity);
-		String fetchOutputOfAapt=pathToaapt+" dump badging "+pathToApk;
-		Process  process=CommandExecute.commandExecution(fetchOutputOfAapt);
-		
+	public static void launchTheApp(String packageName) throws IOException, InterruptedException {
+	
 		String launchableActivityCommand=pathToadb+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		Thread.sleep(90000);
+		Thread.sleep(10000);
 	}
 
 	private static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
