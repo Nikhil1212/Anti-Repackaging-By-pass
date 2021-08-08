@@ -40,7 +40,7 @@ public class StartingPoint {
 				System.out.println(signCertificateKey);
 				
 				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
-				//fetchCertificateKey.codeInjection();
+
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
 				fileNameFetch(packageName);
