@@ -1,30 +1,32 @@
 package signatureAddition;
+/**
+ * This class takes the package name as an input and it will insert the original certificate details of the app to by-pass the certificate validation present in the app.
+ */
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
-
+import installerVerficationByPass.*;
 public class StartingPoint {
 	public static String apksigner="/home/nikhil/Android/Sdk/build-tools/30.0.2/apksigner";
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		int i=0;
-		//String fileNamePath="/home/nikhil/Documents/apks/equitas.apk";
-		//basicGrepCommand();
-		//String pathToApk="/home/nikhil/Documents/apps/pathToApps_1.txt";
-		String pathToApk="/home/nikhil/Documents/apps/pathtoApps_2.txt";
+		String pathToApk="/home/nikhil/Documents/apps/InstallerVerificationApps.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
 		{
 			try
 			{
-				String fileNamePath=scanner.next();
+				
+				String packageName=scanner.next();
+				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
-				String packageName=getPackageName(fileNamePath);
+				//String packageName=getPackageName(fileNamePath);
 				//System.out.println("Checking whehther you can see me over github");
 				
 				String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
@@ -40,7 +42,9 @@ public class StartingPoint {
 				System.out.println(signCertificateKey);
 				
 				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
-
+				
+				StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+				
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
 				fileNameFetch(packageName);
