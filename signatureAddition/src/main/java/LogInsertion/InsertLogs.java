@@ -31,7 +31,7 @@ public class InsertLogs {
 		/**
 		 * Take the packageName as an input from the file
 		 */
-		String FilePath="/home/nikhil/Documents/apps/packageNames_2.txt";
+		String FilePath="/home/nikhil/Documents/apps/packageNames_3.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		//		ExecutePython.downloadApks(FilePath);
@@ -45,7 +45,7 @@ public class InsertLogs {
 			try
 			{
 				 packageName=scanner.next();
-				 String pathToOriginalApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
+				 String pathToOriginalApk="/home/nikhil/Documents/apps/dataset/"+packageName+"/base_3_logInserted.apk";
 
 				 count++;
 				/**
@@ -96,9 +96,9 @@ public class InsertLogs {
 				e.printStackTrace();
 			}
 			finally {
-				CommandExecute.commandExecution("rm "+buildApkPath);
-				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
-				StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory); 
+			//	CommandExecute.commandExecution("rm "+buildApkPath);
+				//CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
+				//StartingPoint.removeDirectory(pathToDisAssembleCodeDirectory); 
 				System.out.println("Number of apps scanned is :"+count);
 			}
 			
@@ -188,10 +188,11 @@ public class InsertLogs {
 		while(line!=null)
 		{
 			//System.out.println(line);
-			if(ValidFilesForCodeInjection.fileCheck(line))
+			/*if(ValidFilesForCodeInjection.fileCheck(line))
 			{
 				validFiles.add(line);
-			}
+			}*/
+			validFiles.add(line);
 	
 			line=bufferedReader.readLine();
 		}

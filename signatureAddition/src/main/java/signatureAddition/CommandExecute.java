@@ -8,6 +8,7 @@ public class CommandExecute {
 
 	public static Process commandExecution(String string) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
+		System.out.println("command to be executed is :"+string);
 		Process pr = Runtime.getRuntime().exec(string);
 		
 		pr.waitFor();

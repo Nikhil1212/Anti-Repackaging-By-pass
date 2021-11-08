@@ -14,9 +14,11 @@ import org.apache.commons.codec.binary.Hex;
 
 public class fetchCertificateKey {
 
-	/*public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String pathToRSA="/home/nikhil/Documents/com.jio.myjio/original/META-INF/BNDLTOOL.RSA";
+		String pathToRSA="/home/nikhil/Documents/apps/dataset/com.sbi.SBIFreedomPlus/final/original/META-INF/SBFREEDO.RSA";
+		getCertificateInHex(pathToRSA, "com.sbi.SBIFreedomPlus");
+		System.exit(0);
 		String packageName="com.jio.myjio";
 		String pathToCert="/home/nikhil/"+packageName+".pem";
 		String commandToFetchCertificateFromRSA="openssl pkcs7 -in "+ pathToRSA+ " -inform DER -print_certs -out "+pathToCert;
@@ -30,7 +32,7 @@ public class fetchCertificateKey {
 				String hexString = Hex.encodeHexString(decoded);
 				System.out.println(hexString);
 
-	}*/
+	}
 	public static String getCertificateInHex(String pathToRSA, String packageName) throws IOException, InterruptedException {
 		//	String certificate="";
 		//simple modification
