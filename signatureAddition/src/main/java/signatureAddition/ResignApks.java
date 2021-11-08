@@ -9,13 +9,15 @@ public class ResignApks {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String filePath="/home/nikhil/Downloads/googleplay-api-master/com.icicibank.fastag-WegEvBG1dfVI-BfqNCUa4g==/repackagedApk/filePath.txt";
+		String filePath="/home/nikhil/Documents/apps/cradlewise/com.cradlewise.nini.app-ifRVrBrdtpvR0oLT7nnr6w==/apkPath.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
+		int ctr=1;
 		while(scanner.hasNext())
 		{
 			String apkPath=scanner.next();
-			StartingPoint.signApk("packageName", apkPath);
+			StartingPoint.signApk("packageName"+ctr, apkPath);
+			ctr++;
 		}
 	}
 
