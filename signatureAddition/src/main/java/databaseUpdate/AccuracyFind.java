@@ -75,7 +75,7 @@ public class AccuracyFind {
 
 	private static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String query ="Select logsInsertion.packageName  from logsInsertion,ManualResults where logsInsertion.packageName = ManualResults.packageName and logsInsertion.NumberOfLogsExecuted > 0 and ManualResults.IsCheckPresent = 'N';";
+		String query ="Select ResourceId_UIAutomator_packageName_2.packageName from ResourceId_UIAutomator_packageName_2,ManualResults where ManualResults.packageName = ResourceId_UIAutomator_packageName_2.packageName and ManualResults.IsCheckPresent ='N' and ManualResults.IsCheckPresent != ResourceId_UIAutomator_packageName_2.IsCheckPresent;";
 		ResultSet resultSet=statement.executeQuery(query);
 		String FileContents="";
 		while (resultSet.next()) {
