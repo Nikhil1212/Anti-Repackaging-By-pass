@@ -9,28 +9,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 import installerVerficationByPass.*;
+import overwriteStrings.StartingPoint_RootDetection;
 public class StartingPoint {
 	public static String apksigner="/home/nikhil/Android/Sdk/build-tools/30.0.2/apksigner";
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		int i=0;
-		String pathToApk="/home/nikhil/Documents/apps/InstallerVerificationApps.txt";
+		String pathToApk="/home/nikhil/Documents/apps/InstallerVerification_2.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
 		{
 			try
 			{
-				
+
 				String packageName=scanner.next();
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
 				//System.out.println("Checking whehther you can see me over github");
-				
+
 				String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
-				
+
 				System.out.println(packageName);
 
 				//package name is retrieved using aapt 
@@ -40,11 +41,15 @@ public class StartingPoint {
 
 				String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
 				System.out.println(signCertificateKey);
-				
+
 				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
-				
+
 				StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
-				
+
+				StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+
+				StartingPoint_RootDetection.main(pathToDisAssembleCode);
+
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
 				fileNameFetch(packageName);
@@ -55,9 +60,9 @@ public class StartingPoint {
 			{
 				e.printStackTrace();
 			}
-			
+
 		}
-			}
+	}
 
 	public static void removeDirectory(String pathToDisAssembleCode) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
@@ -75,18 +80,18 @@ public class StartingPoint {
 		// TODO Auto-generated method stub
 		//String grep="/bin/sh -c grep -rwn -l \"ICSE\" /home/nikhil/Documents/testGrep/";
 		//String grep="/bin/grep -rwn -l \"ICSE\" /home/nikhil/Documents/testGrep/";
-	    String[] cmd = { "/bin/sh", "-c", "grep -r \"Niranjan\" /home/nikhil/Documents/testGrep" };
+		String[] cmd = { "/bin/sh", "-c", "grep -r \"Niranjan\" /home/nikhil/Documents/testGrep" };
 
-	    Process pr = Runtime.getRuntime().exec(cmd);
+		Process pr = Runtime.getRuntime().exec(cmd);
 		pr.waitFor();
-		
+
 		BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 		String line = "";
 		while((line=buf.readLine())!=null)
 		{
 			System.out.println(line);
 		}
-		}
+	}
 
 	public static void fileNameFetch(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
@@ -132,10 +137,10 @@ public class StartingPoint {
 	public static Process commandExecution(String string) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		Process pr = Runtime.getRuntime().exec(string);
-		
+
 		pr.waitFor();
 		//BufferedReader buf1 = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-	//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+		//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		/*String line = "";
 		while ((line=buf.readLine())!=null) {
 			//as in the first line only we can get the package name.That's why immeditate break;
@@ -171,7 +176,7 @@ public class StartingPoint {
 				}
 			}
 		}
-			
+
 		return line.substring(15, i);
 
 	}
@@ -180,12 +185,12 @@ public class StartingPoint {
 		// TODO Auto-generated method stub
 		String apktoolCommand="apktool d -r "+apkPath+" -f -o /home/nikhil/Documents/apps/"+packageName;
 		System.out.println(apktoolCommand);
-		 commandExecution(apktoolCommand);
-		
+		commandExecution(apktoolCommand);
+
 	}
 	public static String buildApk(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		
+
 		System.out.println("Inside the buildAPK process");
 		String buildApkPath="/home/nikhil/Documents/apps/modified_"+packageName+".apk";
 		String apktoolBuildCommand="apktool b /home/nikhil/Documents/apps/"+packageName+" -o /home/nikhil/Documents/apps/modified_"+packageName+".apk";

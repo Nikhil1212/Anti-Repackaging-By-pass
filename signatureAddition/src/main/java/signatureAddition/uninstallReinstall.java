@@ -1,6 +1,7 @@
 package signatureAddition;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 public class uninstallReinstall {
@@ -10,12 +11,28 @@ public class uninstallReinstall {
 		
 		uninstallApp();
 		System.out.println("Uninstallation has happened. Now let's install the repackaged version");
-		installApks();
+		installApps();
+		//installApks();
+	}
+
+	private static void installApps() throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		String filePathRepackaged="/home/nikhil/Documents/apps/InstallerVerification.txt";
+		File file=new File(filePathRepackaged);
+		Scanner scanner=new Scanner(file);
+		while(scanner.hasNext())
+		{
+			String packageName=scanner.next();
+			String prefixPath="/home/nikhil/Documents/apps/modified_";
+			String installCommand="/home/nikhil/Android/Sdk/platform-tools/adb install -r "+prefixPath+packageName+".apk";
+			commandExecution(installCommand);
+			System.out.println("App installation for the package name: "+packageName.substring(packageName.indexOf("com"))+" happened successfully");
+		}
 	}
 
 	private static void uninstallApp() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String filePathRepackaged="/home/nikhil/Documents/apps/packageNames.txt";
+		String filePathRepackaged="/home/nikhil/Documents/apps/InstallerVerification.txt";
 		File file=new File(filePathRepackaged);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())

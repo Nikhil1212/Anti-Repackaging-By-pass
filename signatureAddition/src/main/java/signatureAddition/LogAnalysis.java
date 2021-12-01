@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -474,14 +475,23 @@ public class LogAnalysis {
 
 	}
 
-	private static boolean methodAppCrash(String packageName) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+	public static boolean methodAppCrash(String packageName) throws Exception {
+		
 		Process pr=CommandExecute.commandExecution(pathToadb+" shell pidof "+packageName);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		String pid=bufferedReader.readLine();
-		if(pid==null)
-			return true;
-		return false;
+		if(pid!=null)
+			return false;
+		/**
+		 * Dump the screen and check whether we can see the package name
+		 */
+//		Process pr=CommandExecute.commandExecution(pathToadb+" shell uiautomator dump  "+packageName);
+		String uiDump_orignalPath="/home/nikhil/Documents/apps/uiautomator/AppsAnalysis/"+packageName+"_ToFindAppCrash.xml";
+		uiautomator.Main.dumpScreenXml(uiDump_orignalPath, packageName);
+		String fileContents=new String(Files.readAllBytes(Paths.get(uiDump_orignalPath)));
+		if(fileContents.contains(packageName))
+			return false;
+		return true;
 	}
 
 	public static boolean differenceActiviyNameLogs(String packageName, String logPathForOriginalApp,

@@ -47,6 +47,8 @@ public class FileNamesForSignatureAddition {
 		        {
 		        	//count++;
 		        	String filePath=iterator.next();
+		        	if(isFileLib(filePath))
+		        		continue;
 		        	FinalCodeInjection.codeInjection(filePath, key,list.get(i));
 		        	//FinalCodeInjection.codeInjection(filePath, key,patternToCharArray);
 		        	//FinalCodeInjection.codeInjection(filePath, key,patternToHashCode);
@@ -58,6 +60,21 @@ public class FileNamesForSignatureAddition {
 		String patternToHashCode="Landroid/content/pm/Signature;->hashCode()";*/
 				//fileForCodeInjection.codeInjection(validFiles);
 
+	}
+
+	public static boolean isFileLib(String filePath) {
+		// TODO Auto-generated method stub
+		if(filePath==null)
+			return false;
+		if(filePath.contains(".so"))
+			return true;
+		return false;
+					
+		/*String fileName=filePath.contains(".so")));
+		System.out.println(fileName);
+		if(fileName.substring(0,3).equals("lib"))
+			return true;
+		return false;*/
 	}
 
 	public static List<String> listInitializationForSignaturePattern(List<String> list) {

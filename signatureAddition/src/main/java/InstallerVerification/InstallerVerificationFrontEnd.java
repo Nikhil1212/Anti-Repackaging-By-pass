@@ -5,8 +5,10 @@ package InstallerVerification;
  */
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,6 +26,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
+import signatureAddition.LogAnalysis;
 import signatureAddition.resignedApp;
 
 public class InstallerVerificationFrontEnd {
@@ -41,36 +44,19 @@ public class InstallerVerificationFrontEnd {
 
 
 	public static void main(String[] args) throws InterruptedException, IOException, Exception{
-		
-		String filePath="/home/nikhil/Documents/apps/InstallerVerification.txt";
-		
-		File file=new File(filePath);
-		Scanner scanner=new Scanner(file);
-	setup();
-		driver=new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"),cap);
 
-		Thread.sleep(10000);
-		int count=0;
-		/**
-		 * With the help of appium, we are able to install the app from the play store in an automated way.
-		 */
-		while(scanner.hasNext())
-		{
-			String packageName=scanner.next();
-			uninstallApp(packageName);
-			System.out.println(packageName);
-			installAppFromPlayStore(packageName,driver);
 
-		}
-		scanner.close();
-		driver.quit();
+		String filePath="/home/nikhil/Documents/apps/newApps.txt";
 
-		
-		 // Now we are done with all the apps installation
-		 
-		String filePath1="/home/nikhil/Documents/apps/InstallerVerification.txt";
-		file=new File(filePath1);
-		scanner=new Scanner(file);
+		fetchApkFromPlayStore(filePath);
+
+		System.exit(0);
+
+		// Now we are done with all the apps installation
+
+		String filePath1="/home/nikhil/Documents/apps/packageNames.txt";
+		File file=new File(filePath1);
+		Scanner	scanner=new Scanner(file);
 		while(scanner.hasNext())
 		{
 			String packageName="";
@@ -111,7 +97,7 @@ public class InstallerVerificationFrontEnd {
 						updateDatabaseByPassable(packageName, 'Y', "Difference in the UI components");		
 						break;
 					}
-					}
+				}
 				else
 				{
 					updateDatabaseByPassable(packageName, 'E', "Difference in the widgets when same app ran two times");
@@ -129,6 +115,83 @@ public class InstallerVerificationFrontEnd {
 
 		}
 
+	}
+
+
+
+	public static void fetchApkFromPlayStore(String filePath) throws InterruptedException, IOException, SQLException {
+		/**
+		 * 
+		 */
+		File file=new File(filePath);
+		Scanner scanner=new Scanner(file);
+		setup();
+		driver=new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"),cap);
+
+		Thread.sleep(10000);
+		int count=0;
+		/**
+		 * With the help of appium, we are able to install the app from the play store in an automated way.
+		 */
+		while(scanner.hasNext())
+		{
+			String packageName=scanner.next();
+			uninstallApp(packageName);
+			System.out.println(packageName);
+			installAppFromPlayStore(packageName,driver);
+			
+			/**
+			 * Pull the apk and store it on to the device
+			 */
+			pullTheApk(packageName);
+
+		}
+		scanner.close();
+		driver.quit();
+	}
+
+
+
+	private static void pullTheApk(String packageName) throws SQLException {
+		// TODO Auto-generated method stub
+		try {
+			//String packageName="com.freecharge.android";
+			System.out.println(packageName);
+			String command1=LogAnalysis.pathToadb+" shell pm path "+packageName;
+			Process process=CommandExecute.commandExecution(command1);
+			BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String apkPath=bufferedReader.readLine();
+			System.out.println(apkPath);
+			if(apkPath==null|| apkPath.length()==0)
+			{
+				InstallerVerificationFrontEnd.updateDatabaseByPassable(packageName, 'E', "App is not currently installed on the device");
+				throw new Exception("App did not install");	
+			}
+			int count=0;
+			/**
+			 * Command to create a directory that contains the app 
+			 */
+			String baseApkPath=apkPath.substring(8);
+			String directoryPath="/home/nikhil/Documents/apps/dataset/"+packageName;
+			CommandExecute.commandExecution("mkdir "+directoryPath);
+			String apksPath="";
+			while(apkPath!=null)
+			{
+				System.out.println(apkPath);
+				count++;
+				apksPath=apksPath+SplitApks.parseToFetchApk(apkPath,directoryPath)+" ";
+				apkPath=bufferedReader.readLine();
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			/**
+			 * From the catch block while Pulling the apk
+			 */
+			e.printStackTrace();
+			updateDatabaseByPassable(packageName, 'E', "Pulling the apk catch block");
+		}
+		
 	}
 
 
@@ -171,7 +234,7 @@ public class InstallerVerificationFrontEnd {
 		driver.findElementByXPath(xpathInstallButton).click();
 
 		waitTillButtonEnabled(xpathOpenButton);
-	//	updateDatabaseByPassable(packageName, 'Y', "Successful");
+		//	updateDatabaseByPassable(packageName, 'Y', "Successful");
 		System.out.println("App :"+packageName+" has been installed successfully");
 		//System.out.println("Number of apps successfully installed is :" + ++count);
 
