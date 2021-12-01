@@ -12,11 +12,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+
+import ByPassAntiEmulation.AntiEmulation;
 import installerVerficationByPass.*;
 
 
 
-public class StartingPoint_IntsallerVerification {
+public class StartingPoint_AntiEmulation {
 	public static String apksigner="/home/nikhil/Android/Sdk/build-tools/30.0.2/apksigner";
 
 	public static void main(String[] args) throws Exception {
@@ -38,7 +40,7 @@ public class StartingPoint_IntsallerVerification {
 				System.out.println(packageName);
 
 				disassembleApk(fileNamePath,packageName);
-				codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+				codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
@@ -54,15 +56,16 @@ public class StartingPoint_IntsallerVerification {
 		}
 	}
 
-	public static void codeInjectionByPassIntallerVerification(String pathToDisAssembleCode) throws IOException, InterruptedException {
+	public static void codeInjectionByPassAntiEmulation(String pathToDisAssembleCode) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		
+		/*
 		List<String> patternList=new ArrayList<String>();
 		
 		patternListInitialize(patternList);
 		for(int i=0;i<patternList.size();i++)
-		{
-			Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l '"+patternList.get(i)+"' "+ pathToDisAssembleCode});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
+		{*/
+		String pattern="Landroid/os/Build;->";
+					Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l '"+pattern+"' "+ pathToDisAssembleCode});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
 
 			process.waitFor();
 
@@ -73,11 +76,12 @@ public class StartingPoint_IntsallerVerification {
 			{
 				//count++;
 				String filePath=iterator.next();
+
 				if(FileNamesForSignatureAddition.isFileLib(filePath))
 					continue;
-				Main.modifyInstallerVerificationClass(filePath);
+				AntiEmulation.codeInjection(filePath);
 			}
-		}
+		
 		
 		
 
@@ -199,7 +203,7 @@ public class StartingPoint_IntsallerVerification {
 	public static void signApk(String packageName, String apkPath) throws IOException, InterruptedException {
 		
 		String pathToJks="/home/nikhil/Documents/key/hello.jks ";
-		String apksigner=StartingPoint_IntsallerVerification.apksigner+" sign --ks "+pathToJks + "--ks-pass pass:123456 " + apkPath;
+		String apksigner=StartingPoint_AntiEmulation.apksigner+" sign --ks "+pathToJks + "--ks-pass pass:123456 " + apkPath;
 	
 		Process pr=commandExecution(apksigner);
 		BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
