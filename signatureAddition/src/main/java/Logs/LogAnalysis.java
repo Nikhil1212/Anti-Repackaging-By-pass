@@ -1,5 +1,5 @@
 
-package signatureAddition;
+package Logs;
 
 
 import java.io.BufferedReader;
@@ -20,8 +20,14 @@ import java.util.Scanner;
 
 import org.json.JSONObject;
 
+import signatureAddition.CommandExecute;
+import signatureAddition.StartingPoint;
+import signatureAddition.resignedApp;
 import signatureAddition.pastHardwork.AnalysingJSON;
+import signatureAddition.pastHardwork.TagDifferenceWithApk;
 import signatureAddition.pastHardwork.printLogsThroughPID;
+
+import signatureAddition.*;
 /**
  * This class is the starting point that finds out whether an app has anti-tampering check present or not by analysing various features like Activity, toast message, app crashed, 
  * @author nikhil

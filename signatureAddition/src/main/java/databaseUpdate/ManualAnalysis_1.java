@@ -1,5 +1,8 @@
 package databaseUpdate;
 
+/**
+ * One can ignore this class.
+ */
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.ResultSet;

@@ -1,5 +1,6 @@
 package databaseUpdate;
 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,6 +14,11 @@ import java.util.Scanner;
 
 import signatureAddition.DataBaseConnect;
 
+/**
+ * This is for the finding the accuracy for some past work.
+ * @author nikhil
+ *
+ */
 public class AccuracyFind {
 
 	public static void main(String[] args) throws SQLException, IOException, InterruptedException {

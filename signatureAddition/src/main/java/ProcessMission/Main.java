@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import signatureAddition.CommandExecute;
-import signatureAddition.LogAnalysis;
 
 public class Main {
 
@@ -24,7 +24,8 @@ public class Main {
 		while(scanner.hasNext())
 		{
 			String processId=scanner.next();
-			String command=LogAnalysis.pathToadb+" shell cat /proc/"+processId+"/cmdline";
+			
+			String command=LogAnalysis.pathToadb+" -s 14011JEC202909 dumpsys meminfo com.cradlewise.nini.app | grep pid";
 			Process process= CommandExecute.commandExecution(command);
 			BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String output=bufferedReader.readLine();

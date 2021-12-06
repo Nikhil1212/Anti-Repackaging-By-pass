@@ -2,7 +2,7 @@ package tagDifferenceAnalysis;
 
 import java.io.IOException;
 
-import signatureAddition.LogAnalysis;
+import Logs.LogAnalysis;
 
 public class SCRCPY {
 

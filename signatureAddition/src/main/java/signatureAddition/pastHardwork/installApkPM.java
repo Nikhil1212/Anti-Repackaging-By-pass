@@ -1,8 +1,15 @@
-package signatureAddition;
+package signatureAddition.pastHardwork;
 
 import java.io.IOException;
 import java.util.Scanner;
 
+import signatureAddition.CommandExecute;
+
+/**
+ * Don't know about it; the file path contains double slash
+ * @author nikhil
+ *
+ */
 public class installApkPM {
 
 	public static void main(String[] args) throws IOException, InterruptedException {

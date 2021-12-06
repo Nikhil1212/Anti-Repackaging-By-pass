@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
-import signatureAddition.LogAnalysis;
 import signatureAddition.resignedApp;
 import signatureAddition.pastHardwork.ExecutePython;
 import signatureAddition.pastHardwork.updateTableWithAppDownload;

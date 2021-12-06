@@ -1,10 +1,15 @@
-package signatureAddition;
+package Logs;
+
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-
+/**
+ * Logs related files
+ * @author nikhil
+ *
+ */
 public class DiffActivity {
 
 	public static void main(String[] args) throws IOException {

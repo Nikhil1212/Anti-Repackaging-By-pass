@@ -2,8 +2,8 @@ package signatureAddition.pastHardwork;
 
 import java.io.IOException;
 
+import Logs.LogAnalysis;
 import signatureAddition.CommandExecute;
-import signatureAddition.LogAnalysis;
 
 public class restartSmartphone {
 public static String pathToAdb="/home/nikhil/Downloads/platform-tools_r30.0.5-linux/platform-tools/adb";

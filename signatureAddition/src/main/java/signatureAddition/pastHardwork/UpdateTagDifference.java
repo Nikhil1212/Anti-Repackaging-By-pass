@@ -1,4 +1,4 @@
-package signatureAddition;
+package signatureAddition.pastHardwork;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
+
+import signatureAddition.DataBaseConnect;
 
 public class UpdateTagDifference {
 

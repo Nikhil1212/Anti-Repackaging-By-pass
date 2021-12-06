@@ -4,7 +4,7 @@
  * been called. 
  */
 
-package signatureAddition;
+package LogInsertion;
 
 import java.io.File;
 import java.io.FileWriter;

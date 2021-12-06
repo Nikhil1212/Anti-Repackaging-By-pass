@@ -1,7 +1,7 @@
 package InstallerVerification;
 /**
  * This class finds out whehther an app has installer verification present or not.
- * Install all the apps and the
+ * Install all the apps first through the Play Store capture the screen (i.e dump it) and then side load the same app.
  */
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,13 +20,14 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import signatureAddition.AppInstallationAndDump;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
-import signatureAddition.LogAnalysis;
 import signatureAddition.resignedApp;
 
 public class InstallerVerificationFrontEnd {
@@ -86,7 +87,7 @@ public class InstallerVerificationFrontEnd {
 				boolean result=uiautomator.Main.checkTwoUI_XMLSame_ResourceId_Analysis(uiDump_orignal1Path,uiDump_orignal2Path);
 				if(result)
 				{
-					uiDump_adb_Sideload_Path=SplitApks.main(packageName);
+					uiDump_adb_Sideload_Path=AppInstallationAndDump.main(packageName);
 					result=uiautomator.Main.checkTwoUI_XMLSame_ResourceId_Analysis(uiDump_adb_Sideload_Path, uiDump_orignal2Path);
 					if(result)
 					{
@@ -179,7 +180,7 @@ public class InstallerVerificationFrontEnd {
 			{
 				System.out.println(apkPath);
 				count++;
-				apksPath=apksPath+SplitApks.parseToFetchApk(apkPath,directoryPath)+" ";
+				apksPath=apksPath+AppInstallationAndDump.parseToFetchApk(apkPath,directoryPath)+" ";
 				apkPath=bufferedReader.readLine();
 			}
 		}

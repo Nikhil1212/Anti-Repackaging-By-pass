@@ -1,4 +1,4 @@
-package signatureAddition;
+package signatureAddition.pastHardwork;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,9 +13,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import EachMethodLogInsertionBHIM.Main;
-import signatureAddition.pastHardwork.updateTableWithAppDownload;
-
+import BHIMEachMethodLogInsertion.Main;
+import Logs.LogAnalysis;
+import signatureAddition.CommandExecute;
+import signatureAddition.StartingPoint;
+import signatureAddition.*;
 public class fetchContacts {
 
 	public static void main(String[] args) throws Exception {

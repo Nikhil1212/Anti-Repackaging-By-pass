@@ -16,7 +16,7 @@ public class StartingPoint {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		int i=0;
-		String pathToApk="/home/nikhil/Documents/apps/InstallerVerification_2.txt";
+		String pathToApk="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())

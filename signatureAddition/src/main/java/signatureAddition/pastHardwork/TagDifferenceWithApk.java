@@ -3,7 +3,7 @@
  * The idea is run the original app get the logs, run the repackaged app get the logs and for each of the logs generated, find whether the tag is the part of the apk.
  */
 
-package signatureAddition;
+package signatureAddition.pastHardwork;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,8 +19,11 @@ import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import signatureAddition.pastHardwork.printLogsThroughPID;
-
+import Logs.LogAnalysis;
+import Logs.removeDuplicateLogsStatement;
+import signatureAddition.StartingPoint;
+import signatureAddition.resignedApp;
+import signatureAddition.*;
 public class TagDifferenceWithApk {
 
 	public static void main(String[] args) throws Exception{

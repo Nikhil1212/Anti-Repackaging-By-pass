@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import signatureAddition.CommandExecute;
-import signatureAddition.LogAnalysis;
 import signatureAddition.resignedApp;
 
 public class ResignedAppsLaunch {

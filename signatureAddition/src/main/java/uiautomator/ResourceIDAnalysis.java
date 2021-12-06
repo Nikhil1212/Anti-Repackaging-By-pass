@@ -103,7 +103,7 @@ public class ResourceIDAnalysis {
 	private static HashSet<String> startingNode(String filePath, String packageName, int indexOfPattern) throws Exception {
 
 		File file = new File(filePath);  
-		DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();  
+		DocumentBuilder documentBuilder = DocumentBuilderFactory .newInstance().newDocumentBuilder();  
 		Document document = documentBuilder.parse(file);  
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();  
 		//an instance of builder to parse the specified xml file  

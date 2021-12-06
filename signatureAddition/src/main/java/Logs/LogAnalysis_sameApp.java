@@ -1,4 +1,4 @@
-package signatureAddition;
+package Logs;
 /**
  * This class has a method that launches the app two times, and finds out the disjoint tags with the help of other methods
  */
@@ -17,10 +17,11 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import signatureAddition.StartingPoint;
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.printLogsThroughPID;
 import signatureAddition.pastHardwork.restartSmartphone;
-
+import signatureAddition.*;
 public class LogAnalysis_sameApp {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";

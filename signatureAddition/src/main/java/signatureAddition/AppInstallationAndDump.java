@@ -1,19 +1,24 @@
-package InstallerVerification;
+package signatureAddition;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import InstallerVerification.InstallerVerificationFrontEnd;
+import InstallerVerification.fetchPermissionRequested;
+import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
-import signatureAddition.CommandExecute;
-import signatureAddition.LogAnalysis;
-
-public class SplitApks {
+/**
+ * This class takes the package name as an input and handle the split-apks scenarios and install the app, launch it and takes the dump using adb shell uiautomator.
+ * @author nikhil
+ *
+ */
+public class AppInstallationAndDump {
 
 	public static String main(String packageName) throws Exception {
 		// TODO Auto-generated method stub
 		/**
-		 * Considering the app has been installed. The package Name should be the arguement. Modify it later
+		 * Considering the app has been installed. The package Name should be the arguement. 
 		 */
 		String directoryPath="";
 		String uiDump_adb_Sideload_Path="";

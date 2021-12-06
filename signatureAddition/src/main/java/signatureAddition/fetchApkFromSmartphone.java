@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
+
 public class fetchApkFromSmartphone {
 
 	public static void main(String[] args) throws InterruptedException, IOException {

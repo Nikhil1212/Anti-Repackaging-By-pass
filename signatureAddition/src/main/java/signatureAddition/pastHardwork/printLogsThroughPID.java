@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import signatureAddition.CommandExecute;
-import signatureAddition.LogAnalysis;
 import signatureAddition.StartingPoint;
 
 public class printLogsThroughPID {

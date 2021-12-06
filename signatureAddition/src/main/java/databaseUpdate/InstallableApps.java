@@ -1,5 +1,9 @@
 package databaseUpdate;
 
+/**
+ * This class checks whether the apk which we download; is it installable or not. Because in the earlier days, we were using some Google Play API to download the apk, not the front-end automation.
+ * 
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,9 +13,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
-import signatureAddition.LogAnalysis;
 
 public class InstallableApps {
 

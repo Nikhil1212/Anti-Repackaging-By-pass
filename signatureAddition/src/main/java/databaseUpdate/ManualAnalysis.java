@@ -1,5 +1,8 @@
 package databaseUpdate;
 
+/**
+ * One can ignore this class.
+ */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

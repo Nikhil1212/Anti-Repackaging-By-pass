@@ -68,7 +68,7 @@ public class AntiEmulation {
 						String key="SERIAL";
 						if(line.contains("getRadioVersion"))
 							key="RADIO";
-						String codeInject="\nconst-string "+registerNumber+", "+"\""+hashMap.get(key)+"\"";
+						String codeInject="\nconst-string "+registerNumber+", "+"\""+hashMap.get(key)+"\""+"\n";
 						System.out.println(codeInject);
 						outputContents=outputContents+codeInject+line;
 					}

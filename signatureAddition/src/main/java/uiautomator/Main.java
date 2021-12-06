@@ -16,16 +16,16 @@ import java.util.List;
 import java.util.Scanner;
 
 import InstallerVerification.fetchPermissionRequested;
+import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.DumpUIAutomatorPython;
-import signatureAddition.LogAnalysis;
-import signatureAddition.ResignApks;
 import signatureAddition.RestartADB;
 import signatureAddition.resignedApp;
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.ExecutePython;
+import signatureAddition.pastHardwork.ResignApks;
 /**
  * This class analyses whether an app has anti-tampering check present or not using the front-end automation tool named "uiautomator" by analysing the different UI Components on the screen
  * when the original and the repackaged app is run separately.

@@ -7,8 +7,8 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import Logs.LogAnalysis_sameApp;
 import signatureAddition.DataBaseConnect;
-import signatureAddition.LogAnalysis_sameApp;
 import signatureAddition.StartingPoint;
 
 public class TagDifferenceSameApp {

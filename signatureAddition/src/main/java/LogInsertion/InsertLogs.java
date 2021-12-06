@@ -17,10 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.FileNamesForSignatureAddition;
-import signatureAddition.LogAnalysis;
 import signatureAddition.StartingPoint;
 import signatureAddition.ValidFilesForCodeInjection;
 

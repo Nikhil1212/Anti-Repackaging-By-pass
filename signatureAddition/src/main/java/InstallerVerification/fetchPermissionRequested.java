@@ -3,9 +3,9 @@ package InstallerVerification;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import signatureAddition.CommandExecute;
-import signatureAddition.LogAnalysis;
 
 public class fetchPermissionRequested {
 	public static void grantPermissions(String packageName, String pathToApk ) throws Exception{

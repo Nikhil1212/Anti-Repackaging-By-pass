@@ -1,4 +1,4 @@
-package signatureAddition;
+package Logs;
 /**
  * takes the log generated file as an input and removes the duplicate statements.
  */
@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
+import LogInsertion.componentCount_v2;
 
 public class removeDuplicateLogsStatement {
 /**

@@ -3,7 +3,7 @@
  * for the 20 seconds and then compare it with the resigned version.
  * And if we observe different activities, then we can say that definitely anti-tampering check is present.
  */
-package signatureAddition;
+package Logs;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,7 +1,10 @@
-package signatureAddition;
+package signatureAddition.pastHardwork;
 
 import java.io.File;
 import java.util.Scanner;
+
+import signatureAddition.CommandExecute;
+import signatureAddition.StartingPoint;
 
 public class renameAPK {
 
