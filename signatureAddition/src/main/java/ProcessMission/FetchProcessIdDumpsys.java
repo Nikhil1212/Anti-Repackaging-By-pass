@@ -9,14 +9,20 @@ import signatureAddition.CommandExecute;
 
 public class FetchProcessIdDumpsys {
 	
-	public static void main(String args[]) throws IOException, InterruptedException {
-		String command=LogAnalysis.pathToadb+" -s 14011JEC202909 shell dumpsys meminfo com.cradleewrwise.nini.app | grep pid";
+	public static boolean isAppRunning(String packageName) throws IOException, InterruptedException {
+		String command=LogAnalysis.pathToadb+" shell dumpsys meminfo "+packageName+" | grep pid";
 		Process process= CommandExecute.commandExecution(command);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String output=bufferedReader.readLine();
 		if(output==null)
-			System.out.println("App crashed");
-		System.out.println(output);
+		{
+			System.out.println("App is running");
+			return false;
+		}
+			
+		return true;
+		//	System.out.println("App crashed");
+		//System.out.println(output);
 
 	}
 

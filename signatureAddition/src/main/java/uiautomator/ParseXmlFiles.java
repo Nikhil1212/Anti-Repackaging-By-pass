@@ -32,7 +32,7 @@ public class ParseXmlFiles {
 			try
 			{
 				String packageName=scanner.next();
-				packageName="com.puratech.hdfc";
+			//	packageName="com.puratech.hdfc";
 	//			packageName="com.ausmallfinancebank.amb";
 				String filePath1="/home/nikhil/output_yesfromuiautomator";
 				String filePath2="/home/nikhil/Documents/apps/uiautomator/AppsAnalysis/"+packageName+"_repackaged.xml";
@@ -78,7 +78,7 @@ public class ParseXmlFiles {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-			break;
+		//	break;
 		}
 		FileWriter fileWriter=new FileWriter(filePathres);
 		fileWriter.write(FileContents);

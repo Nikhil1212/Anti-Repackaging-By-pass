@@ -25,7 +25,7 @@ public class ClassAnalysis {
 		String orig2FilePath="";
 		String repackagedFilePath="";
 		
-		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
 		File file=new File(FilePath);
 		String outputFilePath="/home/nikhil/Documents/apps/VariousClassAnalysis.txt";
 		
@@ -49,11 +49,11 @@ public class ClassAnalysis {
 			//text
 			try
 			{
-				String suffixs[]= {"run1","run2","repackaged"};
+				String suffixs[]= {"real","rooted","repackaged"};
 				//packageName="com.bankofbaroda.crismaclegal";
-				String dumpDirectoryPath="/home/nikhil/Documents/pythonUIAutomator/"+packageName+"/";
-				orig1FilePath=dumpDirectoryPath+"dump_orig_1.xml";
-				orig2FilePath=dumpDirectoryPath+"dump_orig_2.xml";
+				String dumpDirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/";
+				orig1FilePath=dumpDirectoryPath+"real.xml";
+				orig2FilePath=dumpDirectoryPath+"rooted.xml";
 				repackagedFilePath=dumpDirectoryPath+"dump_repackaged.xml";
 				String filePaths[]= {orig1FilePath,orig2FilePath,repackagedFilePath};
 			
@@ -63,8 +63,8 @@ public class ClassAnalysis {
 					hashMapOrig2= startingNode(filePaths[1],packageName,3);
 					text=text+suffixs[1]+"\n"+hashMapOrig2+"\n\n";
 				
-					hashMapRepackaged= startingNode(filePaths[2],packageName,3);
-					text=text+suffixs[2]+"\n"+hashMapRepackaged+"\n\n";
+				//	hashMapRepackaged= startingNode(filePaths[2],packageName,3);
+					//text=text+suffixs[2]+"\n"+hashMapRepackaged+"\n\n";
 				
 					/**
 					 * Store this hashMap into the file.
@@ -80,7 +80,7 @@ public class ClassAnalysis {
 						arg2=1;
 					
 				
-		updateTable(packageName,arg1,arg2);	
+		//updateTable(packageName,arg1,arg2);	
 				
 			}
 			catch (Exception e) {

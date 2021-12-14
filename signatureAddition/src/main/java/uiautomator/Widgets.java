@@ -18,6 +18,12 @@ import org.w3c.dom.Document;
 
 import signatureAddition.DataBaseConnect;
 
+
+/**
+ * This class doesn't seems to work properly. In the sense that it giving exceptions. We need to fix it.
+ * @author nikhil
+ *
+ */
 public class Widgets {
 
 	public static void main(String[] args) throws Exception {
@@ -26,7 +32,7 @@ public class Widgets {
 		String orig2FilePath="";
 		String repackagedFilePath="";
 
-		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
 		String outputFilePath="/home/nikhil/Documents/apps/Widgets.txt";
 		HashMap<String, Integer>hashMapOrig1=new HashMap<String, Integer>();
 		HashMap<String, Integer>hashMapOrig2=new HashMap<String, Integer>();
@@ -59,11 +65,11 @@ public class Widgets {
 			
 			try
 			{
-				String suffixs[]= {"run1","run2","repackaged"};
+				String suffixs[]= {"real","rooted","repackaged"};
 				//packageName="com.bankofbaroda.crismaclegal";
-				String dumpDirectoryPath="/home/nikhil/Documents/pythonUIAutomator/"+packageName+"/";
-				orig1FilePath=dumpDirectoryPath+"dump_orig_1.xml";
-				orig2FilePath=dumpDirectoryPath+"dump_orig_2.xml";
+				String dumpDirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/";
+				orig1FilePath=dumpDirectoryPath+"real.xml";
+				orig2FilePath=dumpDirectoryPath+"rooted.xml";
 				repackagedFilePath=dumpDirectoryPath+"dump_repackaged.xml";
 				String filePaths[]= {orig1FilePath,orig2FilePath,repackagedFilePath};
 			
@@ -74,8 +80,8 @@ public class Widgets {
 					hashMapOrig2= startingNode(filePaths[1],packageName,hashMapIndex);
 					text=text+suffixs[1]+"\n"+hashMapOrig2+"\n\n";
 
-					hashMapRepackaged= startingNode(filePaths[2],packageName,hashMapIndex);
-					text=text+suffixs[2]+"\n"+hashMapRepackaged+"\n\n";
+				//	hashMapRepackaged= startingNode(filePaths[2],packageName,hashMapIndex);
+					//text=text+suffixs[2]+"\n"+hashMapRepackaged+"\n\n";
 
 					/**
 					 * Store this hashMapOutput into the file.
@@ -86,13 +92,13 @@ public class Widgets {
 						arg1=0;
 					else
 						arg1=1;
-					if(hashMapOrig1.equals(hashMapRepackaged))
+					/*if(hashMapOrig1.equals(hashMapRepackaged))
 						arg2=0;
 					else
-						arg2=1;
+						arg2=1;*/
 			
 				
-					updateTable(packageName, arg1,arg2);	
+				//	updateTable(packageName, arg1,arg2);	
 
 			}
 			catch (Exception e) {

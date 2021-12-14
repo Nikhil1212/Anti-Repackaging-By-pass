@@ -55,9 +55,9 @@ public class StartingPoint_RootDetection {
 		hashSetAppPackageName.add("\"com.android.vending.billing.InAppBillingService.COIN\"");
 		hashSetAppPackageName.add("\"com.chelpus.luckypatcher\"");
 		
-		hashSetAppPackageName.add("frida-server");
-		hashSetAppPackageName.add("frida");
-		hashSetAppPackageName.add("fridaserver");
+	//	hashSetAppPackageName.add("frida-server");
+		//hashSetAppPackageName.add("frida");
+		//hashSetAppPackageName.add("fridaserver");
 		hashSetAppPackageName.add("mobi.acpm.inspeckage");
 		hashSetAppPackageName.add("com.sudocode.sudohide");
 		hashSetAppPackageName.add("com.noshufou.android.su");
@@ -142,6 +142,12 @@ public class StartingPoint_RootDetection {
 		hashSetBinaries.add("\"magisk\"");
 		hashSetBinaries.add("\"daemonsu\"");
 		hashSetBinaries.add("\"busybox\"");
+		hashSetBinaries.add("\"\\\"frida\\\"\"");
+
+		hashSetBinaries.add("\"\\\"fridaserver\\\"\"");
+
+		hashSetBinaries.add("\"\\\"frida-server\\\"\"");
+
 		hashSetInitialize();
 
 
@@ -233,12 +239,25 @@ public class StartingPoint_RootDetection {
 					{
 						pattern = "\"/sbin\"";
 					}
+					else if (pattern == "\\\"frida\\\"")
+					{
+						pattern = "\"frida\"";
+					}
+					else if (pattern == "\\\"fridaserver\\\"")
+					{
+						pattern = "\"fridaserver\"";
+					}
+					else if (pattern == "\\\"frida-server\\\"")
+					{
+						pattern = "\"frida-server\"";
+					}
+					
 					
 					while(filePath1!=null)
 					{
-						System.out.println(filePath1);
-						if(!FileNamesForSignatureAddition.isFileLib(filePath1))
-						codeInjection(filePath1,pattern);
+					//	System.out.println(filePath1);
+						if(filePath1.contains(".smali"))
+							codeInjection(filePath1,pattern);
 						filePath1=bufferedReader.readLine();
 					}
 					
@@ -252,8 +271,16 @@ public class StartingPoint_RootDetection {
 	}
 
 	private static void codeInjection(String filePath, String pattern) throws IOException {
-		File file=new File(filePath);
 		
+		
+		String bugFind="R$string.smali";
+		if(filePath.contains(bugFind))
+		{
+			System.out.println(pattern);
+		}
+		
+		File file=new File(filePath);
+		System.out.println(filePath);
 		Scanner scanner=new Scanner(file);
 		String output="";
 		while(scanner.hasNext())

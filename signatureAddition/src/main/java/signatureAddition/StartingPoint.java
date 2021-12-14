@@ -14,9 +14,9 @@ public class StartingPoint {
 	public static String apksigner="/home/nikhil/Android/Sdk/build-tools/30.0.2/apksigner";
 
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
+
 		int i=0;
-		String pathToApk="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
+		String pathToApk="/home/nikhil/Documents/apps/packageNames_3.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -25,6 +25,7 @@ public class StartingPoint {
 			{
 
 				String packageName=scanner.next();
+				packageName="com.google.android.apps.nbu.paisa.user";
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
@@ -45,15 +46,16 @@ public class StartingPoint {
 				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
 
 				StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
-
+//
 				StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
 				StartingPoint_RootDetection.main(pathToDisAssembleCode);
 
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
-				fileNameFetch(packageName);
+				//fileNameFetch(packageName);
 				removeDirectory(pathToDisAssembleCode);
+				break;
 
 			}
 			catch (Exception e)

@@ -15,13 +15,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
-import InstallerVerification.fetchPermissionRequested;
 import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.DumpUIAutomatorPython;
 import signatureAddition.RestartADB;
+import signatureAddition.fetchPermissionRequested;
 import signatureAddition.resignedApp;
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.ExecutePython;

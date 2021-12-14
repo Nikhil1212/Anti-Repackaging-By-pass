@@ -22,7 +22,7 @@ public class TextAnalysis {
 		String orig2FilePath="";
 		String repackagedFilePath="";
 		
-		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
 		String outputFilePath="/home/nikhil/Documents/apps/TextAnalysis.txt";
 		
 		File file=new File(FilePath);
@@ -39,22 +39,22 @@ public class TextAnalysis {
 			
 			try
 			{
-				String dumpDirectoryPath="/home/nikhil/Documents/pythonUIAutomator/"+packageName+"/";
-				orig1FilePath=dumpDirectoryPath+"dump_orig_1.xml";
-				orig2FilePath=dumpDirectoryPath+"dump_orig_2.xml";
+				String dumpDirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/";
+				orig1FilePath=dumpDirectoryPath+"real.xml";
+				orig2FilePath=dumpDirectoryPath+"rooted.xml";
 				repackagedFilePath=dumpDirectoryPath+"dump_repackaged.xml";
 				String filePaths[]= {orig1FilePath,orig2FilePath,repackagedFilePath};
-				String suffixs[]= {"run1","run2","repackaged"};
+				String suffixs[]= {"real","rooted","repackaged"};
 				
 				int arr[]=new int[3];
-				for(int i=0;i<filePaths.length;i++)
+				for(int i=0;i<2;i++)
 				{
 					hashSet= startingNode(filePaths[i],packageName);
 					text=text+suffixs[i]+"\n"+hashSet+"\n\n";
 
 					arr[i]=hashSet.size();
 				}
-				updateTable(packageName, arr[0], arr[1], arr[2]);	
+				//updateTable(packageName, arr[0], arr[1], arr[2]);	
 				
 			}
 			catch (Exception e) {

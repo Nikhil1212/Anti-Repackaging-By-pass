@@ -188,7 +188,7 @@ public class UIAutomatorBug {
 
 
 		/**
-		 * Let's uninstall the app command to be executed is :/home/nikhil/Downloads/platform-tools_r30.0.5-linux/platform-tools/adb -s emulator-5554 shell dumpsys meminfo com.ausmallfinancebank.amb | grep pid
+		 * Let's uninappInstallationstall the app command to be executed is :/home/nikhil/Downloads/platform-tools_r30.0.5-linux/platform-tools/adb -s emulator-5554 shell dumpsys meminfo com.ausmallfinancebank.amb | grep pid
 		 * /home/nikhil/Downloads/platform-tools_r30.0.5-linux/platform-tools/adb -s emulator-5554 shell dumpsys meminfo com.ausmallfinancebank.amb | grep pid
 
 		 */

@@ -25,12 +25,11 @@ import analysingDumpSys.DumpSysAnalysis;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import signatureAddition.AppInstallationAndDump;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.resignedApp;
 
-public class InstallerVerificationFrontEnd {
+public class DownloadAppFromPlayStore {
 	public static 	AppiumDriver<MobileElement> driver;
 	public static 	DesiredCapabilities cap;
 	public static	String xpathInstallButton="//android.widget.Button[@text=\"Install\"]";
@@ -47,7 +46,8 @@ public class InstallerVerificationFrontEnd {
 	public static void main(String[] args) throws InterruptedException, IOException, Exception{
 
 
-		String filePath="/home/nikhil/Documents/apps/newApps.txt";
+		String filePath="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
+
 
 		fetchApkFromPlayStore(filePath);
 
@@ -69,7 +69,7 @@ public class InstallerVerificationFrontEnd {
 				String uiDump_orignal1Path="/home/nikhil/Documents/apps/uiautomator/InstallerVerification/"+packageName+"_original_1.xml";
 				String uiDump_orignal2Path="/home/nikhil/Documents/apps/uiautomator/InstallerVerification/"+packageName+"_original_2.xml";
 				String uiDump_adb_Sideload_Path="/home/nikhil/Documents/apps/uiautomator/InstallerVerification/"+packageName+"_original_sidedload.xml";
-				InstallerVerification.fetchPermissionRequested.grantPermissions(packageName, pathToApk);
+				signatureAddition.fetchPermissionRequested.grantPermissions(packageName, pathToApk);
 				DumpSysAnalysis.launchTheApp(packageName);
 
 
@@ -87,7 +87,7 @@ public class InstallerVerificationFrontEnd {
 				boolean result=uiautomator.Main.checkTwoUI_XMLSame_ResourceId_Analysis(uiDump_orignal1Path,uiDump_orignal2Path);
 				if(result)
 				{
-					uiDump_adb_Sideload_Path=AppInstallationAndDump.main(packageName);
+					uiDump_adb_Sideload_Path=SideLoadAppInstall.main(packageName);
 					result=uiautomator.Main.checkTwoUI_XMLSame_ResourceId_Analysis(uiDump_adb_Sideload_Path, uiDump_orignal2Path);
 					if(result)
 					{
@@ -165,7 +165,7 @@ public class InstallerVerificationFrontEnd {
 			System.out.println(apkPath);
 			if(apkPath==null|| apkPath.length()==0)
 			{
-				InstallerVerificationFrontEnd.updateDatabaseByPassable(packageName, 'E', "App is not currently installed on the device");
+				DownloadAppFromPlayStore.updateDatabaseByPassable(packageName, 'E', "App is not currently installed on the device");
 				throw new Exception("App did not install");	
 			}
 			int count=0;
@@ -180,7 +180,7 @@ public class InstallerVerificationFrontEnd {
 			{
 				System.out.println(apkPath);
 				count++;
-				apksPath=apksPath+AppInstallationAndDump.parseToFetchApk(apkPath,directoryPath)+" ";
+				apksPath=apksPath+SideLoadAppInstall.parseToFetchApk(apkPath,directoryPath)+" ";
 				apkPath=bufferedReader.readLine();
 			}
 		}

@@ -17,11 +17,11 @@ import Logs.LogAnalysis;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 
-public class InstallableApps {
+public class TableUpdate {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String FilePath="/home/nikhil/Documents/apps/InvalidAppsPackageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/rootCheckPresent.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		int count=0;
@@ -32,60 +32,37 @@ public class InstallableApps {
 			{
 				String packageName=scanner.next();
 				System.out.println(packageName);
+				updateTable(packageName, 'Y', "from 2nd Run live observation");
+				
 
-				
-				String pathToOriginalApk="/home/nikhil/Downloads/ATADetector-master/apks/"+packageName+".apk";
-				String uninstallCommand=LogAnalysis.pathToadb+" uninstall "+packageName;
-				CommandExecute.commandExecution(uninstallCommand);
-				
-				String installCommand=LogAnalysis.pathToadb+" install "+pathToOriginalApk;
-				Process process=CommandExecute.commandExecution(installCommand);
-				
-				BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
-				String line=bufferedReader.readLine();
-				int flag=0;
-				while(line!=null)
-				{
-					System.out.println(line);
-					if(line.contains("Success"))
-					{
-						updateTable(packageName,'Y');
-						flag=1;
-						CommandExecute.commandExecution(uninstallCommand);
-						break;
-					}
-					line=bufferedReader.readLine();
-				}
-				if(flag==0)
-				{
-					updateTable(packageName,'N');
-				}
 			}
 			catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
+				
 
 	}
 
 }
 
-	private static void updateTable(String packageName, char c) throws SQLException {
+	private static void updateTable(String packageName, char c, String remarks) throws SQLException {
 		// TODO Auto-generated method stub
 		
-		String checkQuery="Select * from InstallableApps where packageName='"+packageName+"';";
+		String checkQuery="Select packagename from ManualResults_RootDetectionAnalysis where isCheckPresent='N';";
 		System.out.println(checkQuery);
 		Statement statement1=DataBaseConnect.initialization();
 		ResultSet resultSet=statement1.executeQuery(checkQuery);
 		int flag=0;
+		String output="";
 		while(resultSet.next())
 		{
 			flag=1;
-			resultSet.getString(1);
+			output=output+ resultSet.getString(1)+"\n";
 		}
 		if(flag==0)
 		{
-			String query="Insert into InstallableApps values ('"+packageName+"','"+c+"');";
+			String query="Insert into ManualResults_RootDetectionAnalysis values ('"+packageName+"','"+c+"','"+remarks+"');";
 			System.out.println(query);
 
 			Statement statement=DataBaseConnect.initialization();
@@ -93,7 +70,7 @@ public class InstallableApps {
 		}
 		else
 		{
-			String query="Update InstallableApps set IsInstallable ='"+c+"' where packageName='"+packageName+"';";
+			String query="Update ManualResults_RootDetectionAnalysis set IsCheckPresent ='"+c+"' , remarks ='"+remarks+"' where packageName='"+packageName+"';";
 			System.out.println(query);
 
 			Statement statement=DataBaseConnect.initialization();

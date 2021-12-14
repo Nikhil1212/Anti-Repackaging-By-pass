@@ -16,10 +16,42 @@ public class CommandExecute {
 	//BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 		String line = "";
 		while ((line=buf.readLine())!=null) {
+			System.out.println("Inside the while loop for command execute");
 			//as in the first line only we can get the package name.That's why immeditate break;
 			System.out.println(line);
 		}
 		buf.close();
 		return pr;
+	}
+
+	public static Process usingBashProcessBuider(String command) {
+		// TODO Auto-generated method stub
+		
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		processBuilder.command("bash", "-c", command);
+		Process process = null;
+		try {
+
+			process = processBuilder.start();
+
+			System.out.println("usingBashProcessBuider try block");
+			int x=process.waitFor();
+			System.out.println("Return value is :"+x);
+			
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(process.getErrorStream()));
+
+			String line=reader.readLine();
+			while(line!=null)
+			{
+				System.out.println(line);
+				line=reader.readLine();
+			}
+			}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return process;
 	}
 }

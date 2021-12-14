@@ -28,7 +28,7 @@ public class ResourceIDAnalysis {
 		String orig2FilePath="";
 		String repackagedFilePath="";
 
-		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
 		String outputFilePath="/home/nikhil/Documents/apps/ResourceIdAnalysis.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
@@ -52,6 +52,11 @@ public class ResourceIDAnalysis {
 		hashMap.put("selected", 15);
 		hashMap.put("visible-to-user", 17);
 		String text="";
+		String packageNameCheckPresent="";
+		String packageNameCheckNotPresent="";
+		List<String> list=new ArrayList<>();
+		
+		
 		while(scanner.hasNext())
 		{
 			String packageName="";
@@ -61,13 +66,18 @@ public class ResourceIDAnalysis {
 
 			try
 			{
-				String dumpDirectoryPath="/home/nikhil/Documents/pythonUIAutomator/"+packageName+"/";
-				orig1FilePath=dumpDirectoryPath+"dump_orig_1.xml";
-				orig2FilePath=dumpDirectoryPath+"dump_orig_2.xml";
-				repackagedFilePath=dumpDirectoryPath+"dump_repackaged.xml";
-				String filePaths[]= {orig1FilePath,orig2FilePath,repackagedFilePath};
-				String suffixs[]= {"run1","run2","repackaged"};
+				String dumpDirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/";
+				orig1FilePath=dumpDirectoryPath+"real.xml";
+				orig2FilePath=dumpDirectoryPath+"rooted.xml";
+				//repackagedFilePath=dumpDirectoryPath+"dump_repackaged.xml";
+				String filePaths[]= {orig1FilePath,orig2FilePath};//,repackagedFilePath};
+				//String suffixs[]= {"run1","run2","repackaged"};
+				String suffixs[]= {"real","rooted"};//,"repackaged"};
 				int arr[]=new int[3];
+				HashSet[] hs = { new HashSet<String>(), 
+			            new HashSet<String>() 
+				};
+				
 				for(int i=0;i<filePaths.length;i++)
 				{
 					hashSet= startingNode(filePaths[i],packageName,13);
@@ -75,12 +85,30 @@ public class ResourceIDAnalysis {
 					/**
 					 * Store this hashSet into the file.
 					 */
+					
 					text=text+suffixs[i]+"\n"+hashSet+"\n\n";
+					hs[i]=hashSet;
+					
+					/*if(i==0)
+						hashSetRun1=hashSet;
+					else if (i==1)
+						hashSetRun2=hashSet;*/
 					arr[i]=hashSet.size();
+				}
+				if(!(hs[0].containsAll(hs[1]) && hs[1].containsAll(hs[0])))
+				{
+					packageNameCheckNotPresent=packageNameCheckNotPresent+packageName+"\n";
+					updateTable(packageName, 'Y', "Resource-id analysis");
+					list.add(packageName);
+				}
+				else
+				{
+					packageNameCheckPresent=packageNameCheckPresent+packageName+"\n";
+					updateTable(packageName, 'N', "Resource-id analysis");
 				}
 				text=text+"\n******\n";
 
-				updateTable(packageName, arr[0], arr[1], arr[2]);	
+				//updateTable(packageName, arr[0], arr[1], arr[2]);	
 
 			}
 			catch (Exception e) {
@@ -88,6 +116,9 @@ public class ResourceIDAnalysis {
 			}
 			//	break;
 		}
+		System.out.println("Conclusion");
+		for(int j=0;j<list.size();j++)
+			System.out.println(list.get(j));
 		writeToFile(outputFilePath,text);
 
 	}
@@ -138,6 +169,39 @@ public class ResourceIDAnalysis {
 		return hashSet;
 
 	}
+	private static void updateTable(String packageName, char c, String remarks) throws Exception{
+
+		String checkQuery="Select packagename from Automation_RootDetectionAnalysis where packageName='"+packageName+"';";
+		System.out.println(checkQuery);
+		Statement statement1=DataBaseConnect.initialization();
+		ResultSet resultSet=statement1.executeQuery(checkQuery);
+		int flag=0;
+		String output="";
+		while(resultSet.next())
+		{
+			flag=1;
+			output=output+ resultSet.getString(1)+"\n";
+		}
+		if(flag==0)
+		{
+			String query="Insert into Automation_RootDetectionAnalysis values ('"+packageName+"','"+c+"','"+remarks+"');";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+		}
+		else
+		{
+	
+			String query="Update Automation_RootDetectionAnalysis set IsCheckPresent ='"+c+"' where packageName='"+packageName+"';";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+		}
+
+	}
+
 	private static void updateTable(String packageName, int a, int b, int c) throws Exception{
 
 		String checkQuery="Select * from Number_Of_ResourceId where packageName='"+packageName+"';";

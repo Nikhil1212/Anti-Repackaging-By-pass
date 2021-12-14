@@ -77,9 +77,8 @@ public class StartingPoint_AntiEmulation {
 				//count++;
 				String filePath=iterator.next();
 
-				if(FileNamesForSignatureAddition.isFileLib(filePath))
-					continue;
-				AntiEmulation.codeInjection(filePath);
+				if(filePath.contains(".smali"))
+					AntiEmulation.codeInjection(filePath);
 			}
 		
 		

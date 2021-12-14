@@ -73,8 +73,7 @@ public class StartingPoint_IntsallerVerification {
 			{
 				//count++;
 				String filePath=iterator.next();
-				if(FileNamesForSignatureAddition.isFileLib(filePath))
-					continue;
+			if(filePath.contains(".smali"))
 				Main.modifyInstallerVerificationClass(filePath);
 			}
 		}

@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class FileNamesForSignatureAddition {
 	
 
-	public static void codeInjectionProcess(String key, String absolutePathAppFolder) throws IOException, InterruptedException {
+	public static void codeInjectionProcess(String key, String absolutePathAppFolder) throws Exception {
 		
 		List<String> list  = new ArrayList<String>();
 		list=listInitializationForSignaturePattern(list);
@@ -47,9 +47,8 @@ public class FileNamesForSignatureAddition {
 		        {
 		        	//count++;
 		        	String filePath=iterator.next();
-		        	if(isFileLib(filePath))
-		        		continue;
-		        	FinalCodeInjection.codeInjection(filePath, key,list.get(i));
+		        	if(filePath.contains(".smali"))
+		    				FinalCodeInjection.codeInjection(filePath, key,list.get(i));
 		        	//FinalCodeInjection.codeInjection(filePath, key,patternToCharArray);
 		        	//FinalCodeInjection.codeInjection(filePath, key,patternToHashCode);
 		        }
@@ -82,15 +81,18 @@ public class FileNamesForSignatureAddition {
 		list.add("Landroid/content/pm/Signature;->toByteArray()");
 		list.add("Landroid/content/pm/Signature;->toCharArray()");
 		list.add("Landroid/content/pm/Signature;->hashCode()");
-		list.add("Landroid/content/pm/Signature;->getPublicKey()");
+		list.add("Landroid/content/pm/Signature;->getPublicKey()"); //Truely grateful for this statement as we went to the source code and analyse the various signature methods possible.
 		list.add("Landroid/content/pm/Signature;->toCharsString()");
 		list.add("Landroid/content/pm/Signature;->getFlags()");
 		list.add("Landroid/content/pm/Signature;->toChars()");
 		list.add("Landroid/content/pm/Signature;->getChainSignatures()");
 		list.add("Landroid/content/pm/Signature;->hashCode()");
-		list.add("Landroid/content/pm/SigningInfo;->hasMultipleSigners()");
-		list.add("Landroid/content/pm/SigningInfo;->getApkContentsSigners()");
-		list.add("Landroid/content/pm/SigningInfo;->getSigningCertificateHistory()");
+		list.add("Landroid/content/pm/Signature;->equals(");
+		list.add("Landroid/content/pm/Signature;->writeToParcel(");
+		
+		//list.add("Landroid/content/pm/SigningInfo;->hasMultipleSigners()");
+	//	list.add("Landroid/content/pm/SigningInfo;->getApkContentsSigners()");
+		//list.add("Landroid/content/pm/SigningInfo;->getSigningCertificateHistory()");
 		
 		return list;
 	}

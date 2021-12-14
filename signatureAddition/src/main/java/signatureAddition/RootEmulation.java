@@ -22,8 +22,8 @@ import signatureAddition.pastHardwork.DeviceStatus;
 
 public class RootEmulation {
 
-	public static String deviceId[]={"14011JEC202909", "emulator-5554", "0248f4221b4ca0ee"};
-	public static String deviceIdSynonym[]={"real", "emulator","rooted"};
+	public static String deviceId[]={"14011JEC202909", "0248f4221b4ca0ee","emulator-5554"};
+	public static String deviceIdSynonym[]={"real","rooted","emulator"};
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
@@ -45,7 +45,7 @@ public class RootEmulation {
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				
 				String modifiedApkPath="/home/nikhil/Documents/apps/modified_"+packageName+".apk";
-				for(int j=0;j<deviceId.length;j++)
+				for(int j=0;j<2;j++)
 				{
 					appInstallation(fileNamePath,packageName, deviceId[j]);
 					if(!isAppInstalled(packageName,deviceId[j]))
@@ -101,7 +101,7 @@ public class RootEmulation {
 	}
 
 }
-	private static boolean isAppInstalled(String packageName, String deviceId) throws IOException, InterruptedException {
+	public static boolean isAppInstalled(String packageName, String deviceId) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String command=LogAnalysis.pathToadb+" -s "+deviceId+" shell pm path "+packageName;
 		Process process= CommandExecute.commandExecution(command);
@@ -178,7 +178,7 @@ public class RootEmulation {
 				
 	}
 
-	private static void createDirectory(String pathToDir) throws IOException, InterruptedException {
+	public static void createDirectory(String pathToDir) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		CommandExecute.commandExecution("mkdir "+pathToDir);
 		return ;
@@ -232,6 +232,6 @@ public class RootEmulation {
 		String launchableActivityCommand=LogAnalysis.pathToadb+" -s "+deviceId+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		Thread.sleep(30000);
+		Thread.sleep(23000);
 	}
 }

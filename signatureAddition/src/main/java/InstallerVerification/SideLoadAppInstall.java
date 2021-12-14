@@ -1,11 +1,10 @@
-package signatureAddition;
+package InstallerVerification;
 
 import java.io.BufferedReader;
+import signatureAddition.*;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import InstallerVerification.InstallerVerificationFrontEnd;
-import InstallerVerification.fetchPermissionRequested;
 import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 /**
@@ -13,7 +12,7 @@ import analysingDumpSys.DumpSysAnalysis;
  * @author nikhil
  *
  */
-public class AppInstallationAndDump {
+public class SideLoadAppInstall {
 
 	public static String main(String packageName) throws Exception {
 		// TODO Auto-generated method stub
@@ -30,7 +29,7 @@ public class AppInstallationAndDump {
 			String apkPath=bufferedReader.readLine();
 			if(apkPath==null|| apkPath.length()==0)
 			{
-				InstallerVerificationFrontEnd.updateDatabaseByPassable(packageName, 'E', "App is not currently installed on the device");
+				DownloadAppFromPlayStore.updateDatabaseByPassable(packageName, 'E', "App is not currently installed on the device");
 				throw new Exception("App did not install");	
 			}
 			int count=0;
