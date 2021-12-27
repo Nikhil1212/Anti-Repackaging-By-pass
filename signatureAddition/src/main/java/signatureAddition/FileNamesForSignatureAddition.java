@@ -19,6 +19,8 @@ public class FileNamesForSignatureAddition {
 		list=listInitializationForSignaturePattern(list);
 		for(int i=0;i<list.size();i++)
 		{
+			
+			System.out.println(list.get(i));
 			Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "grep -r -l '"+list.get(i)+"' "+ absolutePathAppFolder});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
 			
 			process.waitFor();
