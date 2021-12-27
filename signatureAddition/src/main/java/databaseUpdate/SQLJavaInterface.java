@@ -40,7 +40,7 @@ public class SQLJavaInterface {
 	}
 	public static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String query ="Select packageName from antiTamperingCheckModified_v2 where isCheckPresent='N'";
+		String query ="Select packageName from v1SigningScheme where RSA='N';";
 		
 		ResultSet resultSet=statement.executeQuery(query);
 		String FileContents="";
@@ -49,7 +49,7 @@ public class SQLJavaInterface {
 			System.out.println(packageName);
 			FileContents=FileContents+packageName+"\n";
 		}
-		String FilePath="/home/nikhil/Documents/apps/DataSet_ImageAnalysis_PackageNames.txt";
+		String FilePath="/home/nikhil/Documents/apps/AppNoApkInMachine.txt";
 
 		File file=new File(FilePath);
 		file.createNewFile();

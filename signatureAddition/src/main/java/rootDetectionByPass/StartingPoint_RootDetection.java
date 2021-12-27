@@ -1,4 +1,4 @@
-package overwriteStrings;
+package rootDetectionByPass;
 
 /**
  * This class attempts to by-pass the root detection measures 

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 import installerVerficationByPass.*;
-import overwriteStrings.StartingPoint_RootDetection;
+import rootDetectionByPass.StartingPoint_RootDetection;
 public class StartingPoint {
 	public static String apksigner="/home/nikhil/Android/Sdk/build-tools/30.0.2/apksigner";
 
@@ -25,7 +25,7 @@ public class StartingPoint {
 			{
 
 				String packageName=scanner.next();
-				packageName="com.google.android.apps.nbu.paisa.user";
+				packageName="com.freecharge.android";
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
@@ -45,11 +45,11 @@ public class StartingPoint {
 
 				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
 
-				StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
-//
-				StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+			//	StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+				//
+				//StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
-				StartingPoint_RootDetection.main(pathToDisAssembleCode);
+				//StartingPoint_RootDetection.main(pathToDisAssembleCode);
 
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);

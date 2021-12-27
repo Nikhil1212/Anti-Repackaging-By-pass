@@ -21,7 +21,7 @@ public class TableUpdate {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String FilePath="/home/nikhil/Documents/apps/rootCheckPresent.txt";
+		String FilePath="/home/nikhil/Documents/apps/SafetyNetApps.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		int count=0;
@@ -32,8 +32,7 @@ public class TableUpdate {
 			{
 				String packageName=scanner.next();
 				System.out.println(packageName);
-				updateTable(packageName, 'Y', "from 2nd Run live observation");
-				
+				updateTable(packageName, 'Y', "High Chance of use of SafetyNet","EmulatorDetection_Automation");
 
 			}
 			catch (Exception e) {
@@ -46,10 +45,10 @@ public class TableUpdate {
 
 }
 
-	private static void updateTable(String packageName, char c, String remarks) throws SQLException {
+	private static void updateTable(String packageName, char c, String remarks, String tableName) throws SQLException {
 		// TODO Auto-generated method stub
 		
-		String checkQuery="Select packagename from ManualResults_RootDetectionAnalysis where isCheckPresent='N';";
+		String checkQuery="Select packagename from "+tableName+" where isCheckPresent='N';";
 		System.out.println(checkQuery);
 		Statement statement1=DataBaseConnect.initialization();
 		ResultSet resultSet=statement1.executeQuery(checkQuery);
@@ -62,7 +61,7 @@ public class TableUpdate {
 		}
 		if(flag==0)
 		{
-			String query="Insert into ManualResults_RootDetectionAnalysis values ('"+packageName+"','"+c+"','"+remarks+"');";
+			String query="Insert into "+tableName +"values ('"+packageName+"','"+c+"','"+remarks+"');";
 			System.out.println(query);
 
 			Statement statement=DataBaseConnect.initialization();
@@ -70,7 +69,7 @@ public class TableUpdate {
 		}
 		else
 		{
-			String query="Update ManualResults_RootDetectionAnalysis set IsCheckPresent ='"+c+"' , remarks ='"+remarks+"' where packageName='"+packageName+"';";
+			String query="Update "+tableName+" set IsCheckPresent ='"+c+"' , remarks ='"+remarks+"' where packageName='"+packageName+"';";
 			System.out.println(query);
 
 			Statement statement=DataBaseConnect.initialization();
