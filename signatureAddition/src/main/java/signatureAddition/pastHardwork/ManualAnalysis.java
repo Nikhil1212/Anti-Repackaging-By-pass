@@ -1,4 +1,4 @@
-package databaseUpdate;
+package signatureAddition.pastHardwork;
 
 /**
  * One can ignore this class.
@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import databaseUpdate.SQLJavaInterface;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.StartingPoint;
 
