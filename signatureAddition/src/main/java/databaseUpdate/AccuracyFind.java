@@ -21,18 +21,21 @@ import signatureAddition.DataBaseConnect;
  */
 public class AccuracyFind {
 
-	public static void main(String[] args) throws SQLException, IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException, SQLException {
 		// TODO Auto-generated method stub
 		//Retrieve the packageNames and store it in a file.
 		Statement statement=DataBaseConnect.initialization();
-		//statement.close();
-		File file=fetchPackageNamesFromDataBase(statement);
-		Thread.sleep(10000);
+	/*	fetchPackageNamesFromDataBase(statement);
 		
+		System.exit(0);*/
+		File file=new File("/home/nikhil/Documents/apps/dataset/packageNames_2.txt");
+
+		//Thread.sleep(10000);
+
 		String falseResultsPath="/home/nikhil/Documents/apps/falseResults.txt";
-		String falsePositiveResultsPath="/home/nikhil/Documents/apps/falsePositiveResults.txt";
+		String falsePositiveResultsPath="/home/nikhil/Documents/apps/falsePositiveResultsRoot.txt";
 		String falseNegativeResultsPath="/home/nikhil/Documents/apps/falseNegativeResults.txt";
-		
+
 		Scanner scanner=new Scanner(file);
 		int accuracyCount=0;
 		File falseResults=new File(falseResultsPath);
@@ -40,38 +43,59 @@ public class AccuracyFind {
 		Statement statement2=DataBaseConnect.initialization();
 		Statement statement3=DataBaseConnect.initialization();
 		int falsePositive=0,falseNegative=0;
+		String appFalsePositive="";
+		String appFalseNegative="";
 		while(scanner.hasNext())
 		{
-			String packageName=scanner.nextLine();
-			String queryantiTamperingCheckModified="Select ischeckPresent from antiTamperingCheckModified where packageName='"+packageName+"';";
-			String queryManualResults="Select ischeckPresent from ManualResults where packageName='"+packageName+"';";
-			System.out.println(queryantiTamperingCheckModified);
-			ResultSet resultSet2=	statement2.executeQuery(queryantiTamperingCheckModified);
-			resultSet2.next();
-			System.out.println(queryManualResults);
-			ResultSet resultSet3=  statement3.executeQuery(queryManualResults);
-			resultSet3.next();
-			String valTool=resultSet2.getString(1);
-			String valManual=resultSet3.getString(1);
-			//System.out.println(val1);
-			if(valTool.equals(valManual))
-				accuracyCount++;
-			else
+			try
 			{
-				if(valManual.contains("Y") && valTool.contains("N"))
+				String packageName=scanner.nextLine();
+				String queryantiEmulatorCheckModified="Select ischeckPresent from AntiTampering_Automation where packageName='"+packageName+"';";
+				String queryManualResults="Select ischeckPresent from ManualResults where packageName='"+packageName+"';";
+				System.out.println(queryantiEmulatorCheckModified);
+				ResultSet resultSet2=	statement2.executeQuery(queryantiEmulatorCheckModified);
+				resultSet2.next();
+				System.out.println(queryManualResults);
+				ResultSet resultSet3=  statement3.executeQuery(queryManualResults);
+				resultSet3.next();
+				String valTool=resultSet2.getString(1);
+				String valManual=resultSet3.getString(1);
+				//System.out.println(val1);
+				if(valTool.equals(valManual))
+					accuracyCount++;
+				else
 				{
-					falseNegative++;
-					Files.write(Paths.get(falseNegativeResultsPath), (packageName+"\n").getBytes(), StandardOpenOption.APPEND);
+					if(valManual.contains("Y") && valTool.contains("N"))
+					{
+						falseNegative++;
+						appFalseNegative=appFalseNegative+packageName+"\n";
+					//	Files.write(Paths.get(falseNegativeResultsPath), (packageName+"\n").getBytes(), StandardOpenOption.APPEND);
+					}
+					else if(valManual.contains("N") && valTool.contains("Y"))
+					{
+						
+						appFalsePositive=appFalsePositive+packageName+"\n";
+					//	Files.write(Paths.get(falsePositiveResultsPath), (packageName+"\n").getBytes(), StandardOpenOption.APPEND);
+						falsePositive++;
+					}
 
-				}
-				else 
-				{
-					Files.write(Paths.get(falsePositiveResultsPath), (packageName+"\n").getBytes(), StandardOpenOption.APPEND);
-					falsePositive++;
 				}
 
 			}
+			catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 		}
+		
+		FileWriter fileWriter=new FileWriter(falsePositiveResultsPath);
+		fileWriter.write(appFalsePositive);
+		fileWriter.close();
+		
+		fileWriter=new FileWriter(falseNegativeResultsPath);
+		fileWriter.write(appFalseNegative);
+		fileWriter.close();
+		
 		System.out.println("\n***********\n Accuracy count is :"+accuracyCount);
 		System.out.println("False poisitve:"+falsePositive);
 		System.out.println("False neg:"+falseNegative);
@@ -81,7 +105,7 @@ public class AccuracyFind {
 
 	private static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
 		// TODO Auto-generated method stub
-		String query ="Select ResourceId_UIAutomator_packageName_2.packageName from ResourceId_UIAutomator_packageName_2,ManualResults where ManualResults.packageName = ResourceId_UIAutomator_packageName_2.packageName and ManualResults.IsCheckPresent ='N' and ManualResults.IsCheckPresent != ResourceId_UIAutomator_packageName_2.IsCheckPresent;";
+		String query ="Select EmulatorDetection_Automation.packageName  from EmulatorDetection_Automation where remarks ='Differnce in :class';";
 		ResultSet resultSet=statement.executeQuery(query);
 		String FileContents="";
 		while (resultSet.next()) {
@@ -89,7 +113,7 @@ public class AccuracyFind {
 			System.out.println(packageName);
 			FileContents=FileContents+packageName+"\n";
 		}
-		String FilePath="/home/nikhil/Documents/apps/FilteredApps.txt";
+		String FilePath="/home/nikhil/Documents/apps/FalsePositiveUsingClass.txt";
 
 		File file=new File(FilePath);
 		file.createNewFile();

@@ -37,7 +37,7 @@ public class SideLoadAppInstall {
 			 * Command to create a directory that contains the app 
 			 */
 			String baseApkPath=apkPath.substring(8);
-			directoryPath="/home/nikhil/Documents/apps/InstallerVerification/"+packageName;
+			directoryPath="/home/nikhil/Documents/apps/dataset/"+packageName;
 			CommandExecute.commandExecution("mkdir "+directoryPath);
 			String apksPath="";
 			while(apkPath!=null)
@@ -65,7 +65,7 @@ public class SideLoadAppInstall {
 				String installCommand=LogAnalysis.pathToadb+" install-multiple -g "+apksPath;
 				System.out.println(installCommand);
 				CommandExecute.commandExecution(installCommand);
-				String pathToApk="/home/nikhil/Downloads/googleplay-api-master/"+packageName+".apk";
+				String pathToApk="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 
 				fetchPermissionRequested.grantPermissions(packageName, pathToApk);
 			}
@@ -76,7 +76,7 @@ public class SideLoadAppInstall {
 			DumpSysAnalysis.launchTheApp(packageName);
 
 
-			uiDump_adb_Sideload_Path="/home/nikhil/Documents/apps/uiautomator/InstallerVerification/"+packageName+"_original_sidedload.xml";
+		/*	uiDump_adb_Sideload_Path="/home/nikhil/Documents/apps/uiautomator/InstallerVerification/"+packageName+"_original_sidedload.xml";
 			uiautomator.Main.dumpScreenXml(uiDump_adb_Sideload_Path,packageName);
 			uiautomator.Main.dumpScreenXml(uiDump_adb_Sideload_Path,packageName);	
 			
