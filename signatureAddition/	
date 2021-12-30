@@ -1,0 +1,99 @@
+
+com.mbanking.kdcc.kdcc
+
+real
+[com.mbanking.kdcc.kdcc:id/image, com.mbanking.kdcc.kdcc:id/old_user1, android:id/content, com.mbanking.kdcc.kdcc:id/text_new_register, com.mbanking.kdcc.kdcc:id/text_bankname, com.mbanking.kdcc.kdcc:id/rlay_changeuser, com.mbanking.kdcc.kdcc:id/bankname_rlay, com.mbanking.kdcc.kdcc:id/view1login, com.mbanking.kdcc.kdcc:id/rlay_viewpager, com.mbanking.kdcc.kdcc:id/lay1, com.mbanking.kdcc.kdcc:id/rlay_newuser, com.mbanking.kdcc.kdcc:id/LayDesign1, com.mbanking.kdcc.kdcc:id/text_small, com.mbanking.kdcc.kdcc:id/llayNewRegister, com.mbanking.kdcc.kdcc:id/textwelcomemsg, com.mbanking.kdcc.kdcc:id/rlay1, com.mbanking.kdcc.kdcc:id/changeuser, com.mbanking.kdcc.kdcc:id/card11, com.mbanking.kdcc.kdcc:id/text_large, com.mbanking.kdcc.kdcc:id/faq_img, com.mbanking.kdcc.kdcc:id/raly6, com.mbanking.kdcc.kdcc:id/playstorelink, com.mbanking.kdcc.kdcc:id/pager, com.mbanking.kdcc.kdcc:id/btn_login, com.mbanking.kdcc.kdcc:id/versiontext, com.mbanking.kdcc.kdcc:id/ralyicons, com.mbanking.kdcc.kdcc:id/text_reg, com.mbanking.kdcc.kdcc:id/rlaymain, com.mbanking.kdcc.kdcc:id/img_logo_lay, com.mbanking.kdcc.kdcc:id/img_logo, com.mbanking.kdcc.kdcc:id/rlay_welcomeText, com.mbanking.kdcc.kdcc:id/llaychangeuser]
+sideload
+[com.mbanking.kdcc.kdcc:id/image, com.mbanking.kdcc.kdcc:id/old_user1, android:id/content, com.mbanking.kdcc.kdcc:id/text_new_register, com.mbanking.kdcc.kdcc:id/text_bankname, com.mbanking.kdcc.kdcc:id/rlay_changeuser, com.mbanking.kdcc.kdcc:id/bankname_rlay, com.mbanking.kdcc.kdcc:id/view1login, com.mbanking.kdcc.kdcc:id/rlay_viewpager, com.mbanking.kdcc.kdcc:id/lay1, com.mbanking.kdcc.kdcc:id/rlay_newuser, com.mbanking.kdcc.kdcc:id/LayDesign1, com.mbanking.kdcc.kdcc:id/text_small, com.mbanking.kdcc.kdcc:id/llayNewRegister, com.mbanking.kdcc.kdcc:id/textwelcomemsg, com.mbanking.kdcc.kdcc:id/rlay1, com.mbanking.kdcc.kdcc:id/changeuser, com.mbanking.kdcc.kdcc:id/card11, com.mbanking.kdcc.kdcc:id/text_large, com.mbanking.kdcc.kdcc:id/faq_img, com.mbanking.kdcc.kdcc:id/raly6, com.mbanking.kdcc.kdcc:id/playstorelink, com.mbanking.kdcc.kdcc:id/pager, com.mbanking.kdcc.kdcc:id/btn_login, com.mbanking.kdcc.kdcc:id/versiontext, com.mbanking.kdcc.kdcc:id/ralyicons, com.mbanking.kdcc.kdcc:id/text_reg, com.mbanking.kdcc.kdcc:id/rlaymain, com.mbanking.kdcc.kdcc:id/img_logo_lay, com.mbanking.kdcc.kdcc:id/img_logo, com.mbanking.kdcc.kdcc:id/rlay_welcomeText, com.mbanking.kdcc.kdcc:id/llaychangeuser]
+******
+com.sbi.apps.sbi_loans
+
+real
+[com.sbi.apps.sbi_loans:id/action_bar_root, com.sbi.apps.sbi_loans:id/table_layout, android:id/content, com.sbi.apps.sbi_loans:id/drawer_layout, com.sbi.apps.sbi_loans:id/tool_text, com.sbi.apps.sbi_loans:id/simplenclick, com.sbi.apps.sbi_loans:id/pers_loan_btn, com.sbi.apps.sbi_loans:id/home_loan_btn, com.sbi.apps.sbi_loans:id/frame_container, com.sbi.apps.sbi_loans:id/auto_loan_btn, com.sbi.apps.sbi_loans:id/app_bar, com.sbi.apps.sbi_loans:id/scrolling_toolbar, com.sbi.apps.sbi_loans:id/home_top_up_loan_btn]
+sideload
+[]
+******
+com.sbi.home_loans
+
+real
+[com.sbi.home_loans:id/homeloans_drawer_layout, com.sbi.home_loans:id/viewPager, com.sbi.home_loans:id/homeloans_image, com.sbi.home_loans:id/apply_online_btn, com.sbi.home_loans:id/virtual_tour_btn, com.sbi.home_loans:id/table_layout, com.sbi.home_loans:id/homeloans_tool_logo, com.sbi.home_loans:id/homeloans_frame_container, android:id/content, com.sbi.home_loans:id/action_bar_root, com.sbi.home_loans:id/app_bar, com.sbi.home_loans:id/homeloans_scrolling_toolbar, com.sbi.home_loans:id/appr_proj_btn, com.sbi.home_loans:id/pageIndicator, com.sbi.home_loans:id/app_track_btn, com.sbi.home_loans:id/call_back_btn, com.sbi.home_loans:id/contact_us_btn, com.sbi.home_loans:id/faq_btn, com.sbi.home_loans:id/latest_offers_btn, com.sbi.home_loans:id/button_layout, com.sbi.home_loans:id/bottom_btns_frame_container, com.sbi.home_loans:id/products_btn, com.sbi.home_loans:id/calc_btn, com.sbi.home_loans:id/about_us_btn]
+sideload
+[]
+******
+com.sbi.lotusintouch
+
+real
+[]
+sideload
+[android:id/content]
+******
+com.freecharge.android
+
+real
+[com.freecharge.android:id/auth_nav_host_fragment, android:id/content, com.freecharge.android:id/action_bar_root, com.freecharge.android:id/layout_mobile, com.freecharge.android:id/etMobileNumber, com.freecharge.android:id/tvHelp]
+sideload
+[com.freecharge.android:id/auth_nav_host_fragment, android:id/content, com.freecharge.android:id/action_bar_root, com.freecharge.android:id/layout_mobile, com.freecharge.android:id/etMobileNumber, com.freecharge.android:id/tvHelp]
+******
+com.google.android.apps.nbu.paisa.merchant
+
+real
+[com.google.android.apps.nbu.paisa.merchant:id/toolbar, com.google.android.apps.nbu.paisa.merchant:id/paging_indicators, com.google.android.apps.nbu.paisa.merchant:id/action_button, com.google.android.apps.nbu.paisa.merchant:id/image, com.google.android.apps.nbu.paisa.merchant:id/content_container, android:id/content, com.google.android.apps.nbu.paisa.merchant:id/action_bar_root, com.google.android.apps.nbu.paisa.merchant:id/viewpager, com.google.android.apps.nbu.paisa.merchant:id/title]
+sideload
+[com.google.android.apps.nbu.paisa.merchant:id/toolbar, com.google.android.apps.nbu.paisa.merchant:id/paging_indicators, com.google.android.apps.nbu.paisa.merchant:id/action_button, com.google.android.apps.nbu.paisa.merchant:id/image, com.google.android.apps.nbu.paisa.merchant:id/content_container, android:id/content, com.google.android.apps.nbu.paisa.merchant:id/action_bar_root, com.google.android.apps.nbu.paisa.merchant:id/viewpager, com.google.android.apps.nbu.paisa.merchant:id/title]
+******
+com.hdfc.tomobile
+
+real
+[contrycode, android:id/content, signup_msisdn, signupmsisdn, txt_signup_msisdn, reginput, corporateid_register, alert, fb-root, btn_reginput_continue, txt_reg_btn_continue, customerid_register, country_dropdown, txt_dropdown, alertLogout, img_preview]
+sideload
+[android:id/message, android:id/alertTitle, android:id/button1, android:id/parentPanel, android:id/titleDividerNoCustom, android:id/content, android:id/buttonPanel, android:id/topPanel, android:id/contentPanel, android:id/scrollView, android:id/title_template]
+******
+com.hdfc.totablet
+
+real
+[contrycode, android:id/content, signup_msisdn, signupmsisdn, txt_signup_msisdn, reginput, corporateid_register, alert, fb-root, btn_reginput_continue, txt_reg_btn_continue, customerid_register, country_dropdown, txt_dropdown, alertLogout, img_preview]
+sideload
+[android:id/message, android:id/alertTitle, android:id/button1, android:id/parentPanel, android:id/titleDividerNoCustom, android:id/content, android:id/buttonPanel, android:id/topPanel, android:id/contentPanel, android:id/scrollView, android:id/title_template]
+******
+com.idbibank.paywiz
+
+real
+[]
+sideload
+[]
+******
+com.indigo.hdfcloans
+
+real
+[com.indigo.hdfcloans:id/btn_register_login, com.indigo.hdfcloans:id/indicator, com.indigo.hdfcloans:id/rl_bottombar, android:id/content, com.indigo.hdfcloans:id/imageView, com.indigo.hdfcloans:id/action_bar_root, com.indigo.hdfcloans:id/pager]
+sideload
+[com.indigo.hdfcloans:id/btn_register_login, com.indigo.hdfcloans:id/indicator, com.indigo.hdfcloans:id/rl_bottombar, android:id/content, com.indigo.hdfcloans:id/imageView, com.indigo.hdfcloans:id/action_bar_root, com.indigo.hdfcloans:id/pager]
+******
+com.khaalijeb.inkdrops
+
+real
+[com.khaalijeb.inkdrops:id/indicatorlayout, com.khaalijeb.inkdrops:id/action_bar_root, android:id/content, com.khaalijeb.inkdrops:id/secondlayout, com.khaalijeb.inkdrops:id/coming, com.khaalijeb.inkdrops:id/next, com.khaalijeb.inkdrops:id/image, com.khaalijeb.inkdrops:id/thirdlayout, com.khaalijeb.inkdrops:id/title_bottom, com.khaalijeb.inkdrops:id/circlepage, com.khaalijeb.inkdrops:id/viewpager, com.khaalijeb.inkdrops:id/firstlayout, com.khaalijeb.inkdrops:id/bottomlayout, com.khaalijeb.inkdrops:id/color_bg, com.khaalijeb.inkdrops:id/title_top, com.khaalijeb.inkdrops:id/activity_starting]
+sideload
+[com.khaalijeb.inkdrops:id/indicatorlayout, com.khaalijeb.inkdrops:id/action_bar_root, android:id/content, com.khaalijeb.inkdrops:id/secondlayout, com.khaalijeb.inkdrops:id/coming, com.khaalijeb.inkdrops:id/next, com.khaalijeb.inkdrops:id/image, com.khaalijeb.inkdrops:id/thirdlayout, com.khaalijeb.inkdrops:id/title_bottom, com.khaalijeb.inkdrops:id/circlepage, com.khaalijeb.inkdrops:id/viewpager, com.khaalijeb.inkdrops:id/firstlayout, com.khaalijeb.inkdrops:id/bottomlayout, com.khaalijeb.inkdrops:id/color_bg, com.khaalijeb.inkdrops:id/title_top, com.khaalijeb.inkdrops:id/activity_starting]
+******
+com.mbanking.ajmsb.ajmsb
+
+real
+[com.mbanking.ajmsb.ajmsb:id/rlaymain, com.mbanking.ajmsb.ajmsb:id/llaychangeuser, com.mbanking.ajmsb.ajmsb:id/playstorelink, com.mbanking.ajmsb.ajmsb:id/llayNewRegister, com.mbanking.ajmsb.ajmsb:id/share_img, com.mbanking.ajmsb.ajmsb:id/raly6, com.mbanking.ajmsb.ajmsb:id/textwelcomemsg, android:id/content, com.mbanking.ajmsb.ajmsb:id/rlay_changeuser, com.mbanking.ajmsb.ajmsb:id/lay1, com.mbanking.ajmsb.ajmsb:id/view1login, com.mbanking.ajmsb.ajmsb:id/rlay1, com.mbanking.ajmsb.ajmsb:id/text_large, com.mbanking.ajmsb.ajmsb:id/text_reg, com.mbanking.ajmsb.ajmsb:id/faq_img, com.mbanking.ajmsb.ajmsb:id/ralyicons, com.mbanking.ajmsb.ajmsb:id/versiontext, com.mbanking.ajmsb.ajmsb:id/rlay_viewpager, com.mbanking.ajmsb.ajmsb:id/img_logo_lay, com.mbanking.ajmsb.ajmsb:id/pager, com.mbanking.ajmsb.ajmsb:id/old_user1, com.mbanking.ajmsb.ajmsb:id/text_bankname, com.mbanking.ajmsb.ajmsb:id/LayDesign1, com.mbanking.ajmsb.ajmsb:id/card11, com.mbanking.ajmsb.ajmsb:id/image, com.mbanking.ajmsb.ajmsb:id/cimg_logo, com.mbanking.ajmsb.ajmsb:id/rlay_newuser, com.mbanking.ajmsb.ajmsb:id/btn_login, com.mbanking.ajmsb.ajmsb:id/bankname_rlay, com.mbanking.ajmsb.ajmsb:id/text_small, com.mbanking.ajmsb.ajmsb:id/changeuser, com.mbanking.ajmsb.ajmsb:id/text_new_register, com.mbanking.ajmsb.ajmsb:id/rlay_welcomeText]
+sideload
+[com.mbanking.ajmsb.ajmsb:id/rlaymain, com.mbanking.ajmsb.ajmsb:id/llaychangeuser, com.mbanking.ajmsb.ajmsb:id/playstorelink, com.mbanking.ajmsb.ajmsb:id/llayNewRegister, com.mbanking.ajmsb.ajmsb:id/share_img, com.mbanking.ajmsb.ajmsb:id/raly6, com.mbanking.ajmsb.ajmsb:id/textwelcomemsg, android:id/content, com.mbanking.ajmsb.ajmsb:id/rlay_changeuser, com.mbanking.ajmsb.ajmsb:id/lay1, com.mbanking.ajmsb.ajmsb:id/view1login, com.mbanking.ajmsb.ajmsb:id/rlay1, com.mbanking.ajmsb.ajmsb:id/text_large, com.mbanking.ajmsb.ajmsb:id/text_reg, com.mbanking.ajmsb.ajmsb:id/faq_img, com.mbanking.ajmsb.ajmsb:id/ralyicons, com.mbanking.ajmsb.ajmsb:id/versiontext, com.mbanking.ajmsb.ajmsb:id/rlay_viewpager, com.mbanking.ajmsb.ajmsb:id/img_logo_lay, com.mbanking.ajmsb.ajmsb:id/pager, com.mbanking.ajmsb.ajmsb:id/old_user1, com.mbanking.ajmsb.ajmsb:id/text_bankname, com.mbanking.ajmsb.ajmsb:id/LayDesign1, com.mbanking.ajmsb.ajmsb:id/card11, com.mbanking.ajmsb.ajmsb:id/image, com.mbanking.ajmsb.ajmsb:id/cimg_logo, com.mbanking.ajmsb.ajmsb:id/rlay_newuser, com.mbanking.ajmsb.ajmsb:id/btn_login, com.mbanking.ajmsb.ajmsb:id/bankname_rlay, com.mbanking.ajmsb.ajmsb:id/text_small, com.mbanking.ajmsb.ajmsb:id/changeuser, com.mbanking.ajmsb.ajmsb:id/text_new_register, com.mbanking.ajmsb.ajmsb:id/rlay_welcomeText]
+******
+com.phonepe.app
+
+real
+[com.phonepe.app:id/et_mobile_number, com.phonepe.app:id/tv_subtitle, com.phonepe.app:id/ll_mobile_number, com.phonepe.app:id/layout_verify_number, com.phonepe.app:id/iv_logo, com.phonepe.app:id/tv_title, com.phonepe.app:id/action_bar_root, com.phonepe.app:id/tv_subtext, android:id/content, com.phonepe.app:id/vg_full_container, com.phonepe.app:id/tv_verify]
+sideload
+[com.phonepe.app:id/et_mobile_number, com.phonepe.app:id/tv_subtitle, com.phonepe.app:id/ll_mobile_number, com.phonepe.app:id/layout_verify_number, com.phonepe.app:id/iv_logo, com.phonepe.app:id/tv_title, com.phonepe.app:id/action_bar_root, com.phonepe.app:id/tv_subtext, android:id/content, com.phonepe.app:id/vg_full_container, com.phonepe.app:id/tv_verify]
+******
+com.phonepe.app.business
+
+real
+[com.phonepe.app.business:id/decor_content_parent, android:id/content]
+sideload
+[com.phonepe.app.business:id/decor_content_parent, android:id/content]
+******

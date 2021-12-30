@@ -31,7 +31,7 @@ public class NativeErrorApkInstall {
 		if(line==null)
 		{
 			System.out.println("We have to do something");
-			System.exit(x);
+			System.exit(0);
 		}
 		if(line.contains("failed"))
 		{

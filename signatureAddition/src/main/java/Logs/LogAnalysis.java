@@ -317,7 +317,7 @@ public class LogAnalysis {
 		return null;
 	}
 
-	private static boolean checkAntiTamperingPresence(String packageName, String pathToOriginalApk, String logPathForOriginalApp, String logPathForResignedApp, String fileContentsLogsPidOriginal, String fileContentsLogsPidRepackaged) throws Exception, IOException {
+	public static boolean checkAntiTamperingPresence(String packageName, String pathToOriginalApk, String logPathForOriginalApp, String logPathForResignedApp, String fileContentsLogsPidOriginal, String fileContentsLogsPidRepackaged) throws Exception, IOException {
 		
 		
 		/**
@@ -347,7 +347,7 @@ public class LogAnalysis {
 			return true;
 		}
 		//	boolean appCrash=methodAppCrash(packageName);
-		boolean finalResult=resultToast|resultActivity;
+		boolean finalResult=false;
 
 		if(finalResult==true)
 			return finalResult;
@@ -557,7 +557,13 @@ public class LogAnalysis {
 		String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
 		System.out.println(signCertificateKey);
 
-		FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+		try {
+			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 		//fetchCertificateKey.codeInjection();
 		String modifiedApkPath=StartingPoint.buildApk(packageName);
 		StartingPoint.signApk(packageName, modifiedApkPath);//, modifiedApkPath);
@@ -662,9 +668,12 @@ public class LogAnalysis {
 
 			//System.out.println(analysingLogsUsingPID);
 
-
+		//	usingLogcat(packageName,pid,logPathForOutput);
+			
 			storingLogOutputUsingGrepPackageName(packageName);
 			storingLogOutputUsingPID(packageName,pid);
+
+		//	String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
 
 			String filePath1=directoryLocationForStoringLogs+"logs_"+packageName+"_PID.txt";
 			String filePath2="/home/nikhil/Documents/logs/fromProgram"+packageName+".txt";
@@ -690,12 +699,56 @@ public class LogAnalysis {
 			 */
 			//	CommandExecute.commandExecution(removeFile1);
 			CommandExecute.commandExecution(removeFile2);
-			CommandExecute.commandExecution(clearLogcat);
-
+			CommandExecute.commandExecution(removeFile1);
 			return str1;
 
 		}
 		//return -1;
+	}
+
+	public static void usingLogcat(String packageName, String pid, String logPathForOutput) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		storingLogOutputUsingGrepPackageName(packageName);
+		if(pid!=null)
+		storingLogOutputUsingPID(packageName,pid);
+
+		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
+
+		String filePath1=directoryLocationForStoringLogs+"logs_"+packageName+"_PID.txt";
+		String filePath2="/home/nikhil/Documents/logs/fromProgram"+packageName+".txt";
+
+
+		String str1="";
+		if(pid!=null)
+		str1=new String(Files.readAllBytes(Paths.get(filePath1)));
+		
+		//	System.out.println(str1);
+		
+		String str2=new String(Files.readAllBytes(Paths.get(filePath2)));
+		String str3=str1+str2;
+		//System.out.println(str2);
+		//String outputFilePath="/home/nikhil/Documents/logs/universal_"+packageName+".txt";
+		FileWriter fileWriter=new FileWriter(logPathForOutput);
+		fileWriter.write(str3);
+		fileWriter.close();
+		System.out.println("Successfully wrote to the file");
+
+
+		String removeFile1="rm "+filePath1;
+		String removeFile2="rm "+filePath2;
+
+		/*
+		 * Removing the files
+		 */
+		//	CommandExecute.commandExecution(removeFile1);
+		CommandExecute.commandExecution(removeFile2);
+		CommandExecute.commandExecution(removeFile1);
+
+	}
+
+	private static void usingLogcat(String packageName, String pid) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public static void checkApkInstall(String packageName) throws Exception {
@@ -785,7 +838,7 @@ public class LogAnalysis {
 		Thread.sleep(15000);
 	}
 
-	private static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
+	public static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		System.out.println("PID of the app is : "+pid);
 		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
@@ -820,7 +873,7 @@ public class LogAnalysis {
 
 	}
 
-	private static void storingLogOutputUsingGrepPackageName(String packageName) throws IOException, InterruptedException {
+	public static void storingLogOutputUsingGrepPackageName(String packageName) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String phoneDirectory="/data/local/tmp/fromProgramPackageName.txt";
 		String commandToFilterLogsUsingPackageName=pathToadb+" shell logcat -v brief -d | grep "+packageName+" > "+phoneDirectory;

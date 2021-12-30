@@ -9,9 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
@@ -20,8 +18,8 @@ import java.util.Scanner;
 import signatureAddition.StartingPoint;
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.printLogsThroughPID;
-import signatureAddition.pastHardwork.restartSmartphone;
 import signatureAddition.*;
+
 public class LogAnalysis_sameApp {
 	public static 	String pathToadb="/home/nikhil/Android/Sdk/platform-tools/adb";
 	static 	String pathToaapt="/home/nikhil/Android/Sdk/build-tools/27.0.3/aapt";
@@ -116,7 +114,12 @@ public class LogAnalysis_sameApp {
 		String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
 		System.out.println(signCertificateKey);
 
-		FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+		try {
+			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//fetchCertificateKey.codeInjection();
 		String modifiedApkPath=StartingPoint.buildApk(packageName);
 		StartingPoint.signApk(packageName, modifiedApkPath);//, modifiedApkPath);

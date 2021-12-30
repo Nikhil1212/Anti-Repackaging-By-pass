@@ -9,9 +9,9 @@ import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import signatureAddition.AppLaunchAndDump;
 import signatureAddition.CommandExecute;
+import signatureAddition.GettingConstantDumps;
 import signatureAddition.RootEmulation;
 import signatureAddition.fetchPermissionRequested;
-import signatureAddition.pastHardwork.GettingConstantDumps;
 
 
 /**

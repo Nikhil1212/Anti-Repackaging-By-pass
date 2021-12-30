@@ -1,24 +1,9 @@
-package rootDetectionByPass;
+package signatureAddition.pastHardwork;
 
-/**
- * This class attempts to by-pass the root detection measures. High level methodology: overwrite the string values related to root-detection checks.
- */
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
-import signatureAddition.FileNamesForSignatureAddition;
-
-public class StartingPoint_RootDetection {
+public class grepCommand {
 	public static HashSet<String> hashSetAppPackageName;
 	public static HashSet<String> hashSetSuPossiblePath;
 	public static HashSet<String>	hashSetHarmfulFiles;
@@ -29,18 +14,6 @@ public class StartingPoint_RootDetection {
             new HashSet<String>(),
             new HashSet<String>()	
 	};
-	
-	
-	/*public static void hello()
-	{
-		System.out.println("Can u see me?");
-
-		Set<String> universalHashSet[] = new HashSet[10];
-		for (int i = 0; i < universalHashSet.length; i++) {
-		 universalHashSet[i] = new HashSet<String>();
-		}
-	}*/
-	
 	
 	public static void hashSetInitialize()
 	{
@@ -127,13 +100,8 @@ public class StartingPoint_RootDetection {
 		hashSetHarmfulFiles.add("/system/app/Superuser.apk");
 		hashSetHarmfulFiles.add("/system/etc/init.d/99SuperSUDaemon");
 		hashSetHarmfulFiles.add("/dev/com.koushikdutta.superuser.daemon");
-		hashSetHarmfulFiles.add("/system/xbin/daemonsu");		
-	
-	}
-	public static void main(String pathToDisAssembleCode) throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-	//	String filePath="/home/nikhil/Documents/apps/dataset/com.sbi.upi/base/smali_classes4/com/scottyab/rootbeer/Const.smali";
-		
+		hashSetHarmfulFiles.add("/system/xbin/daemonsu");
+		//	System.out.println(universalHashSet.length);
 		HashSet<String> hashSetBinaries=new HashSet<String>();
 		String suPattern="su";
 		hashSetBinaries.add("su");  //because we want the pattern to be "su"
@@ -163,151 +131,17 @@ public class StartingPoint_RootDetection {
 		hs[2]=hashSetSuPossiblePath;
 		hs[3]=hashSetHarmfulFiles;
 		hs[4]=hashSetSensitiveDirectory;
-//		{"/system", "/system/bin", "/system/sbin", "/system/xbin", "/vendor/bin", "/sbin", "/etc"};
 
-		//String pathToDisAssembleCode="/home/nikhil/Documents/apps/dataset/com.sbi.upi/base/";
-		
-
-		for(int i=0;i<=4;i++)
-		{
-			Iterator<String> iterator=hs[i].iterator();
-			while(iterator.hasNext())
-			{
-				String pattern=iterator.next();
-				System.out.println(pattern);
-				
-				String grepCommand="grep -r -l \\\""+pattern+"\\\""+" "+pathToDisAssembleCode;
-				System.out.println(grepCommand);
-					Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", grepCommand});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
-					
-					process.waitFor();
-					BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
-					String filePath1=bufferedReader.readLine();
-				//	List<String> filePathsList=new ArrayList<String>();
-				/*	if(pattern==suPattern)
-						pattern="\"su\"";
-					else if (pattern == "\\\"/system\\\"")
-					{
-						pattern = "\"/system\"";
-					}
-					else if (pattern == "\\\"/system/bin\\\"")
-					{
-						pattern = "\"/system/bin\"";
-					}
-					else if (pattern == "\\\"/system/sbin\\\"")
-					{
-						pattern = "\"/system/sbin\"";
-					}
-					else if (pattern == "\\\"/system/xbin\\\"")
-					{
-						pattern = "\"/system/xbin\"";
-					}
-					else if (pattern == "\\\"/vendor/bin\\\"")
-					{
-						pattern = "\"/vendor/bin\"";
-					}
-					else if (pattern == "\\\"/sbin/\\\"")
-					{
-						pattern = "\"/sbin/\"";
-						
-					}
-					else if (pattern == "\\\"/etc\\\"")
-					{
-						pattern = "\"/etc\"";
-					}
-
-					else if (pattern == "\\\"/data\\\"")
-					{
-						pattern = "\"/data\"";
-					}
-					else if (pattern == "\\\"/cache\\\"")
-					{
-						pattern = "\"/cache\"";
-					}
-					else if (pattern == "\\\"/dev\\\"")
-					{
-						pattern = "\"/dev\"";
-					}
-					
-					else if (pattern == "\\\"/su/bin/\\\"")
-					{
-						pattern = "\"/su/bin/\"";
-					}
-					
-					else if (pattern == "\\\"/sbin\\\"")
-					{
-						pattern = "\"/sbin\"";
-					}
-					else if (pattern == "\\\"frida\\\"")
-					{
-						pattern = "\"frida\"";
-					}
-					else if (pattern == "\\\"fridaserver\\\"")
-					{
-						pattern = "\"fridaserver\"";
-					}
-					else if (pattern == "\\\"frida-server\\\"")
-					{
-						pattern = "\"frida-server\"";
-					}
-					*/
-					
-					while(filePath1!=null)
-					{
-					//	System.out.println(filePath1);
-						if(filePath1.contains(".smali"))
-							codeInjection(filePath1,pattern);
-						filePath1=bufferedReader.readLine();
-					}
-					
-			}
-		}
-		  
-
-		 
-		
-		
-	}
-
-	private static void codeInjection(String filePath, String ptr) throws IOException {
-		
-		String pattern="\""+ptr+"\"";
-		
-		String bugFind="R$string.smali";
-		if(filePath.contains(bugFind))
-		{
-			System.out.println(pattern);
-		}
-		
-		File file=new File(filePath);
-		System.out.println(filePath);
-		Scanner scanner=new Scanner(file);
-		String output="";
-		while(scanner.hasNext())
-		{
-			String contents=scanner.nextLine();
-			if(contents.contains(pattern))
-			{
-				//update contents variable
-				System.out.println("Overwriting :"+pattern);
-				contents=contents.substring(0,(contents.indexOf("\"")+1))+"SaiBaba"+"\"";
-			}
-			output=output+contents+"\n";
-			
-		
-		}
-
-		scanner.close();
-		writeToFile(output,filePath);
 	
-		
-			
 	}
-	private static void writeToFile(String contents, String destination) throws IOException {
+
+
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		FileWriter fileWriter=new FileWriter(destination);
-		fileWriter.write(contents);
-		fileWriter.close();
+		String pattern="su";
+		String grepCommand="grep -r -l \\\""+pattern+"\\\"";
+
+		System.out.println(grepCommand);
 	}
 
 }

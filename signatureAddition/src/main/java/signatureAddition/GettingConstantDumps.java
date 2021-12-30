@@ -1,11 +1,10 @@
-package signatureAddition.pastHardwork;
+package signatureAddition;
 
 import java.io.IOException;
 import java.util.HashSet;
 
 import parseXml.Main;
 import parseXml.TextAnalysis;
-import signatureAddition.RootEmulation;
 /**
  * For a given packageName and on the given filePath, we are taking the dump and storing it on the given filePath. Since the uiautomator does not give the same dump for the same screen, we are taking the dump
  * The purpose of this class is to get as much resource id as possible. Since python wrapper does not capture the entire resource id, we are generating the dump atmost 10 times or untill the time, dump is constant.
@@ -83,7 +82,7 @@ public class GettingConstantDumps {
 		}
 }
 
-	private static boolean isHashSetsEqual(HashSet[] hashSetFirstArr, HashSet[] hashSetSecondArr) {
+	public static boolean isHashSetsEqual(HashSet[] hashSetFirstArr, HashSet[] hashSetSecondArr) {
 		// TODO Auto-generated method stub
 		for(int i=0;i<hashSetFirstArr.length;i++)
 		{

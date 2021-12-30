@@ -20,7 +20,7 @@ public class CommandExecute {
 			//as in the first line only we can get the package name.That's why immeditate break;
 			System.out.println(line);
 		}
-		buf.close();
+	//	buf.close();
 		return pr;
 	}
 

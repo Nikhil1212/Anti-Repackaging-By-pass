@@ -28,6 +28,8 @@ public class fetchPermissionRequested {
 		permissionsHashSet.add("READ_EXTERNAL_STORAGE");
 		permissionsHashSet.add("WRITE_EXTERNAL_STORAGE");
 		permissionsHashSet.add("CALENDAR");
+		permissionsHashSet.add("PACKAGE_USAGE_STATS");
+
 			
 /**
  * This function fetches the various permissions requested by the app in the AndroidManifest.xml through aapt and then grant the permission using adb's pm.
@@ -84,6 +86,7 @@ public class fetchPermissionRequested {
 		permissionsHashSet.add("READ_EXTERNAL_STORAGE");
 		permissionsHashSet.add("WRITE_EXTERNAL_STORAGE");
 		permissionsHashSet.add("CALENDAR");
+		permissionsHashSet.add("PACKAGE_USAGE_STATS");
 
 		BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line=bufferedReader.readLine();

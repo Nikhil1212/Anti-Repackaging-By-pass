@@ -47,7 +47,8 @@ public class ModifiedApkRun {
 				if(isSplitApks(packageName))
 				{
 					count=2;
-					//Resigned the split-apks scenarios and handle install-multiple command and 
+					
+					pathTillDataset="/home/nikhil/Documents/apps/dataset/";
 					String pathToPackage=pathTillDataset+packageName+"/";
 					
 					String fetchApkInsideDirectory=AppLaunchAndDump.pathToLS+" "+pathToPackage;
@@ -88,8 +89,7 @@ public class ModifiedApkRun {
 						StartingPoint.signApk(packageName,modifiedBuildApkPath);
 						line=bufferedReader.readLine();
 					}
-					installationCommand=pathToadb+ " install-multiple -g "+modifiedBaseApkPath+" "+ apkPaths;
-					
+					 installationCommand=pathToadb+ " install-multiple -g "+modifiedBaseApkPath+" "+ apkPaths;
 				}
 				else
 				{
@@ -136,6 +136,54 @@ public class ModifiedApkRun {
 			//break;
 		}
 		
+	}
+
+	public static String generateRepackagedApk(String packageName, String modifiedBaseApkPath) throws Exception{
+		// TODO Auto-generated method stub
+		String pathTillDataset="/home/nikhil/Documents/apps/dataset/";
+		String pathToPackage=pathTillDataset+packageName+"/";
+		
+		String fetchApkInsideDirectory=AppLaunchAndDump.pathToLS+" "+pathToPackage;
+		System.out.println(fetchApkInsideDirectory);
+		//Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "readlink -f "+ fetchApkInsideDirectory});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
+		
+		//process.waitFor();
+		
+		Process process=CommandExecute.commandExecution(fetchApkInsideDirectory);
+		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line=bufferedReader.readLine();
+		String apkPaths="";
+		while(line!=null)
+		{
+			//create a directory
+			String splitApkPath=pathToPackage+line;
+			System.out.println("value of split apks path: "+splitApkPath);
+			if(!line.contains(".apk"))
+			{
+				line=bufferedReader.readLine();
+				continue;
+			}
+			if(line.contains("base.apk"))
+			{
+				line=bufferedReader.readLine();
+				continue;
+			}
+			String	directoryPath="/home/nikhil/Documents/apps/"+packageName+"/";
+			String lastPart=line.substring(line.indexOf("split_"));
+			RootEmulation.createDirectory(directoryPath);
+			
+			String copyCommand="cp "+splitApkPath+" "+directoryPath;
+			System.out.println("copy command is :"+copyCommand);
+			CommandExecute.commandExecution(copyCommand);
+			
+			String modifiedBuildApkPath = directoryPath+lastPart;
+			apkPaths=apkPaths+" "+modifiedBuildApkPath;
+			StartingPoint.signApk(packageName,modifiedBuildApkPath);
+			line=bufferedReader.readLine();
+		}
+		String installationCommand=pathToadb+ " install-multiple -g "+modifiedBaseApkPath+" "+ apkPaths;
+	
+		return installationCommand;
 	}
 
 	private static void updateTable(String packageName, char c) throws SQLException {

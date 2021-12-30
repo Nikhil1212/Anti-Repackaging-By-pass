@@ -16,7 +16,7 @@ public class StartingPoint {
 	public static void main(String[] args) throws Exception {
 
 		int i=0;
-		String pathToApk="/home/nikhil/Documents/apps/packageNames_3.txt";
+		String pathToApk="/home/nikhil/Documents/apps/TextFiles/packageNames_3.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -25,12 +25,13 @@ public class StartingPoint {
 			{
 
 				String packageName=scanner.next();
-				packageName="com.freecharge.android";
+				packageName="com.khaalijeb.inkdrops";
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
 				//System.out.println("Checking whehther you can see me over github");
 
+			//	modifiedApkGeneration(packageName);
 				String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 
 				System.out.println(packageName);
@@ -45,16 +46,16 @@ public class StartingPoint {
 
 				FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
 
-			//	StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+				StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
 				//
 				//StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
-				//StartingPoint_RootDetection.main(pathToDisAssembleCode);
+				StartingPoint_RootDetection.main(pathToDisAssembleCode);
 
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
 				//fileNameFetch(packageName);
-				removeDirectory(pathToDisAssembleCode);
+				//removeDirectory(pathToDisAssembleCode);
 				break;
 
 			}
@@ -64,6 +65,46 @@ public class StartingPoint {
 			}
 
 		}
+	}
+
+	public static String modifiedApkGeneration(String packageName) {
+		// TODO Auto-generated method stub
+		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
+		
+		
+		String modifiedApkPath="";
+		try
+		{
+			System.out.println(packageName);
+			
+			//package name is retrieved using aapt 
+			disassembleApk(fileNamePath,packageName);
+
+			String fullRSAfetch= fetchRSAName(packageName);
+
+			String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
+			System.out.println(signCertificateKey);
+
+			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+
+			StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+			//
+			//StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+
+			StartingPoint_RootDetection.main(pathToDisAssembleCode);
+
+			 modifiedApkPath=buildApk(packageName);
+			signApk(packageName, modifiedApkPath);
+			//fileNameFetch(packageName);
+			removeDirectory(pathToDisAssembleCode);
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return modifiedApkPath;
+		
 	}
 
 	public static void removeDirectory(String pathToDisAssembleCode) throws IOException, InterruptedException {

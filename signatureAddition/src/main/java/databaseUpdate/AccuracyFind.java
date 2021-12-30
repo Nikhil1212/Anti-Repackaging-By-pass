@@ -28,7 +28,7 @@ public class AccuracyFind {
 	/*	fetchPackageNamesFromDataBase(statement);
 		
 		System.exit(0);*/
-		File file=new File("/home/nikhil/Documents/apps/dataset/packageNames_2.txt");
+		File file=new File("/home/nikhil/Documents/apps/AntiTamperingCheckPresent.txt");
 
 		//Thread.sleep(10000);
 
@@ -50,8 +50,8 @@ public class AccuracyFind {
 			try
 			{
 				String packageName=scanner.nextLine();
-				String queryantiEmulatorCheckModified="Select ischeckPresent from AntiTampering_Automation where packageName='"+packageName+"';";
-				String queryManualResults="Select ischeckPresent from ManualResults where packageName='"+packageName+"';";
+				String queryantiEmulatorCheckModified="Select IsBypassable from ByPass_AntiTampering_Automation where packageName='"+packageName+"';";
+				String queryManualResults="Select IsBypassable from Manual_ByPass_AntiTampering_Automation where packageName='"+packageName+"';";
 				System.out.println(queryantiEmulatorCheckModified);
 				ResultSet resultSet2=	statement2.executeQuery(queryantiEmulatorCheckModified);
 				resultSet2.next();

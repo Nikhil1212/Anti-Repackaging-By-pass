@@ -38,27 +38,77 @@ public class SQLJavaInterface {
 			//Thread.sleep(5000);
 		}
 	}
-	public static File fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException {
+	public static void fetchPackageNamesFromDataBase(Statement statement) throws IOException, SQLException  {
 		// TODO Auto-generated method stub
-		String query ="Select packageName from v1SigningScheme where RSA='N';";
+	
+		int arr[]=new int[4];
+		String filePath="/home/nikhil/Documents/apps/few.txt";
+		File fileInput=new File(filePath);
+		Scanner scanner=new Scanner(fileInput);
+		
+		String query ="Select packageName from ManualResults where PackageName NOT IN (Select PackageName From Manual_Emulator_With_Google_API);";
 		
 		ResultSet resultSet=statement.executeQuery(query);
+		
+		
 		String FileContents="";
-		while (resultSet.next()) {
-			String packageName=resultSet.getString(1);
-			System.out.println(packageName);
-			FileContents=FileContents+packageName+"\n";
+
+		
+		while(resultSet.next())
+		{
+			FileContents=FileContents +resultSet.getString(1)+"\n";
 		}
-		String FilePath="/home/nikhil/Documents/apps/AppNoApkInMachine.txt";
+/*		while(scanner.hasNext())
+		{
+			try
+			{
+				String packageName=scanner.next();
+			//	String query ="Select * from PlayStoreAppDownload where packageName='"+packageName+"'";
+				
+				//ResultSet resultSet=statement.executeQuery(query);
+				if(resultSet.next()) {
+					
+					String remarks=resultSet.getString(3);
 
-		File file=new File(FilePath);
-		file.createNewFile();
-
-		FileWriter fileWriter=new FileWriter(FilePath);
+					if(remarks.contains("removed"))
+						arr[0]++;
+					
+					else if(remarks.contains("Premium"))
+						arr[1]++;
+					
+					else if(remarks.contains("country"))
+						arr[2]++;
+					
+					else if(remarks.contains("Hope"))
+						arr[3]++;
+					
+					String res=resultSet.getString(2);
+					System.out.println(res);
+			
+					
+					
+				if(res.contains("Y"))
+					{
+						FileContents=FileContents+"\n"+packageName;
+					}
+					System.out.println(packageName);
+					
+				}
+			}
+			catch (Exception e) {
+	
+				e.printStackTrace();
+			}
+			
+		}*/
+		
+		
+		String outputFilePath="/home/nikhil/Documents/apps/AntiEmulator.txt";
+		
+		FileWriter fileWriter=new FileWriter(outputFilePath);
 		fileWriter.write(FileContents);
 		fileWriter.close();
 
-		return file;
 	}
 
 }

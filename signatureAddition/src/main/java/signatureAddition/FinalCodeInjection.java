@@ -18,6 +18,12 @@ import signatureAddition.pastHardwork.ParseRegisters;
 public class FinalCodeInjection {
 	
 	public static String constRegisterValue=null;
+	public static void main(String[] args) throws Exception {
+		String filePath="/home/nikhil/Documents/apps/dataset/com.khaalijeb.inkdrops/base/smali_classes2/com/khaalijeb/inkdrops/e/h.smali";
+		String key="KuchBhi";
+		String pattern="Landroid/content/pm/Signature;->equals()";
+		codeInjection(constRegisterValue, constRegisterValue, constRegisterValue);
+	}
 
 	public static void codeInjection(String filePath, String key, String pattern) throws Exception {
 
@@ -379,16 +385,19 @@ public class FinalCodeInjection {
 		 * We have updated the locals register count
 		 * Now just insert the signature related code
 		 */
+		
+		int indexInvokeVirtual=codeToWrite.lastIndexOf("invoke-virtual");
+		
 
 		//	String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 
 		int indextoByteArray=codeToWrite.indexOf(pattern);
 
-		String beforeSignInjection=codeToWrite.substring(0,indextoByteArray-22);
+		String beforeSignInjection=codeToWrite.substring(0,indexInvokeVirtual);
 		/**
 		 * I have a doubt whether this 22 will always works
 		 */
-		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indextoByteArray -22);
+		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indexInvokeVirtual);
 
 		return res;
 	}
@@ -401,13 +410,23 @@ public class FinalCodeInjection {
 
 		//String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 
-		int indextoByteArray=codeToWrite.lastIndexOf(pattern);
+		int indexPattern=codeToWrite.lastIndexOf(pattern);
 
-		String beforeSignInjection=codeToWrite.substring(0,indextoByteArray-22);
+		int indexInvokeVirtual=codeToWrite.lastIndexOf("invoke-virtual");
+		System.out.println("Value of the invoke-virtual is :"+indexInvokeVirtual);
+		int len=codeToWrite.length();
+		//String beforeSignInjection=codeToWrite.substring(0, len-(indexPattern-(indexInvokeVirtual)));
+		
+		String beforeSignInjection=codeToWrite.substring(0, indexInvokeVirtual);
+		
 		/**
 		 * I have a doubt whether this 22 will always works
 		 */
-		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indextoByteArray -22);
+		
+//		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indextoByteArray -22);
+
+		
+		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indexInvokeVirtual);
 
 		return res;
 	}
@@ -454,7 +473,7 @@ public class FinalCodeInjection {
 		//String vinvoke="p1";
 		//String vlocal="v8";
 		//String keyFetched="123456";
-		String s1="new-instance "+registerInvoke+", Landroid/content/pm/Signature;\n\n";
+		String s1="\nnew-instance "+registerInvoke+", Landroid/content/pm/Signature;\n\n";
 		String s2="const-string v"+localsCount+ ", \""+keyFetched+"\"";
 		String s3="\ninvoke-direct {"+registerInvoke+", v"+localsCount+"}, Landroid/content/pm/Signature;-><init>(Ljava/lang/String;)V\n";
 		System.out.println(s1+s2+s3);

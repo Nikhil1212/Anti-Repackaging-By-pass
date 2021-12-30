@@ -1,4 +1,4 @@
-package Repackaged;
+package signatureAddition;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,18 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import Logs.LogAnalysis;
 import ProcessMission.FetchProcessIdDumpsys;
 import analysingDumpSys.DumpSysAnalysis;
 import parseXml.Main;
-import signatureAddition.CommandExecute;
-import signatureAddition.ModifiedApkRun;
-import signatureAddition.RootEmulation;
-import signatureAddition.StartingPoint;
-import signatureAddition.fetchPermissionRequested;
-import signatureAddition.pastHardwork.GettingConstantDumps;
 import signatureAddition.pastHardwork.HelloUiAutomator;
 
 /**
@@ -30,8 +25,8 @@ public class AntiTampering {
 	public  static String pathToLS="/bin/ls";
 	public  static String readlink="/bin/readlink";
 	
-	public static String deviceId[]={"14011JEC202909", "emulator-5554", "0248f4221b4ca0ee"};  //"93d6906c",
-	public static String deviceIdSynonym[]={"real", "emulator","rooted","repackaged"};
+	public static String deviceId[]={"14011JEC202909", "emulator-5554", "0248f4221b4ca0ee","ab06bf54"};  //"93d6906c",
+	public static String deviceIdSynonym[]={"real", "emulator","rooted","repackaged","modified"};
 
 
 	public static void main(String[] args) throws Exception {
@@ -41,7 +36,7 @@ public class AntiTampering {
 		Scanner scanner=new Scanner(file);
 		String packageName="";
 		
-		lockUnlockPhone("1995", deviceId[0]);
+		lockUnlockPhone("1995", deviceId[3]);
 		
 	//	lockUnlockPhone("1234", deviceId[2]);
 		
@@ -53,19 +48,21 @@ public class AntiTampering {
 			{
 				
 				packageName=scanner.next();
-			//	packageName="com.icicibank.iMcanada";
-				//packageName="com.icicibank.iMcanada";
-			//	packageName="com.phonepe.app";
 				count1++;
 				System.out.println(count1);
-			//	packageName="com.suryodaybank.mobilebanking";
-			//	packageName="net.one97.paytm";
+			//	packageName="in.org.npci.upiapp";
+			
+				//	packageName="net.one97.paytm";
 				
-				//CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
+				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
 
 				String logPathOriginal="/home/nikhil/Documents/apps/logs/"+packageName+"/original.txt";
 
 				String logPathRepackaged="/home/nikhil/Documents/apps/logs/"+packageName+"/repackaged.txt";
+				
+				String logPathModifed="/home/nikhil/Documents/apps/logs/"+packageName+"/modified.txt";
+				
+				
 				CommandExecute.commandExecution("mkdir /home/nikhil/Documents/apps/logs/"+packageName);
 
 				String dumpPathDirectory="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
@@ -88,41 +85,37 @@ public class AntiTampering {
 					line=bufferedReader.readLine();
 					apkPaths=apkPaths+" "+temp;
 				}
-				String installationCommandNonRoot="";
-				String installationCommandRoot="";
-				String installationCommandEmulator="";
-				
+			
 				System.out.println(apkPaths);
 				String installationCommandSingleDevice="";
 				if(count>1)
 				{
 					System.out.println("It is a split apk scenario");
-					installationCommandNonRoot=LogAnalysis.pathToadb+" -s "+ deviceId[0]+" install-multiple -g "+ apkPaths;
-					installationCommandRoot=LogAnalysis.pathToadb+" -s "+ deviceId[2]+" install-multiple -g "+ apkPaths;
-					installationCommandEmulator=LogAnalysis.pathToadb+" -e install-multiple -g "+apkPaths;
 					installationCommandSingleDevice=LogAnalysis.pathToadb+" install-multiple -g "+ apkPaths;
 				}
 				else
 				{
-					installationCommandNonRoot=LogAnalysis.pathToadb+" -s "+ deviceId[0]+ " install -g "+apkPaths;
-					installationCommandRoot=LogAnalysis.pathToadb+" -s "+ deviceId[2]+ " install -g "+apkPaths;
-					installationCommandEmulator=LogAnalysis.pathToadb+" -e install -g "+apkPaths;
 					installationCommandSingleDevice=LogAnalysis.pathToadb+ " install -g "+apkPaths;
 				}
-				takeDumpOnDevice(deviceId[0], deviceIdSynonym[0],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+				takeDumpOnDevice(deviceId[3], deviceIdSynonym[0],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
 				
 				String pidOriginal=FetchProcessIdDumpsys.retrievePID(packageName);
 				
 				LogAnalysis.usingLogcat(packageName, pidOriginal, logPathOriginal);
 				
 				
-				uninstallApp(packageName,deviceId[0]);
+				uninstallApp(packageName,deviceId[3]);
 				
 				
 				
 				//takeDumpOnDevice(deviceId[2], "real_2",installationCommandNonRoot,count,packageName,dumpPathDirectory,appPathDirectory);
 				
 				//Create the repackaged version and then generate the installation Command
+				
+				
+				/**
+				 * Arrangement for the repackaged apk
+				 */
 				
 				String outputDirectoryPath="/home/nikhil/Documents/apps/"+packageName+"/";
 				CommandExecute.commandExecution("mkdir "+outputDirectoryPath);
@@ -133,29 +126,68 @@ public class AntiTampering {
 				String repackagedApkPath=outputDirectoryPath+"base.apk";
 				StartingPoint.signApk(packageName,repackagedApkPath);
 				
+				installationCommandSingleDevice=getInstallationCommand(packageName,repackagedApkPath,count);
 				
-				if(count==1)
-				{
-					installationCommandSingleDevice=LogAnalysis.pathToadb+ " install -g "+repackagedApkPath;
-				}
-				else
-				{
-					installationCommandSingleDevice=ModifiedApkRun.generateRepackagedApk(packageName, repackagedApkPath);
-				}
-				takeDumpOnDevice(deviceId[0], deviceIdSynonym[3],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
-			
-				
+				takeDumpOnDevice(deviceId[3], deviceIdSynonym[3],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+
 				String pidRepackaged=FetchProcessIdDumpsys.retrievePID(packageName);
 				
 				LogAnalysis.usingLogcat(packageName, pidRepackaged, logPathRepackaged);
 				
-				uninstallApp(packageName,deviceId[0]);
+				uninstallApp(packageName,deviceId[3]);
 				
-				boolean resultsFromLogs=isDifferentLogs(packageName,pidOriginal,pidRepackaged,logPathOriginal,logPathRepackaged);
+				
+				
+				/**
+				 * Compare the logs
+				 */
+				boolean differentLogs=isDifferentLogs(packageName,pidOriginal,pidRepackaged,logPathOriginal,logPathRepackaged);
+
+				String val=isDumpDifferent(packageName,dumpPathDirectory,deviceIdSynonym[0],deviceIdSynonym[3]);
+				
+				if(!differentLogs && val==null)
+				{
+					Main.updateTable(packageName, 'N', "No difference from Log and dump", "AntiTampering_Automation");
+					CommandExecute.commandExecution("rm -r "+outputDirectoryPath);
+
+					continue;
+				}
+									
+				updateTableDesiredWay(packageName,val,differentLogs);
+				
+				
+				
+				
+				/**
+				 * It means that the check is present and we need to by-pass it.
+				 */
+				/**
+				 * Generate the modified_apk path and then we need to invoke the command
+				 */
+				
+				
+				String modifiedApkPath=StartingPoint.modifiedApkGeneration(packageName);
+				
+				installationCommandSingleDevice=getInstallationCommand(packageName,modifiedApkPath,count);
+				
+				
+				takeDumpOnDevice(deviceId[3], deviceIdSynonym[4],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+
+				String pidModified=FetchProcessIdDumpsys.retrievePID(packageName);
+				
+				LogAnalysis.usingLogcat(packageName, pidModified, logPathModifed);
+				
+				uninstallApp(packageName,deviceId[3]);
+				
+				differentLogs=isDifferentLogs(packageName,pidOriginal,pidModified,logPathOriginal,logPathModifed);
+				
+				String pattern=isDumpDifferent(packageName, dumpPathDirectory, deviceIdSynonym[0],deviceIdSynonym[4]);
+				
+				updateByPassInfo(packageName,differentLogs,pattern);
 				
 				CommandExecute.commandExecution("rm -r "+outputDirectoryPath);
 				
-				//break;
+			//	break;
 				
 			}
 			catch (Exception e) {
@@ -165,6 +197,81 @@ public class AntiTampering {
 
 
 		}
+	}
+
+	private static void updateByPassInfo(String packageName, boolean differentLogs, String pattern) throws SQLException {
+		// TODO Auto-generated method stub
+		if(differentLogs)
+		{
+			//Not able to by-pass the check
+			Main.updateTable(packageName, 'N', "Log Analysis", "ByPass_AntiTampering_Automation");
+			return;
+			
+		}
+		if(pattern!=null)
+		{
+			//Dump is different
+			Main.updateTable(packageName, 'N', pattern, "ByPass_AntiTampering_Automation");
+		}
+		else
+			Main.updateTable(packageName, 'Y', "Able to locate the check", "ByPass_AntiTampering_Automation");
+	
+	}
+
+	public static void updateTableDesiredWay(String packageName, String val, boolean differentLogs) throws SQLException {
+		// TODO Auto-generated method stub
+		if(differentLogs)
+		{
+			Main.updateTable(packageName, 'Y', "Log Analysis", "AntiTampering_Automation");
+				
+		}
+		else if (val!=null)
+		{
+			Main.updateTable(packageName, 'Y', val, "AntiTampering_Automation");
+			
+		}
+	}
+
+	public static String  isDumpDifferent(String packageName, String dumpPathDirectory, String appS1, String appS2) throws Exception {
+		// TODO Auto-generated method stub
+		String	realPath=dumpPathDirectory+"/"+appS1+"_BuiltIn.xml";
+		
+		String	repackagedPath=dumpPathDirectory+"/"+appS2+"_BuiltIn.xml";
+		String pattern[]= {"resource-id","text","class","content-desc"};
+		
+		HashSet hashSetOriginal[]= {new HashSet<String>(),new HashSet<String>(),new HashSet<String>(),new HashSet<String>()};
+		
+		HashSet hashSetRepackaged[]= {new HashSet<String>(),new HashSet<String>(),new HashSet<String>(),new HashSet<String>()};
+	
+		for(int i=0;i<pattern.length;i++)
+		{
+			hashSetOriginal[i]=Main.analysePatternInXml(packageName, realPath, pattern[i]);
+			hashSetRepackaged[i]=Main.analysePatternInXml(packageName, repackagedPath, pattern[i]);		
+		}
+		for(int i=0;i<pattern.length;i++)
+		{
+			if(hashSetOriginal[i].size()!=hashSetRepackaged[i].size())
+			{
+				Main.updateTable(packageName, 'Y', pattern[i],"AntiTampering_Automation");
+				return pattern[i];
+			}
+		}
+		return null;
+		
+	}
+
+	public static String getInstallationCommand(String packageName, String apkPath, int count) throws Exception {
+
+		String installationCommandSingleDevice="";
+		if(count==1)
+		{
+			installationCommandSingleDevice=LogAnalysis.pathToadb+ " install -g "+apkPath;
+		}
+		else
+		{
+			installationCommandSingleDevice=ModifiedApkRun.generateRepackagedApk(packageName, apkPath);
+		}	
+		return installationCommandSingleDevice;
 	}
 
 	public static boolean isDifferentLogs(String packageName, String pidOriginal, String pidRepackaged,

@@ -183,7 +183,12 @@ public class ActivityAnalysis {
 		String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
 		System.out.println(signCertificateKey);
 
-		FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+		try {
+			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//fetchCertificateKey.codeInjection();
 		String modifiedApkPath=StartingPoint.buildApk(packageName);
 		StartingPoint.signApk(packageName, modifiedApkPath);//, modifiedApkPath);

@@ -168,9 +168,21 @@ public class RootEmulation {
 	}
 
 	public static void dumpTheAppScreen(String packageName, String destinationPath, String deviceId) throws IOException, InterruptedException {
-		CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+deviceId+" shell uiautomator dump  /data/local/tmp/dump.xml ");//+directoryPath+"/"+deviceId[j]);
+	Process takeDump=CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+deviceId+" shell uiautomator dump  /data/local/tmp/dump.xml ");//+directoryPath+"/"+deviceId[j]);
 		
+	
 		//pull the xml
+	BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(takeDump.getInputStream()));
+	String line=bufferedReader.readLine();
+	System.out.println(line);
+	if(line==null)
+	{
+		System.out.println("Unable to take dump");
+	}
+	for(int i=1;i<10;i++)
+	{
+		
+	}
 		String pullXml=LogAnalysis.pathToadb+" -s "+deviceId+" pull /data/local/tmp/dump.xml "+destinationPath;
 		
 		CommandExecute.commandExecution(pullXml);
@@ -227,11 +239,11 @@ public class RootEmulation {
 	}
 	public static void launchTheApp(String packageName, String deviceId) throws IOException, InterruptedException {
 		
-		RestartADB.main();
+		//RestartADB.main();
 		
 		String launchableActivityCommand=LogAnalysis.pathToadb+" -s "+deviceId+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		Thread.sleep(23000);
+		Thread.sleep(30000);
 	}
 }

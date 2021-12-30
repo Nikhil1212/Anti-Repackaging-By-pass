@@ -1,4 +1,4 @@
-package InstallerVerification;
+package FrontEndAutomation;
 /**
  * This class finds out whehther an app has installer verification present or not.
  * Install all the apps first through the Play Store capture the screen (i.e dump it) and then side load the same app.
@@ -20,6 +20,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import InstallerVerification.SideLoadAppInstall;
 import Logs.LogAnalysis;
 import analysingDumpSys.DumpSysAnalysis;
 import io.appium.java_client.AppiumDriver;
@@ -32,7 +33,7 @@ import signatureAddition.RootEmulation;
 import signatureAddition.fetchPermissionRequested;
 import signatureAddition.resignedApp;
 
-public class DownloadAppFromPlayStore {
+public class appAvailablePlayStore {
 	public static 	AppiumDriver<MobileElement> driver;
 	public static 	DesiredCapabilities cap;
 	public static	String xpathInstallButton="//android.widget.Button[@text=\"Install\"]";
@@ -77,6 +78,7 @@ public class DownloadAppFromPlayStore {
 		while(scanner.hasNext())
 		{
 			String packageName=scanner.next();
+		//
 			uninstallApp(packageName);
 			System.out.println(packageName);
 			installAppFromPlayStore(packageName,driver);
@@ -98,47 +100,7 @@ public class DownloadAppFromPlayStore {
 
 
 
-	private static void pullTheApk(String packageName) throws SQLException {
-		// TODO Auto-generated method stub
-		try {
-			//String packageName="com.freecharge.android";
-			System.out.println(packageName);
-			String command1=LogAnalysis.pathToadb+" shell pm path "+packageName;
-			Process process=CommandExecute.commandExecution(command1);
-			BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String apkPath=bufferedReader.readLine();
-			System.out.println(apkPath);
-			if(apkPath==null|| apkPath.length()==0)
-			{
-			//	DownloadAppFromPlayStore.updateDatabaseByPassable(packageName, 'E', "App is not currently installed on the device");
-				throw new Exception("App did not install");	
-			}
-			int count=0;
-			/**
-			 * Command to create a directory that contains the app 
-			 */
-			String baseApkPath=apkPath.substring(8);
-			String directoryPath="/home/nikhil/Documents/apps/dataset/"+packageName;
-			CommandExecute.commandExecution("mkdir "+directoryPath);
-			String apksPath="";
-			while(apkPath!=null)
-			{
-				System.out.println(apkPath);
-				count++;
-				apksPath=apksPath+SideLoadAppInstall.parseToFetchApk(apkPath,directoryPath)+" ";
-				apkPath=bufferedReader.readLine();
-			}
-		}
-		catch (Exception e) {
-			// TODO: handle exception
-			/**
-			 * From the catch block while Pulling the apk
-			 */
-			e.printStackTrace();
-			//updateDatabaseByPassable(packageName, 'E', "Pulling the apk catch block");
-		}
-		
-	}
+	
 
 
 
@@ -146,7 +108,7 @@ public class DownloadAppFromPlayStore {
 
 		String command="adb shell am force-stop "+packageName;
 		CommandExecute.commandExecution(command);
-	}
+}
 
 
 
@@ -262,9 +224,11 @@ public class DownloadAppFromPlayStore {
 		}
 	}
 
-	private static void openAppInstallationPage(AppiumDriver<MobileElement> driver, String packageName) {
-		String myURL="https://play.google.com/store/apps/details?id="+packageName;
+	private static void openAppInstallationPage(AppiumDriver<MobileElement> driver, String packageName) throws InterruptedException {
+		String myURL="https://play.google.com/store/apps/details?id=qwe"+packageName;
 		driver.get(myURL);
+		Thread.sleep(5000);
+		System.out.println(driver.getPageSource());
 
 	}
 
