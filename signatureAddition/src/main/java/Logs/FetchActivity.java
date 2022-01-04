@@ -82,7 +82,7 @@ public class FetchActivity {
 
 private static boolean checkPresenceOfNumber(String finalContents) {
 	// TODO Auto-generated method stub
-	System.out.println("Inside the checkPresence of Number");
+	//System.out.println("Inside the checkPresence of Number");
 	 int indexSlash=finalContents.indexOf('/');
 	 if(finalContents.charAt(indexSlash+1)>=48 && finalContents.charAt(indexSlash+1)<=57)
 		 return false;

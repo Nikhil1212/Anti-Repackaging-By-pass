@@ -36,7 +36,7 @@ public class fetchPermissionRequested {
  */
 		
 		
-		Process process=CommandExecute.commandExecution(DumpSysAnalysis.pathToaapt+" dump badging "+pathToApk);
+		Process process=CommandExecute.commandExecutionSh(DumpSysAnalysis.pathToaapt+" dump badging "+pathToApk);
 		BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line=bufferedReader.readLine();
 		String pattern="uses-permission: name='";
@@ -57,7 +57,7 @@ public class fetchPermissionRequested {
 					String perm=iterator.next();
 					if(permission.contains(perm))
 					{
-						CommandExecute.commandExecution(LogAnalysis.pathToadb+" shell pm grant "+packageName+" "+permission);
+						CommandExecute.commandExecutionSh(LogAnalysis.pathToadb+" shell pm grant "+packageName+" "+permission);
 						break;
 					}
 				}
@@ -69,7 +69,7 @@ public class fetchPermissionRequested {
 
 	public static void grantPermissions(String packageName, String pathToApk, String deviceId) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		Process process=CommandExecute.commandExecution(DumpSysAnalysis.pathToaapt+" dump badging "+pathToApk);
+		Process process=CommandExecute.commandExecutionSh(DumpSysAnalysis.pathToaapt+" dump badging "+pathToApk);
 		
 
 		permissionsHashSet.add("CAMERA");
@@ -107,7 +107,7 @@ public class fetchPermissionRequested {
 					String perm=iterator.next();
 					if(permission.contains(perm))
 					{
-						CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+ deviceId+" shell pm grant "+packageName+" "+permission);
+						CommandExecute.commandExecutionSh(LogAnalysis.pathToadb+" -s "+ deviceId+" shell pm grant "+packageName+" "+permission);
 						break;
 					}
 				}

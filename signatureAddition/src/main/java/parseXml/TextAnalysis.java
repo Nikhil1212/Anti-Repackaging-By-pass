@@ -23,7 +23,7 @@ public class TextAnalysis {
 	public static void main(String[] args) throws IOException {
 		
 		
-		String filePath="/home/nikhil/Documents/apps/falseResultsReRun.txt";
+		String filePath="/home/nikhil/Documents/apps/falsePositiveResultsEmulator.txt";
 		File file=new File(filePath);
 		String outputFilePath="/home/nikhil/Documents/apps/TextAnalysis.txt";
 		
@@ -36,7 +36,7 @@ public class TextAnalysis {
 			
 			String filePathReal="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/real_BuiltIn.xml";
 			
-			String filePathRooted="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/rooted_BuiltIn.xml";
+			String filePathRooted="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/emulator_BuiltIn.xml";
 			String pattern="text";
 			HashSet<String> countRealtext=nonEmptyText(packageName, filePathReal ,pattern);
 
@@ -52,7 +52,7 @@ public class TextAnalysis {
 			HashSet<String>	countRootedDesc=nonEmptyContentDesc( packageName, filePathRooted,pattern);
 			
 			outputContents=outputContents+"\n"
-					+ ""+packageName+"\n"+AppLaunchAndDump.deviceIdSynonym[0]+"\n"+countRealtext+"\n"+AppLaunchAndDump.deviceIdSynonym[2]+"\n"+countRootedText + "\n"+AppLaunchAndDump.deviceIdSynonym[0]+"\n"+countRealDesc+"\n"+AppLaunchAndDump.deviceIdSynonym[2]+"\n"+countRootedDesc;
+					+ ""+packageName+"\n"+AppLaunchAndDump.deviceIdSynonym[0]+"\n"+countRealtext+"\n"+AppLaunchAndDump.deviceIdSynonym[2]+"\n"+countRootedText;// + "\n"+AppLaunchAndDump.deviceIdSynonym[0]+"\n"+countRealDesc+"\n"+AppLaunchAndDump.deviceIdSynonym[2]+"\n"+countRootedDesc;
 			try
 			{
 				if(countRealtext.size()!=countRootedText.size())

@@ -25,8 +25,9 @@ public class ModifiedApkRun {
 
 	public static String readlink="/bin/readlink";
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		String pathToApk="/home/nikhil/Documents/apps/apkGeneration_1.txt";
+		
+		
+		String pathToApk="/home/nikhil/Documents/apps/updateRootDetection.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String pathTillDataset="/home/nikhil/Documents/apps/dataset/";
@@ -42,6 +43,8 @@ public class ModifiedApkRun {
 				String installationCommand="";
 				modifiedBaseApkPath="/home/nikhil/Documents/apps/modified_"+packageName+".apk";
 				directoryPath="/home/nikhil/Documents/apps/"+packageName+"/";
+				
+				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
 			//	String directoryPath="";
 				int count=0;
 				if(isSplitApks(packageName))
@@ -105,7 +108,8 @@ public class ModifiedApkRun {
 					System.out.println("App did not installed.");
 					continue;
 				}
-			//	AppLaunchAndDump.installAndGrantPermission(installationCommand, count, packageName, appPathDirectory+packageName+"/", "0248f4221b4ca0ee");
+				if(count==2)
+				fetchPermissionRequested.grantPermissions(packageName, modifiedBaseApkPath, "0248f4221b4ca0ee");
 				
 				DumpSysAnalysis.launchTheApp(packageName);
 				//Now dump it.
@@ -138,7 +142,7 @@ public class ModifiedApkRun {
 		
 	}
 
-	public static String generateRepackagedApk(String packageName, String modifiedBaseApkPath) throws Exception{
+	public static String generateRepackagedApk(String packageName, String modifiedBaseApkPath, String deviceId) throws Exception{
 		// TODO Auto-generated method stub
 		String pathTillDataset="/home/nikhil/Documents/apps/dataset/";
 		String pathToPackage=pathTillDataset+packageName+"/";
@@ -181,7 +185,7 @@ public class ModifiedApkRun {
 			StartingPoint.signApk(packageName,modifiedBuildApkPath);
 			line=bufferedReader.readLine();
 		}
-		String installationCommand=pathToadb+ " install-multiple -g "+modifiedBaseApkPath+" "+ apkPaths;
+		String installationCommand=pathToadb+" -s "+deviceId +" install-multiple -g "+modifiedBaseApkPath+" "+ apkPaths;
 	
 		return installationCommand;
 	}

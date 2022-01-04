@@ -23,6 +23,15 @@ public class CommandExecute {
 	//	buf.close();
 		return pr;
 	}
+	
+	public static Process commandExecutionSh(String command) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
+		
+		process.waitFor();
+	//	buf.close();
+		return process;
+	}
 
 	public static Process usingBashProcessBuider(String command) {
 		// TODO Auto-generated method stub

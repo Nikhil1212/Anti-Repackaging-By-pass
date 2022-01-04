@@ -178,11 +178,9 @@ public class RootEmulation {
 	if(line==null)
 	{
 		System.out.println("Unable to take dump");
+		return;
 	}
-	for(int i=1;i<10;i++)
-	{
-		
-	}
+	
 		String pullXml=LogAnalysis.pathToadb+" -s "+deviceId+" pull /data/local/tmp/dump.xml "+destinationPath;
 		
 		CommandExecute.commandExecution(pullXml);
@@ -244,6 +242,6 @@ public class RootEmulation {
 		String launchableActivityCommand=LogAnalysis.pathToadb+" -s "+deviceId+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		Thread.sleep(30000);
+		Thread.sleep(60000);
 	}
 }

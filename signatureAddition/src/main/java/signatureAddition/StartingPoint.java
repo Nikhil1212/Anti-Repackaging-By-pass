@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 import installerVerficationByPass.*;
 import rootDetectionByPass.StartingPoint_RootDetection;
@@ -16,7 +19,7 @@ public class StartingPoint {
 	public static void main(String[] args) throws Exception {
 
 		int i=0;
-		String pathToApk="/home/nikhil/Documents/apps/TextFiles/packageNames_3.txt";
+		String pathToApk="/home/nikhil/Documents/apps/RemainingApps.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -25,7 +28,7 @@ public class StartingPoint {
 			{
 
 				String packageName=scanner.next();
-				packageName="com.khaalijeb.inkdrops";
+				//packageName="com.khaalijeb.inkdrops";
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
@@ -54,9 +57,12 @@ public class StartingPoint {
 
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
+				
+				isModifiedApkGenerated(modifiedApkPath,packageName);
+			
 				//fileNameFetch(packageName);
-				//removeDirectory(pathToDisAssembleCode);
-				break;
+				removeDirectory(pathToDisAssembleCode);
+			//	break;
 
 			}
 			catch (Exception e)
@@ -67,7 +73,57 @@ public class StartingPoint {
 		}
 	}
 
-	public static String modifiedApkGeneration(String packageName) {
+	private static void isModifiedApkGenerated(String modifiedApkPath, String packageName) throws IOException, InterruptedException, SQLException {
+		// TODO Auto-generated method stub
+		Process process=CommandExecute.commandExecution("ls "+modifiedApkPath);
+		String line=new BufferedReader(new InputStreamReader(process.getInputStream())).readLine();
+		if(line==null)
+		{
+			//Modified apk not generated. Update the table
+			
+			updateTable(packageName,'N',"Reason unknown","ModifiedApkGeneration");
+			
+		}
+		else
+			updateTable(packageName,'Y',"","ModifiedApkGeneration");
+		
+	}
+
+	public static void updateTable(String packageName, char c, String remarks, String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		
+		String checkQuery="Select packagename from "+tableName+" where packageName ='"+packageName+"';";
+		System.out.println(checkQuery);
+		Statement statement1=DataBaseConnect.initialization();
+		ResultSet resultSet=statement1.executeQuery(checkQuery);
+		int flag=0;
+		String output="";
+		while(resultSet.next())
+		{
+			flag=1;
+			output=output+ resultSet.getString(1)+"\n";
+		}
+		if(flag==0)
+		{
+			String query="Insert into "+tableName+" values ('"+packageName+"','"+c+"','"+remarks+"');";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+		}
+		else
+		{
+			String query="Update "+tableName+" set IsApkGenerated ='"+c+"' , remarks ='"+remarks+"' where packageName='"+packageName+"';";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+		}
+
+
+		
+	}
+	public static String modifiedApkGenerationAntiEmulator(String packageName) {
 		// TODO Auto-generated method stub
 		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
@@ -90,9 +146,89 @@ public class StartingPoint {
 
 			StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
 			//
-			//StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+			StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
 			StartingPoint_RootDetection.main(pathToDisAssembleCode);
+
+			 modifiedApkPath=buildApk(packageName);
+			signApk(packageName, modifiedApkPath);
+			//fileNameFetch(packageName);
+			removeDirectory(pathToDisAssembleCode);
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return modifiedApkPath;
+		
+	}
+	
+	public static String modifiedApkGenerationRootDetection(String packageName) {
+		// TODO Auto-generated method stub
+		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
+		
+		
+		String modifiedApkPath="";
+		try
+		{
+			System.out.println(packageName);
+			
+			//package name is retrieved using aapt 
+			disassembleApk(fileNamePath,packageName);
+
+			String fullRSAfetch= fetchRSAName(packageName);
+
+			String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
+			System.out.println(signCertificateKey);
+
+			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+
+			StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+			//
+//			StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+
+			StartingPoint_RootDetection.main(pathToDisAssembleCode);
+
+			 modifiedApkPath=buildApk(packageName);
+			signApk(packageName, modifiedApkPath);
+			//fileNameFetch(packageName);
+			removeDirectory(pathToDisAssembleCode);
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return modifiedApkPath;
+		
+	}
+	
+	public static String modifiedApkGenerationAntiTampering(String packageName) {
+		// TODO Auto-generated method stub
+		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
+		
+		
+		String modifiedApkPath="";
+		try
+		{
+			System.out.println(packageName);
+			
+			//package name is retrieved using aapt 
+			disassembleApk(fileNamePath,packageName);
+
+			String fullRSAfetch= fetchRSAName(packageName);
+
+			String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
+			System.out.println(signCertificateKey);
+
+			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+
+			StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+			//
+//			StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+
+			//StartingPoint_RootDetection.main(pathToDisAssembleCode);
 
 			 modifiedApkPath=buildApk(packageName);
 			signApk(packageName, modifiedApkPath);
@@ -228,7 +364,7 @@ public class StartingPoint {
 		// TODO Auto-generated method stub
 		String apktoolCommand="apktool d -r "+apkPath+" -f -o /home/nikhil/Documents/apps/"+packageName;
 		System.out.println(apktoolCommand);
-		commandExecution(apktoolCommand);
+		CommandExecute.commandExecutionSh(apktoolCommand);
 
 	}
 	public static String buildApk(String packageName) throws IOException, InterruptedException {

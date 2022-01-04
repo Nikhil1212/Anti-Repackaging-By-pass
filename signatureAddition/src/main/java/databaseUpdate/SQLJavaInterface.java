@@ -42,11 +42,11 @@ public class SQLJavaInterface {
 		// TODO Auto-generated method stub
 	
 		int arr[]=new int[4];
-		String filePath="/home/nikhil/Documents/apps/few.txt";
-		File fileInput=new File(filePath);
-		Scanner scanner=new Scanner(fileInput);
+	//	String filePath="/home/nikhil/Documents/apps/few.txt";
+	//	.File fileInput=new File(filePath);
+		//Scanner scanner=new Scanner(fileInput);
 		
-		String query ="Select packageName from ManualResults where PackageName NOT IN (Select PackageName From Manual_Emulator_With_Google_API);";
+		String query ="Select packageName from ManualResults_RootDetectionAnalysis where IsCheckPresent ='Y' and packageName IN (Select packageName from Manual_Emulator_With_Google_API);";
 		
 		ResultSet resultSet=statement.executeQuery(query);
 		
@@ -103,7 +103,7 @@ public class SQLJavaInterface {
 		}*/
 		
 		
-		String outputFilePath="/home/nikhil/Documents/apps/AntiEmulator.txt";
+		String outputFilePath="/home/nikhil/Documents/apps/RootCheckPresentTool.txt";
 		
 		FileWriter fileWriter=new FileWriter(outputFilePath);
 		fileWriter.write(FileContents);

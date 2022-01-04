@@ -81,20 +81,14 @@ public class FileNamesForSignatureAddition {
 	public static List<String> listInitializationForSignaturePattern(List<String> list) {
 		// TODO Auto-generated method stub
 		list.add("Landroid/content/pm/Signature;->toByteArray()");
-		list.add("Landroid/content/pm/Signature;->toCharArray()");
 		list.add("Landroid/content/pm/Signature;->hashCode()");
 		list.add("Landroid/content/pm/Signature;->getPublicKey()"); //Truely grateful for this statement as we went to the source code and analyse the various signature methods possible.
 		list.add("Landroid/content/pm/Signature;->toCharsString()");
 		list.add("Landroid/content/pm/Signature;->getFlags()");
 		list.add("Landroid/content/pm/Signature;->toChars()");
 		list.add("Landroid/content/pm/Signature;->getChainSignatures()");
-		list.add("Landroid/content/pm/Signature;->hashCode()");
 		list.add("Landroid/content/pm/Signature;->equals(");
 		list.add("Landroid/content/pm/Signature;->writeToParcel(");
-		
-		//list.add("Landroid/content/pm/SigningInfo;->hasMultipleSigners()");
-	//	list.add("Landroid/content/pm/SigningInfo;->getApkContentsSigners()");
-		//list.add("Landroid/content/pm/SigningInfo;->getSigningCertificateHistory()");
 		
 		return list;
 	}

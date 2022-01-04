@@ -21,12 +21,12 @@ public class AppLaunchAndDump {
 	public  static String readlink="/bin/readlink";
 	
 	public static String deviceId[]={"14011JEC202909", "emulator-5554", "0248f4221b4ca0ee","ab06bf54"};  //"93d6906c",
-	public static String deviceIdSynonym[]={"real", "emulator","rooted","repackaged","sideload"};
+	public static String deviceIdSynonym[]={"real", "emulator","rooted","repackaged","modifiedRepackaged","modifiedEmulator","modifiedRoot"};
 
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/EmulatorReRun.txt";
+		String pathToApk="/home/nikhil/Documents/apps/RemainingApps.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -44,7 +44,8 @@ public class AppLaunchAndDump {
 				
 
 				packageName=scanner.next();
-				packageName="com.csam.icici.bank.mimobile";
+				packageName="com.ibank.icici_secure_app";
+				//packageName="com.csam.icici.bank.mimobile";
 				//packageName="com.icicibank.iMcanada";
 				count1++;
 				System.out.println(count1);
@@ -95,7 +96,7 @@ public class AppLaunchAndDump {
 					installationCommandEmulator=LogAnalysis.pathToadb+" -e install -g "+apkPaths;
 					installationCommandSingleDevice=LogAnalysis.pathToadb+ " install -g "+apkPaths;
 				}
-				takeDumpOnDevice(deviceId[2], deviceIdSynonym[1],installationCommandEmulator,count,packageName,dumpPathDirectory,appPathDirectory);
+				takeDumpOnDevice(deviceId[2], deviceIdSynonym[2],installationCommandSingleDevice,count,packageName,dumpPathDirectory,appPathDirectory);
 				//takeDumpOnDevice(deviceId[2], "real_2",installationCommandNonRoot,count,packageName,dumpPathDirectory,appPathDirectory);
 				
 				//takeDumpOnDevice(deviceId[1], deviceIdSynonym[1],installationCommandEmulator,count,packageName,dumpPathDirectory,appPathDirectory);

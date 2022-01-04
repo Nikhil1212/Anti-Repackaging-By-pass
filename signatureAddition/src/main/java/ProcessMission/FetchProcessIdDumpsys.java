@@ -33,9 +33,9 @@ public class FetchProcessIdDumpsys {
 
 	}
 
-	public static String retrievePID(String packageName) throws IOException, InterruptedException {
+	public static String retrievePID(String packageName, String deviceID) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		String command=LogAnalysis.pathToadb+" shell dumpsys meminfo "+packageName+" | grep pid";
+		String command=LogAnalysis.pathToadb+" -s "+deviceID+" shell dumpsys meminfo "+packageName+" | grep pid";
 		Process process= CommandExecute.commandExecution(command);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String output=bufferedReader.readLine();

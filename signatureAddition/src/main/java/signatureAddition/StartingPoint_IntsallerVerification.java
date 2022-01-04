@@ -82,7 +82,7 @@ public class StartingPoint_IntsallerVerification {
 
 
 	}
-	private static void patternListInitialize(List<String> patternList) {
+	public static void patternListInitialize(List<String> patternList) {
 		// TODO Auto-generated method stub
 		String pattern="Landroid/content/pm/PackageManager;->getInstallerPackageName(Ljava/lang/String;)";
 		patternList.add(pattern);
@@ -90,7 +90,7 @@ public class StartingPoint_IntsallerVerification {
 		patternList.add(pattern);
 	}
 
-	private static HashSet<String> fetchValidFiles(Process process) throws IOException, InterruptedException {
+	public static HashSet<String> fetchValidFiles(Process process) throws IOException, InterruptedException {
 
 		/*
 		 * This code will 

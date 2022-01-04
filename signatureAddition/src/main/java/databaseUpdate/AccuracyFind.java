@@ -28,14 +28,14 @@ public class AccuracyFind {
 	/*	fetchPackageNamesFromDataBase(statement);
 		
 		System.exit(0);*/
-		File file=new File("/home/nikhil/Documents/apps/AntiTamperingCheckPresent.txt");
+		File file=new File("/home/nikhil/Documents/apps/PackageNames.txt");
 
 		//Thread.sleep(10000);
 
-		String falseResultsPath="/home/nikhil/Documents/apps/falseResults.txt";
+		String falseResultsPath="/home/nikhil/Documents/apps/falseResultsRoot.txt";
 		String falsePositiveResultsPath="/home/nikhil/Documents/apps/falsePositiveResultsRoot.txt";
-		String falseNegativeResultsPath="/home/nikhil/Documents/apps/falseNegativeResults.txt";
-
+		String falseNegativeResultsPath="/home/nikhil/Documents/apps/falseNegativeResultsRoot.txt";
+		String outputContentsFalse="";
 		Scanner scanner=new Scanner(file);
 		int accuracyCount=0;
 		File falseResults=new File(falseResultsPath);
@@ -50,8 +50,8 @@ public class AccuracyFind {
 			try
 			{
 				String packageName=scanner.nextLine();
-				String queryantiEmulatorCheckModified="Select IsBypassable from ByPass_AntiTampering_Automation where packageName='"+packageName+"';";
-				String queryManualResults="Select IsBypassable from Manual_ByPass_AntiTampering_Automation where packageName='"+packageName+"';";
+				String queryantiEmulatorCheckModified="Select IsCheckPresent from RootDetection_Automation where packageName='"+packageName+"';";
+				String queryManualResults="Select IsCheckPresent from ManualResults_RootDetectionAnalysis where packageName='"+packageName+"';";
 				System.out.println(queryantiEmulatorCheckModified);
 				ResultSet resultSet2=	statement2.executeQuery(queryantiEmulatorCheckModified);
 				resultSet2.next();
@@ -67,13 +67,14 @@ public class AccuracyFind {
 				{
 					if(valManual.contains("Y") && valTool.contains("N"))
 					{
+						outputContentsFalse=outputContentsFalse+packageName+"\n";
 						falseNegative++;
 						appFalseNegative=appFalseNegative+packageName+"\n";
 					//	Files.write(Paths.get(falseNegativeResultsPath), (packageName+"\n").getBytes(), StandardOpenOption.APPEND);
 					}
 					else if(valManual.contains("N") && valTool.contains("Y"))
 					{
-						
+						outputContentsFalse=outputContentsFalse+packageName+"\n";
 						appFalsePositive=appFalsePositive+packageName+"\n";
 					//	Files.write(Paths.get(falsePositiveResultsPath), (packageName+"\n").getBytes(), StandardOpenOption.APPEND);
 						falsePositive++;
@@ -94,6 +95,10 @@ public class AccuracyFind {
 		
 		fileWriter=new FileWriter(falseNegativeResultsPath);
 		fileWriter.write(appFalseNegative);
+		fileWriter.close();
+		
+		fileWriter=new FileWriter(falseResultsPath);
+		fileWriter.write(outputContentsFalse);
 		fileWriter.close();
 		
 		System.out.println("\n***********\n Accuracy count is :"+accuracyCount);

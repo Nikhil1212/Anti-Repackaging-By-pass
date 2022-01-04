@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import signatureAddition.CommandExecute;
 import signatureAddition.StartingPoint;
 import signatureAddition.resignedApp;
+import signatureAddition.pastHardwork.AnalyseActivities;
 import signatureAddition.pastHardwork.AnalysingJSON;
 import signatureAddition.pastHardwork.TagDifferenceWithApk;
 import signatureAddition.pastHardwork.printLogsThroughPID;
@@ -504,11 +505,17 @@ public class LogAnalysis {
 			String logPathForResignedApp) throws FileNotFoundException, SQLException {
 		System.out.println("\n***************************** \n \n fetching activity names");
 
+		
 		HashSet<String> activiyOriginalHashSet=FetchActivity.fetchActivity(logPathForOriginalApp, packageName);
+		
+		AnalyseActivities.iterateHashSet(activiyOriginalHashSet);
 		System.out.println("from original app : "+activiyOriginalHashSet);
-
+		
+		
 		HashSet<String> activiyRepckagedHashSet=FetchActivity.fetchActivity(logPathForResignedApp, packageName);
-		System.out.println("from repackaged app : "+activiyRepckagedHashSet);
+		AnalyseActivities.iterateHashSet(activiyRepckagedHashSet);
+
+		System.out.println("from app's other run: "+activiyRepckagedHashSet);
 
 		String fileContents=packageName+":\noriginal:"+activiyOriginalHashSet+"\nResigned:"+activiyRepckagedHashSet+"\n";
 		if (activiyRepckagedHashSet.containsAll(activiyOriginalHashSet) && activiyOriginalHashSet.containsAll(activiyRepckagedHashSet))
@@ -670,8 +677,8 @@ public class LogAnalysis {
 
 		//	usingLogcat(packageName,pid,logPathForOutput);
 			
-			storingLogOutputUsingGrepPackageName(packageName);
-			storingLogOutputUsingPID(packageName,pid);
+			storingLogOutputUsingGrepPackageName(packageName,AppLaunchAndDump.deviceId[0]);
+			storingLogOutputUsingPID(packageName,pid,AppLaunchAndDump.deviceId[0]);
 
 		//	String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
 
@@ -706,11 +713,11 @@ public class LogAnalysis {
 		//return -1;
 	}
 
-	public static void usingLogcat(String packageName, String pid, String logPathForOutput) throws IOException, InterruptedException {
+	public static void usingLogcat(String packageName, String pid, String logPathForOutput, String deviceId) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		storingLogOutputUsingGrepPackageName(packageName);
+		storingLogOutputUsingGrepPackageName(packageName,deviceId);
 		if(pid!=null)
-		storingLogOutputUsingPID(packageName,pid);
+		storingLogOutputUsingPID(packageName,pid,deviceId);
 
 		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
 
@@ -746,10 +753,7 @@ public class LogAnalysis {
 
 	}
 
-	private static void usingLogcat(String packageName, String pid) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	public static void checkApkInstall(String packageName) throws Exception {
 		// TODO Auto-generated method stub
@@ -838,14 +842,14 @@ public class LogAnalysis {
 		Thread.sleep(15000);
 	}
 
-	public static void storingLogOutputUsingPID(String packageName, String pid) throws IOException, InterruptedException {
+	public static void storingLogOutputUsingPID(String packageName, String pid, String deviceId) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		System.out.println("PID of the app is : "+pid);
 		String directoryLocationForStoringLogs="/home/nikhil/Documents/logs/";
 
 		String phoneDirectory_1="/data/local/tmp/fromProgrampid.txt";
 		String testFilePath="/data/local/tmp/myfile.txt";
-		String analysingLogsUsingPID=pathToadb+" logcat -v brief -d --pid "+pid+" -f "+testFilePath;// > "+phoneDirectory_1;
+		String analysingLogsUsingPID=pathToadb+" -s " +deviceId+" logcat -v brief -d --pid "+pid+" -f "+testFilePath;// > "+phoneDirectory_1;
 
 		/**
 		 * Pull this file to PC and save it to the  
@@ -861,29 +865,29 @@ public class LogAnalysis {
 		/**
 		 * Let's pull this file 
 		 */
-		String pullCommand=pathToadb+" pull "+testFilePath+" "+filePath;
+		String pullCommand=pathToadb+" -s "+deviceId+" pull "+testFilePath+" "+filePath;
 		Process process=CommandExecute.commandExecution(pullCommand);
 
 		/**
 		 * Remove the file
 		 */
-		String removeTxtFileCommand=LogAnalysis.pathToadb+" shell rm "+testFilePath;
+		String removeTxtFileCommand=LogAnalysis.pathToadb+" -s "+ deviceId+" shell rm "+testFilePath;
 		CommandExecute.commandExecution(removeTxtFileCommand);
 	
 
 	}
 
-	public static void storingLogOutputUsingGrepPackageName(String packageName) throws IOException, InterruptedException {
+	public static void storingLogOutputUsingGrepPackageName(String packageName, String deviceId) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		String phoneDirectory="/data/local/tmp/fromProgramPackageName.txt";
-		String commandToFilterLogsUsingPackageName=pathToadb+" shell logcat -v brief -d | grep "+packageName+" > "+phoneDirectory;
+		String commandToFilterLogsUsingPackageName=pathToadb+" -s "+ deviceId+" shell logcat -v brief -d | grep "+packageName+" > "+phoneDirectory;
 
 		System.out.println(commandToFilterLogsUsingPackageName);
 
 		Process process3=CommandExecute.commandExecution(commandToFilterLogsUsingPackageName);
 
 		String devicePCDirectory="/home/nikhil/Documents/logs/fromProgram"+packageName+".txt";
-		String pullFromPhoneToPC=pathToadb+" pull "+phoneDirectory+" "+devicePCDirectory;
+		String pullFromPhoneToPC=pathToadb+" -s "+ deviceId+" pull "+phoneDirectory+" "+devicePCDirectory;
 		CommandExecute.commandExecution(pullFromPhoneToPC);
 
 	}

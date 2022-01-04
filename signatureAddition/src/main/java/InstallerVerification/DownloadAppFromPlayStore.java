@@ -51,7 +51,7 @@ public class DownloadAppFromPlayStore {
 	public static void main(String[] args) throws InterruptedException, IOException, Exception{
 
 
-		String filePath="/home/nikhil/Documents/apps/filteredApps_1.txt";
+		String filePath="/home/nikhil/Documents/apps/TextFiles/AppsReDownload.txt";
 
 
 		fetchApkFromPlayStore(filePath);
@@ -84,8 +84,8 @@ public class DownloadAppFromPlayStore {
 			/**
 			 * Pull the apk and store it on to the device
 			 */
-			//pullTheApk(packageName);
-			//uninstallApp(packageName);
+			pullTheApk(packageName);
+			uninstallApp(packageName);
 	/*		RootEmulation.launchTheApp(packageName, AppLaunchAndDump.deviceId[0]);
 			
 			String tempFilePath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/playStore.xml";
@@ -186,16 +186,16 @@ public class DownloadAppFromPlayStore {
 		
 		//waitTillButtonEnabled(xpathInstallButton);
 
-	/*	driver.findElementByXPath(xpathInstallButton).click();
 		driver.findElementByXPath(xpathInstallButton).click();
+	//	driver.findElementByXPath(xpathInstallButton).click();
 
 		
 		//driver.findElementByXPath(xpathInstallButton).click();
 
 		System.out.println("Can you see me");
 		
-	/*	Thread.sleep(5000);
-		
+		Thread.sleep(5000);
+		/*
 		if(isElementPresent(xpathAcceptButton))
 		{
 			
@@ -205,10 +205,10 @@ public class DownloadAppFromPlayStore {
 			
 			
 			//driver.findElementByXPath(xpathAcceptButton).click();			
-		}
+		}*/
 		
-	*/
-		//waitTillButtonEnabled(xpathOpenButton);
+	
+		waitTillButtonEnabled(xpathOpenButton);
 
 		//	updateDatabaseByPassable(packageName, 'Y', "Successful");
 		

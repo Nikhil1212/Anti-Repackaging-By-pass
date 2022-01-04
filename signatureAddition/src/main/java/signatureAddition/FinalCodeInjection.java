@@ -18,12 +18,12 @@ import signatureAddition.pastHardwork.ParseRegisters;
 public class FinalCodeInjection {
 	
 	public static String constRegisterValue=null;
-	public static void main(String[] args) throws Exception {
+/*	public static void main(String[] args) throws Exception {
 		String filePath="/home/nikhil/Documents/apps/dataset/com.khaalijeb.inkdrops/base/smali_classes2/com/khaalijeb/inkdrops/e/h.smali";
 		String key="KuchBhi";
-		String pattern="Landroid/content/pm/Signature;->equals()";
-		codeInjection(constRegisterValue, constRegisterValue, constRegisterValue);
-	}
+		String pattern="Landroid/content/pm/Signature;->equals(";
+		codeInjection(filePath, key, pattern);
+	}*/
 
 	public static void codeInjection(String filePath, String key, String pattern) throws Exception {
 
@@ -105,7 +105,7 @@ public class FinalCodeInjection {
 		 * Let's fetch the register which is inovking the toByteArray
 		 */
 
-		String registerName=registerInvoke(fromLocaltoSignatureMethodInvoke);
+		String registerName=registerInvoke1(fromLocaltoSignatureMethodInvoke);
 		//	System.out.println(fromLocaltoByteArray.substring(0, fromLocaltoByteArray.length()-22));
 
 		System.out.println("Register name is :"+registerName);
@@ -344,7 +344,7 @@ public class FinalCodeInjection {
 		/***
 		 * Let's fetch the register which is inovking the toByteArray
 		 */
-		String registerName=registerInvoke(fromLocaltoSignatureMethodInvoke);
+		String registerName=registerInvoke1(fromLocaltoSignatureMethodInvoke);
 		System.out.println(fromLocaltoSignatureMethodInvoke.substring(0, fromLocaltoSignatureMethodInvoke.length()-22));
 
 		String signRelatedCode="";
@@ -379,45 +379,110 @@ public class FinalCodeInjection {
 
 	}
 
-	private static String insertSignCode(String codeToWrite, String signRelatedCode, String pattern) {
+	private static String insertSignCode(String fileContents, String signRelatedCode, String pattern) throws IOException {
 
 		/**
 		 * We have updated the locals register count
 		 * Now just insert the signature related code
 		 */
+	/*	
+		System.out.println(codeToWrite);
+		String filePath="/home/nikhil/Documents/apps/codeToWrite.txt";
+		FileWriter fileWriter=new FileWriter(filePath);
+		fileWriter.write(codeToWrite);
+		fileWriter.close();
 		
-		int indexInvokeVirtual=codeToWrite.lastIndexOf("invoke-virtual");
+		filePath="/home/nikhil/Documents/apps/signRelatedCode.txt";
+		fileWriter=new FileWriter(filePath);
+		fileWriter.write(signRelatedCode);
+		fileWriter.close();
+		*/
 		
+		//String fileContentsTillSignatuteInvoke=fileContents.
+		
+	//	int indexInvokeVirtual=fileContents.lastIndexOf("invoke-virtual");
+		
+		
+		
+		System.out.println(fileContents);
+		
+		int indexPattern=fileContents.indexOf(pattern);
+
+		
+		String contentsTillPattern=fileContents.substring(0,indexPattern);
+		int indexInvokeVirtual=contentsTillPattern.lastIndexOf("invoke-virtual");
+		
+		//int indexInvokeVirtual=fileContents.lastIndexOf("invoke-virtual");
+		System.out.println("Value of the invoke-virtual is :"+indexInvokeVirtual);
+		
+		System.out.println("Value of the pattern :"+indexPattern);
+		
+		
+		//int len=fileContents.length();
+		//String beforeSignInjection=codeToWrite.substring(0, len-(indexPattern-(indexInvokeVirtual)));
+		
+		//String beforeSignInjection=fileContents.substring(0, indexInvokeVirtual);
+		
+		String beforeSignInjection=fileContents.substring(0, indexInvokeVirtual);
+		
+	/*	
+		System.out.println("Index of virtual :"+indexInvokeVirtual);
 
 		//	String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 
-		int indextoByteArray=codeToWrite.indexOf(pattern);
+		int indextoByteArray=fileContents.indexOf(pattern);
 
-		String beforeSignInjection=codeToWrite.substring(0,indexInvokeVirtual);
+		System.out.println("Index of toByteArray :"+indextoByteArray);
+
+		String beforeSignInjection=fileContents.substring(0,indextoByteArray-22);*/
 		/**
 		 * I have a doubt whether this 22 will always works
 		 */
-		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indexInvokeVirtual);
+		String res=beforeSignInjection+ signRelatedCode +fileContents.substring(indexInvokeVirtual);
 
 		return res;
 	}
-	private static String insertSignCodeLast(String codeToWrite, String signRelatedCode, String pattern) {
+	/**
+	 * 
+	 * @param fileContents (the value that contains the file's contents with the modification of the .locals parameter)
+	 * @param signRelatedCode
+	 * @param pattern
+	 * @return
+	 */
+	private static String insertSignCodeLast(String fileContents, String signRelatedCode, String pattern) {
 
 		/**
 		 * We have updated the locals register count
 		 * Now just insert the signature related code
+		 */
+		
+		/**
+		 * codeToWrite contains the code of the entire file
 		 */
 
 		//String patternToByteArray="Landroid/content/pm/Signature;->toByteArray()";
 
-		int indexPattern=codeToWrite.lastIndexOf(pattern);
+		
+		System.out.println(fileContents);
+		
+		int indexPattern=fileContents.lastIndexOf(pattern);
 
-		int indexInvokeVirtual=codeToWrite.lastIndexOf("invoke-virtual");
+		
+		String contentsTillPattern=fileContents.substring(0,indexPattern);
+		int indexInvokeVirtual=contentsTillPattern.lastIndexOf("invoke-virtual");
+		
+		//int indexInvokeVirtual=fileContents.lastIndexOf("invoke-virtual");
 		System.out.println("Value of the invoke-virtual is :"+indexInvokeVirtual);
-		int len=codeToWrite.length();
+		
+		System.out.println("Value of the pattern :"+indexPattern);
+		
+		
+		//int len=fileContents.length();
 		//String beforeSignInjection=codeToWrite.substring(0, len-(indexPattern-(indexInvokeVirtual)));
 		
-		String beforeSignInjection=codeToWrite.substring(0, indexInvokeVirtual);
+		//String beforeSignInjection=fileContents.substring(0, indexInvokeVirtual);
+		
+		String beforeSignInjection=fileContents.substring(0, indexInvokeVirtual);
 		
 		/**
 		 * I have a doubt whether this 22 will always works
@@ -426,7 +491,7 @@ public class FinalCodeInjection {
 //		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indextoByteArray -22);
 
 		
-		String res=beforeSignInjection+ signRelatedCode +codeToWrite.substring(indexInvokeVirtual);
+		String res=beforeSignInjection+ signRelatedCode +fileContents.substring(indexInvokeVirtual);
 
 		return res;
 	}
@@ -454,6 +519,25 @@ public class FinalCodeInjection {
 		}
 		return registerName;
 		//return null;
+	}
+	
+	private static String registerInvoke1(String fromLocaltoByteArray) {
+
+		//return null;
+		
+		int index=fromLocaltoByteArray.lastIndexOf("invoke-virtual");
+		String output=fromLocaltoByteArray.substring(index);
+		System.out.println(output);
+		int openingBracketIndex=output.indexOf("{");
+		int i=openingBracketIndex;
+		while(output.charAt(i)!=',' && output.charAt(i)!='}' )
+		{
+			i++;
+		}
+		String res=output.substring(openingBracketIndex+1,i);
+		System.out.println(res);
+		return res;
+	
 	}
 
 	private static int localsCountToInt(String localsCount) {

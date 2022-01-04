@@ -21,7 +21,7 @@ public class TableUpdate {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String FilePath="/home/nikhil/Documents/apps/ByPassRootDetection.txt";
+		String FilePath="/home/nikhil/Documents/apps/AppsTransfer.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		int count=0;
@@ -33,7 +33,8 @@ public class TableUpdate {
 				String packageName=scanner.next();
 				System.out.println(packageName);
 				//updateTable(packageName, 'Y', FilePath, packageName);
-				updateTable(packageName, 'Y', "","Manual_ByPass_RootDetection_Automation");
+			//	updateTable(packageName, 'Y', "Overwrite String values","TempFinalDataset");
+				updateTable(packageName,"FinalDataset");
 
 			}
 			catch (Exception e) {
@@ -45,6 +46,36 @@ public class TableUpdate {
 	}
 
 }
+
+
+	private static void updateTable(String packageName, String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		String checkQuery="Select * from "+tableName+" where packageName='"+packageName+"';";
+		System.out.println(checkQuery);
+		Statement statement1=DataBaseConnect.initialization();
+		ResultSet resultSet=statement1.executeQuery(checkQuery);
+		int flag=0;
+		String output="";
+		while(resultSet.next())
+		{
+			flag=1;
+			output=output+ resultSet.getString(1)+"\n";
+		}
+		if(flag==0)
+		{
+			String query="Insert into "+tableName +" values ('"+packageName+"');";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+		}
+		else
+		{
+			return ;
+		}
+
+	}
+
 
 	private static void updateTable(String packageName, char c, String remarks, String tableName) throws SQLException {
 		// TODO Auto-generated method stub
