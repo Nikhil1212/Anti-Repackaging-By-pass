@@ -1,47 +1,44 @@
-package signatureAddition;
+package finalRun;
+
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import com.google.common.collect.Table;
-
 import Logs.LogAnalysis;
-import Logs.LogAnalysis_sameApp;
 import ProcessMission.FetchProcessIdDumpsys;
-import analysingDumpSys.DumpSysAnalysis;
 import databaseUpdate.TableUpdate;
 import parseXml.Main;
-import signatureAddition.pastHardwork.HelloUiAutomator;
+import signatureAddition.*;
+import signatureAddition.PullApps.AppsPull;
 import signatureAddition.pastHardwork.restartSmartphone;
 
+
 /**
- * So, this class takes the package name as an input and installs the original app if the apk is present in the local machine. Handles split-apks scenarios. This will also grant the permissions and launches the app.
- * Currently, we are trying to find the bug in the uiautomator part, so we are taking the dump two times for a single installation and then we will compare the resource id.
+ * 
  * @author nikhil
  *
  */
-public class AntiTampering {
+public class RealDeviceRun {
 	public  static String pathToLS="/bin/ls";
 	public  static String readlink="/bin/readlink";
 	
 	public static String deviceId[]={"14011JEC202909", "emulator-5554", "0248f4221b4ca0ee","ab06bf54"};  //"93d6906c",
-	public static String deviceIdSynonym[]={"real", "emulator","rooted","repackaged","modifiedRepackaged","modifiedEmulator","modifiedRoot"};
+	public static String deviceIdSynonym[]={"real", "emulator","rooted","repackaged","modified"};
 
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/dataset/packageNames_2.txt";
+		String pathToApk="/home/nikhil/Documents/apps/RepackagedReRun.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
 		
-		lockUnlockPhone("1995", deviceId[3]);
+	//	lockUnlockPhone("1995", deviceId[0]);
 		
 	//	lockUnlockPhone("1234", deviceId[2]);
 		
@@ -53,19 +50,20 @@ public class AntiTampering {
 			{
 				
 				packageName=scanner.next();
+				//packageName="in.org.npci.upiapp";
 				count1++;
-				System.out.println(count1);
-			//	packageName="in.org.npci.upiapp";
-			
-				//	packageName="net.one97.paytm";
+			//	if(count1<=1350)
+				//	continue;
 				
-				CommandExecute.commandExecution(LogAnalysis.pathToadb+" uninstall "+packageName);
-
-				String logPathOriginal="/home/nikhil/Documents/apps/logs/"+packageName+"/original.txt";
+				System.out.println("Package Number count  :"+count1);
+			
+				
+				uninstallApp(packageName, deviceId[0]);
+			//	String logPathOriginal="/home/nikhil/Documents/apps/logs/"+packageName+"/original.txt";
 
 				String logPathRepackaged="/home/nikhil/Documents/apps/logs/"+packageName+"/repackaged.txt";
 				
-				String logPathModifed="/home/nikhil/Documents/apps/logs/"+packageName+"/modified.txt";
+				String logPathModified="/home/nikhil/Documents/apps/logs/"+packageName+"/modified.txt";
 				
 				
 				CommandExecute.commandExecution("mkdir /home/nikhil/Documents/apps/logs/"+packageName);
@@ -73,9 +71,9 @@ public class AntiTampering {
 				String dumpPathDirectory="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
 
 				RootEmulation.createDirectory(dumpPathDirectory);
-				String originalApkDirectory="/home/nikhil/Documents/apps/dataset/"+packageName+"/";
+				String originalApkDirectory=AppsPull.appDirectoryPrefix+packageName+"/";
 
-				Process process=CommandExecute.commandExecution(AntiTampering.pathToLS+" "+originalApkDirectory);
+				Process process=CommandExecute.commandExecutionSh(RealDeviceRun.pathToLS+" "+originalApkDirectory);
 				
 				//fetchPermissionRequested.grantPermissions("com.phonepe.app", pathToApk);
 				BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -92,24 +90,49 @@ public class AntiTampering {
 				}
 			
 				System.out.println(apkPaths);
-				String installationCommandSingleDevice="";
+				String installationCommandRealDevice="";
 				if(count>1)
 				{
 					System.out.println("It is a split apk scenario");
-					installationCommandSingleDevice=LogAnalysis.pathToadb+" install-multiple -g "+ apkPaths;
+					installationCommandRealDevice=LogAnalysis.pathToadb+" -s "+ deviceId[0]+" install-multiple -g "+ apkPaths;
 				}
 				else
 				{
-					installationCommandSingleDevice=LogAnalysis.pathToadb+ " install -g "+apkPaths;
+					installationCommandRealDevice=LogAnalysis.pathToadb+ " -s "+ deviceId[0]+ " install -g "+apkPaths;
 				}
-				takeDumpOnDevice(deviceId[3], deviceIdSynonym[0],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+			//	takeDumpOnDevice(deviceId[0], deviceIdSynonym[3],installationCommandRealDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
 				
-				String pidOriginal=FetchProcessIdDumpsys.retrievePID(packageName,AppLaunchAndDump.deviceId[0]);
+				//String pidOriginal=FetchProcessIdDumpsys.retrievePID(packageName,deviceId[0]);
 				
-				LogAnalysis.usingLogcat(packageName, pidOriginal, logPathOriginal,AppLaunchAndDump.deviceId[0]);
+				//LogAnalysis.usingLogcat(packageName, pidOriginal, logPathRepackaged, deviceId[0]);
 				
 				
-				uninstallApp(packageName,deviceId[3]);
+				
+				String outputDirectoryPath="/home/nikhil/Documents/apps/"+packageName+"/";
+				CommandExecute.commandExecution("mkdir "+outputDirectoryPath);
+
+				String baseOriginalApkPath=originalApkDirectory+"base.apk";
+				CommandExecute.commandExecutionSh("cp "+ baseOriginalApkPath + " "+outputDirectoryPath);
+				
+				String repackagedApkPath=outputDirectoryPath+"base.apk";
+				StartingPoint.signApk(packageName,repackagedApkPath);
+				installationCommandRealDevice=getInstallationCommand(packageName,repackagedApkPath,count,deviceId[0]);
+
+				
+				takeDumpOnDevice(deviceId[0], deviceIdSynonym[3],installationCommandRealDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+
+				String pidRepackaged=FetchProcessIdDumpsys.retrievePID(packageName,deviceId[0]);
+				
+				LogAnalysis.usingLogcat(packageName, pidRepackaged, logPathRepackaged, deviceId[0]);
+				
+				uninstallApp(packageName,deviceId[0]);
+				
+				CommandExecute.commandExecution("rm -r "+outputDirectoryPath);
+				
+				//CommandExecute.commandExecution("rm "+repackagedApkPath);
+				
+				
+			//	uninstallApp(packageName,deviceId[0]);
 				
 				
 				
@@ -121,31 +144,39 @@ public class AntiTampering {
 				/**
 				 * Arrangement for the repackaged apk
 				 */
+				/*
 				
 				String outputDirectoryPath="/home/nikhil/Documents/apps/"+packageName+"/";
 				CommandExecute.commandExecution("mkdir "+outputDirectoryPath);
 
 				String baseOriginalApkPath=originalApkDirectory+"base.apk";
-				CommandExecute.commandExecution("cp "+ baseOriginalApkPath + " "+outputDirectoryPath);
+				CommandExecute.commandExecutionSh("cp "+ baseOriginalApkPath + " "+outputDirectoryPath);
 				
 				String repackagedApkPath=outputDirectoryPath+"base.apk";
 				StartingPoint.signApk(packageName,repackagedApkPath);
-				
-				installationCommandSingleDevice=getInstallationCommand(packageName,repackagedApkPath,count);
-				
-				takeDumpOnDevice(deviceId[3], deviceIdSynonym[3],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+				installationCommandRealDevice=getInstallationCommand(packageName,repackagedApkPath,count,deviceId[0]);
 
-				String pidRepackaged=FetchProcessIdDumpsys.retrievePID(packageName,AppLaunchAndDump.deviceId[0]);
 				
-				LogAnalysis.usingLogcat(packageName, pidRepackaged, logPathRepackaged,AppLaunchAndDump.deviceId[0]);
+				takeDumpOnDevice(deviceId[0], deviceIdSynonym[3],installationCommandRealDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+
+				String pidRepackaged=FetchProcessIdDumpsys.retrievePID(packageName,deviceId[0]);
 				
-				uninstallApp(packageName,deviceId[3]);
+				LogAnalysis.usingLogcat(packageName, pidRepackaged, logPathRepackaged, deviceId[0]);
+				
+				*/
 				
 				
 				
 				/**
 				 * Compare the logs
 				 */
+				
+				/**
+				 * Commenting the below code as we are just capturing the dump.
+				 */
+				
+				/*
+				
 				boolean differentLogs=isDifferentLogs(packageName,pidOriginal,pidRepackaged,logPathOriginal,logPathRepackaged);
 
 				String val=isDumpDifferent(packageName,dumpPathDirectory,deviceIdSynonym[0],deviceIdSynonym[3]);
@@ -170,28 +201,27 @@ public class AntiTampering {
 				 * Generate the modified_apk path and then we need to invoke the command
 				 */
 				
-				
-				String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName,baseOriginalApkPath);
+				/*
+				String modifiedApkPath=StartingPoint.modifiedApkGeneration(packageName);
 				
 				installationCommandSingleDevice=getInstallationCommand(packageName,modifiedApkPath,count);
 				
 				
-				takeDumpOnDevice(deviceId[3], deviceIdSynonym[4],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
+				takeDumpOnDevice(deviceId[0], deviceIdSynonym[4],installationCommandSingleDevice,count,packageName,dumpPathDirectory,originalApkDirectory);
 
-				String pidModified=FetchProcessIdDumpsys.retrievePID(packageName, AppLaunchAndDump.deviceId[0]);
+				String pidModified=FetchProcessIdDumpsys.retrievePID(packageName);
 				
-				LogAnalysis.usingLogcat(packageName, pidModified, logPathModifed,AppLaunchAndDump.deviceId[0]);
+				LogAnalysis.usingLogcat(packageName, pidModified, logPathModified);
 				
-				uninstallApp(packageName,deviceId[3]);
+				uninstallApp(packageName,deviceId[0]);
 				
-				differentLogs=isDifferentLogs(packageName,pidOriginal,pidModified,logPathOriginal,logPathModifed);
+				differentLogs=isDifferentLogs(packageName,pidOriginal,pidModified,logPathOriginal,logPathModified);
 				
 				String pattern=isDumpDifferent(packageName, dumpPathDirectory, deviceIdSynonym[0],deviceIdSynonym[4]);
 				
 				updateByPassInfo(packageName,differentLogs,pattern);
 				
-				CommandExecute.commandExecution("rm -r "+outputDirectoryPath);
-				
+				*/
 			//	break;
 				
 			}
@@ -265,16 +295,16 @@ public class AntiTampering {
 		
 	}
 
-	public static String getInstallationCommand(String packageName, String apkPath, int count) throws Exception {
+	public static String getInstallationCommand(String packageName, String apkPath, int count, String deviceId) throws Exception {
 
 		String installationCommandSingleDevice="";
 		if(count==1)
 		{
-			installationCommandSingleDevice=LogAnalysis.pathToadb+ " install -g "+apkPath;
+			installationCommandSingleDevice=LogAnalysis.pathToadb+" -s "+deviceId +" install -g "+apkPath;
 		}
 		else
 		{
-			installationCommandSingleDevice=ModifiedApkRun.generateRepackagedApk(packageName, apkPath, AppLaunchAndDump.deviceId[0]);
+			installationCommandSingleDevice=ModifiedApkRun.generateRepackagedApk(packageName, apkPath,deviceId);
 		}	
 		return installationCommandSingleDevice;
 	}
@@ -318,7 +348,7 @@ public class AntiTampering {
 	}
 
 	public static void takeDumpOnDevice(String deviceId, String deviceSynonym, String installationCommand, int count,
-			String packageName, String directoryPath, String appPathDirectory) throws Exception {
+			String packageName, String dumpDirectoryPath, String appPathDirectory) throws Exception {
 		String destinationPath="";
 		//RootEmulation.dumpTheAppScreen(packageName, destinationPath2, deviceId[2]);
 		uninstallApp(packageName, deviceId);
@@ -340,18 +370,16 @@ public class AntiTampering {
 			
 		}
 		
-		destinationPath="/data/local/tmp/"+packageName+".apk";
-		CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+deviceId+" shell rm "+destinationPath);
 		
 
 		//DumpSysAnalysis.launchTheApp(packageName);
 		//destinationPath=directoryPath+"/"+deviceSynonym+"_python.xml";
 		
-		destinationPath=directoryPath+"/"+deviceSynonym+"_BuiltIn.xml";
+		destinationPath=dumpDirectoryPath+"/"+deviceSynonym+"_BuiltIn.xml";
 		
 		//DumpSysAnalysis.launchTheApp(packageName);
 		
-		String clearLogcat=LogAnalysis.pathToadb+" -s "+deviceId +" shell logcat -b all -c";
+		String clearLogcat=LogAnalysis.pathToadb+" -s " +deviceId+" shell logcat -b all -c";
 
 
 
@@ -375,7 +403,7 @@ public class AntiTampering {
 		// TODO Auto-generated method stub
 		CommandExecute.commandExecutionSh(installationCommand);
 		if(count>1)
-			fetchPermissionRequested.grantPermissions(packageName, appPathDirectory+"/base.apk", deviceId);
+			fetchPermissionRequested.grantPermissions(packageName, appPathDirectory+"base.apk", deviceId);
 	}
 
 	public static void uninstallApp(String packageName, String deviceId) throws IOException, InterruptedException {

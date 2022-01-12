@@ -29,6 +29,7 @@ public class fetchPermissionRequested {
 		permissionsHashSet.add("WRITE_EXTERNAL_STORAGE");
 		permissionsHashSet.add("CALENDAR");
 		permissionsHashSet.add("PACKAGE_USAGE_STATS");
+		permissionsHashSet.add("CALL_PHONE");
 
 			
 /**
@@ -87,7 +88,9 @@ public class fetchPermissionRequested {
 		permissionsHashSet.add("WRITE_EXTERNAL_STORAGE");
 		permissionsHashSet.add("CALENDAR");
 		permissionsHashSet.add("PACKAGE_USAGE_STATS");
+		permissionsHashSet.add("CALL_PHONE");
 
+		
 		BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line=bufferedReader.readLine();
 		String pattern="uses-permission: name='";

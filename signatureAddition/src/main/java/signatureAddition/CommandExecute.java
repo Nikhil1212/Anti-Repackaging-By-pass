@@ -26,6 +26,7 @@ public class CommandExecute {
 	
 	public static Process commandExecutionSh(String command) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
+		System.out.println(command);
 		Process process=Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});///home/nikhil/Documents/apps/com.mbanking.aprb.aprb"});
 		
 		process.waitFor();

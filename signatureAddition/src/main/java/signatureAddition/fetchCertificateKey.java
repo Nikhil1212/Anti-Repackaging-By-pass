@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -25,17 +26,29 @@ public class fetchCertificateKey {
 		Process pr = Runtime.getRuntime().exec(commandToFetchCertificateFromRSA);
 		String content = new String(Files.readAllBytes(Paths.get(pathToCert)));
 		//	byte[] decoded = Base64.decodeBase64(content);
-			 String[] arrOfStr = content.split("CERTIFICATE-----");
-			 String[] strings=content.split("-----END CERTIFICATE-----");
-			 String[] str=arrOfStr[1].split("-----END");
-			byte[] decoded = Base64.decodeBase64(str[0]);	
-				String hexString = Hex.encodeHexString(decoded);
-				System.out.println(hexString);
+		String[] arrOfStr = content.split("CERTIFICATE-----");
+		String[] strings=content.split("-----END CERTIFICATE-----");
+		String[] str=arrOfStr[1].split("-----END");
+		byte[] decoded = Base64.decodeBase64(str[0]);	
+		String hexString = Hex.encodeHexString(decoded);
+		System.out.println(hexString);
 
 	}
 	public static String getCertificateInHex(String pathToRSA, String packageName) throws IOException, InterruptedException {
 		//	String certificate="";
 		//simple modification
+		if(pathToRSA==null)
+		{
+			try {
+
+
+				String output=StartingPoint.fetchCertificateFromDatabase(packageName, "appsCertificate");
+				return output;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		String pathToCert="/home/nikhil/Documents/apps/certificates/"+packageName+"_cert.pem";
 		//file creation is required otherwise it will throw no file found exception
 		File file=new File(pathToCert);

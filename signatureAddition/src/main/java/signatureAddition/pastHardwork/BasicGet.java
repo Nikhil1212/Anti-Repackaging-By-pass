@@ -10,7 +10,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import Logs.LogAnalysis;
 import finalRun.isDumpGenerated;
+import signatureAddition.CommandExecute;
 
 public class BasicGet {
 
@@ -21,8 +23,29 @@ public class BasicGet {
 	private static final String USER_AGENT = "Mozilla/5.0";
 
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		String pathToApk="/home/nikhil/Documents/apps/FinalDataset.txt";
+		
+		String apkPath="/home/nikhil/Documents/apps/dataset/com.google.android.apps.nbu.paisa.user/base_1.apk";
+		Process process= CommandExecute.commandExecutionSh(LogAnalysis.pathToadb+" -s 0248f4221b4ca0ee install "+apkPath);
+		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line=bufferedReader.readLine();
+		while(line!=null)
+		{
+			System.out.println(line);
+			line=bufferedReader.readLine();
+		}
+		
+		bufferedReader=new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		 line=bufferedReader.readLine();
+		while(line!=null)
+		{
+			System.out.println(line);
+			line=bufferedReader.readLine();
+		}
+		
+		
+		System.exit(0);
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";

@@ -9,24 +9,23 @@ import java.util.Scanner;
 
 import Logs.LogAnalysis;
 import ProcessMission.FetchProcessIdDumpsys;
-import finalRun.RootDetection;
 import signatureAddition.AntiTampering;
 import signatureAddition.AppLaunchAndDump;
 import signatureAddition.CommandExecute;
 import signatureAddition.StartingPoint;
 import signatureAddition.PullApps.AppsPull;
 
+
 /**
- * This class assumes that the apps in which the check is present; those list of apps is stored in a file. And this class takes this file 
- * as an input and generate the modified version of the app and then installs and launch the app and capture the dump and the logs.
+ * This class assumes that the modified version of the app is already generated.
  * @author nikhil
  *
  */
-public class ByPassRootDetection {
+public class OnePlusApps {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String filePath="/home/nikhil/Documents/apps/RootModiffiedApkRemainingApps.txt";
+		String filePath="/home/nikhil/Documents/apps/OnePlusApps.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 		int packageCount=0;
@@ -37,9 +36,8 @@ public class ByPassRootDetection {
 				String packageName=scanner.next();
 				//Refer the anti-tampering class
 				
+			//	packageName="com.upi.axispay";
 				System.out.println("package Count is :"+(++packageCount));
-			//	if(packageCount<960)
-				//	continue;
 				
 				String originalApkDirectory=AppsPull.appDirectoryPrefix+packageName+"/";
 
@@ -47,53 +45,54 @@ public class ByPassRootDetection {
 
 			//	Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
 				
-				String logPathModifed="/home/nikhil/Documents/apps/logs/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[6]+".txt";
+				String logPathModifed="/home/nikhil/Documents/apps/logs/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[4]+".txt";
 				
 				int count=isSplitApk(packageName,originalApkDirectory);
 				
-				String modifiedAppsDirectory=AppsPull.modifiedAppsDirectoryPath+"RootEmulator/";
+				String modifiedAppsDirectory=AppsPull.modifiedAppsDirectoryPath+"SignatureByPass/";
 				String localBaseModifiedApkPath="/home/nikhil/Documents/apps/"+packageName+".apk";
 				
 			//	String modifiedApkLocalPath=
 				String modifiedApkPathHD=modifiedAppsDirectory+"modified_"+packageName+".apk";
-
 				
-				
+			
 				String	copyCommand="cp "+modifiedApkPathHD+" "+localBaseModifiedApkPath;
 				
 				CommandExecute.commandExecutionSh(copyCommand);
 
+				
 				File file2=new File(localBaseModifiedApkPath);
 				if(!file2.exists())
 					continue;
 				
-			//	String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName,originalApkDirectory+"/base.apk");
+			//	String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName,originalApkDirectory+"base.apk");
 				
 				
 					
-				String installationCommand=finalRun.AntiTampering.getInstallationCommand(packageName,localBaseModifiedApkPath,count,AppLaunchAndDump.deviceId[2]);
+				String installationCommand=finalRun.AntiTampering.getInstallationCommand(packageName,localBaseModifiedApkPath,count,AppLaunchAndDump.deviceId[3]);
 				
-				RootDetection.takeDumpOnDevice(AppLaunchAndDump.deviceId[2], AppLaunchAndDump.deviceIdSynonym[6],installationCommand,count,packageName,dumpPathDirectory,originalApkDirectory);
+				AntiTampering.takeDumpOnDevice(AppLaunchAndDump.deviceId[3], AppLaunchAndDump.deviceIdSynonym[4],installationCommand,count,packageName,dumpPathDirectory,originalApkDirectory);
 
+				String pidModified=FetchProcessIdDumpsys.retrievePID(packageName, AppLaunchAndDump.deviceId[3]);
 				
-				String pidModified=FetchProcessIdDumpsys.retrievePID(packageName, AppLaunchAndDump.deviceId[2]);
+				LogAnalysis.usingLogcat(packageName, pidModified, logPathModifed,AppLaunchAndDump.deviceId[3]);
 				
-				LogAnalysis.usingLogcat(packageName, pidModified, logPathModifed,AppLaunchAndDump.deviceId[2]);
-				
-				finalRun.AntiTampering.uninstallApp(packageName,AppLaunchAndDump.deviceId[2]);
+				finalRun.AntiTampering.uninstallApp(packageName,AppLaunchAndDump.deviceId[3]);
 				
 				CommandExecute.commandExecution("rm -r /home/nikhil/Documents/apps/"+packageName);
 				
 				CommandExecute.commandExecution("rm "+localBaseModifiedApkPath);
 				
+				
 			}
 			
 			catch (Exception e) {
 				
-				
 				e.printStackTrace();
 			
 			}
+		//	break;
+
 			
 			
 		}

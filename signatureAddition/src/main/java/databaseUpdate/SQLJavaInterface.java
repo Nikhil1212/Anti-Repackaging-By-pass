@@ -46,7 +46,7 @@ public class SQLJavaInterface {
 	//	.File fileInput=new File(filePath);
 		//Scanner scanner=new Scanner(fileInput);
 		
-		String query ="Select packageName from ManualResults_RootDetectionAnalysis where IsCheckPresent ='Y' and packageName IN (Select packageName from Manual_Emulator_With_Google_API);";
+		String query ="Select packageName from AntiTampering_Automation where isCheckPresent ='Y' and packageName in (Select packageName from appsCertificate);";
 		
 		ResultSet resultSet=statement.executeQuery(query);
 		
@@ -103,7 +103,7 @@ public class SQLJavaInterface {
 		}*/
 		
 		
-		String outputFilePath="/home/nikhil/Documents/apps/RootCheckPresentTool.txt";
+		String outputFilePath="/home/nikhil/Documents/apps/ATv2.txt";
 		
 		FileWriter fileWriter=new FileWriter(outputFilePath);
 		fileWriter.write(FileContents);

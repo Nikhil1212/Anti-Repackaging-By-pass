@@ -15,11 +15,17 @@ import signatureAddition.CommandExecute;
 import signatureAddition.StartingPoint;
 import signatureAddition.PullApps.AppsPull;
 
+
+/**
+ * This class assumes that the modified version of the app is already generated.
+ * @author nikhil
+ *
+ */
 public class ByPassAntiTampering {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String filePath="/home/nikhil/Documents/apps/AntiTamperCheckPresent.txt";
+		String filePath="/home/nikhil/Documents/apps/ATv2.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 		int packageCount=0;
@@ -30,21 +36,40 @@ public class ByPassAntiTampering {
 				String packageName=scanner.next();
 				//Refer the anti-tampering class
 				
+			//	packageName="com.upi.axispay";
 				System.out.println("package Count is :"+(++packageCount));
 				
 				String originalApkDirectory=AppsPull.appDirectoryPrefix+packageName+"/";
 
 				String dumpPathDirectory="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
 
-				Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
+			//	Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
 				
 				String logPathModifed="/home/nikhil/Documents/apps/logs/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[4]+".txt";
 				
 				int count=isSplitApk(packageName,originalApkDirectory);
 				
-				String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName);
+				String modifiedAppsDirectory=AppsPull.modifiedAppsDirectoryPath+"SignatureByPass/";
+				String localBaseModifiedApkPath="/home/nikhil/Documents/apps/"+packageName+".apk";
 				
-				String installationCommand=finalRun.AntiTampering.getInstallationCommand(packageName,modifiedApkPath,count,AppLaunchAndDump.deviceId[0]);
+			//	String modifiedApkLocalPath=
+				String modifiedApkPathHD=modifiedAppsDirectory+"modified_"+packageName+".apk";
+				
+			
+				String	copyCommand="cp "+modifiedApkPathHD+" "+localBaseModifiedApkPath;
+				
+				CommandExecute.commandExecutionSh(copyCommand);
+
+				
+				File file2=new File(localBaseModifiedApkPath);
+				if(!file2.exists())
+					continue;
+				
+			//	String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName,originalApkDirectory+"base.apk");
+				
+				
+					
+				String installationCommand=finalRun.AntiTampering.getInstallationCommand(packageName,localBaseModifiedApkPath,count,AppLaunchAndDump.deviceId[0]);
 				
 				AntiTampering.takeDumpOnDevice(AppLaunchAndDump.deviceId[0], AppLaunchAndDump.deviceIdSynonym[4],installationCommand,count,packageName,dumpPathDirectory,originalApkDirectory);
 
@@ -53,6 +78,12 @@ public class ByPassAntiTampering {
 				LogAnalysis.usingLogcat(packageName, pidModified, logPathModifed,AppLaunchAndDump.deviceId[0]);
 				
 				finalRun.AntiTampering.uninstallApp(packageName,AppLaunchAndDump.deviceId[0]);
+				
+				CommandExecute.commandExecution("rm -r /home/nikhil/Documents/apps/"+packageName);
+				
+				CommandExecute.commandExecution("rm "+localBaseModifiedApkPath);
+				
+				
 			}
 			
 			catch (Exception e) {
@@ -60,6 +91,8 @@ public class ByPassAntiTampering {
 				e.printStackTrace();
 			
 			}
+		//	break;
+
 			
 			
 		}
@@ -69,7 +102,7 @@ public class ByPassAntiTampering {
 	public static int isSplitApk(String packageName, String originalApkDirectory) throws IOException, InterruptedException {
 		int count=0;
 		
-		Process process=CommandExecute.commandExecution(AntiTampering.pathToLS+" "+originalApkDirectory);
+		Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
 		
 		//fetchPermissionRequested.grantPermissions("com.phonepe.app", pathToApk);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));

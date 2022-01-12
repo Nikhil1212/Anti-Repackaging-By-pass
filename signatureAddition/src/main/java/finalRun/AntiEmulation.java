@@ -32,7 +32,7 @@ public class AntiEmulation {
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/FinalDataset_Emulator.txt";
+		String pathToApk="/home/nikhil/Documents/apps/AntiEmulatorReRun.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -49,12 +49,12 @@ public class AntiEmulation {
 			{
 				
 				packageName=scanner.next();
-				//packageName="in.org.npci.upiapp";
+				//packageName="com.phonepe.app";
 				count1++;
 				System.out.println("Package Number count  :"+count1);
 			
 				
-				uninstallApp(packageName, deviceId[2]);
+				uninstallApp(packageName, deviceId[1]);
 				String logPathEmulator="/home/nikhil/Documents/apps/logs/"+packageName+"/emulator.txt";
 
 				
@@ -101,7 +101,7 @@ public class AntiEmulation {
 				
 				uninstallApp(packageName,deviceId[1]);
 				
-				
+				//break;
 				
 				//takeDumpOnDevice(deviceId[2], "real_2",installationCommandNonRoot,count,packageName,dumpPathDirectory,appPathDirectory);
 				

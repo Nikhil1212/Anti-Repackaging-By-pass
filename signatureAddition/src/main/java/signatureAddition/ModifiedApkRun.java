@@ -13,6 +13,7 @@ import java.util.Scanner;
 import Logs.LogAnalysis;
 import ProcessMission.FetchProcessIdDumpsys;
 import analysingDumpSys.DumpSysAnalysis;
+import signatureAddition.PullApps.AppsPull;
 
 /**
  * This will install the modified version of the app on the rooted device handling the split-apks scenarios and taking the dump. This will also generate the resigned version of the split-apks.
@@ -144,8 +145,8 @@ public class ModifiedApkRun {
 
 	public static String generateRepackagedApk(String packageName, String modifiedBaseApkPath, String deviceId) throws Exception{
 		// TODO Auto-generated method stub
-		String pathTillDataset="/home/nikhil/Documents/apps/dataset/";
-		String pathToPackage=pathTillDataset+packageName+"/";
+	//	String pathTillDataset=A;
+		String pathToPackage=AppsPull.appDirectoryPrefix+packageName+"/";
 		
 		String fetchApkInsideDirectory=AppLaunchAndDump.pathToLS+" "+pathToPackage;
 		System.out.println(fetchApkInsideDirectory);
@@ -153,7 +154,7 @@ public class ModifiedApkRun {
 		
 		//process.waitFor();
 		
-		Process process=CommandExecute.commandExecution(fetchApkInsideDirectory);
+		Process process=CommandExecute.commandExecutionSh(fetchApkInsideDirectory);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line=bufferedReader.readLine();
 		String apkPaths="";
@@ -162,7 +163,7 @@ public class ModifiedApkRun {
 			//create a directory
 			String splitApkPath=pathToPackage+line;
 			System.out.println("value of split apks path: "+splitApkPath);
-			if(!line.contains(".apk"))
+			if(!line.contains(".apk")) //Important to get the escape of any directory or any .idsig
 			{
 				line=bufferedReader.readLine();
 				continue;
@@ -178,7 +179,7 @@ public class ModifiedApkRun {
 			
 			String copyCommand="cp "+splitApkPath+" "+directoryPath;
 			System.out.println("copy command is :"+copyCommand);
-			CommandExecute.commandExecution(copyCommand);
+			CommandExecute.commandExecutionSh(copyCommand);
 			
 			String modifiedBuildApkPath = directoryPath+lastPart;
 			apkPaths=apkPaths+" "+modifiedBuildApkPath;

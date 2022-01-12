@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import Logs.LogAnalysis;
 import ProcessMission.FetchProcessIdDumpsys;
+import databaseUpdate.TableUpdate;
 import parseXml.Main;
 import signatureAddition.*;
 import signatureAddition.PullApps.AppsPull;
@@ -32,7 +33,7 @@ public class RootDetection {
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/FinalDataset_Root.txt";
+		String pathToApk="/home/nikhil/Documents/apps/RootDetectionReRun.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -241,7 +242,16 @@ public class RootDetection {
 		
 		installAndGrantPermission(installationCommand, count, packageName, appPathDirectory, deviceId);
 		
-	
+		if(!RootEmulation.isAppInstalled(packageName, deviceId))
+		{
+			TableUpdate.updateTable(packageName, "isAppInstalled");
+			return;
+			
+		}
+		
+		destinationPath="/data/local/tmp/"+packageName+".apk";
+		CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+deviceId+" shell rm "+destinationPath);
+		
 		
 
 		//DumpSysAnalysis.launchTheApp(packageName);

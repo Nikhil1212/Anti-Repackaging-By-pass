@@ -28,7 +28,8 @@ public class StartingPoint {
 			{
 
 				String packageName=scanner.next();
-				//packageName="com.khaalijeb.inkdrops";
+			//	packageName="com.khaalijeb.inkdrops";
+				packageName="com.YONOMUApp";
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
@@ -51,7 +52,7 @@ public class StartingPoint {
 
 				StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
 				//
-				//StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
+				StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
 				StartingPoint_RootDetection.main(pathToDisAssembleCode);
 
@@ -61,8 +62,8 @@ public class StartingPoint {
 				isModifiedApkGenerated(modifiedApkPath,packageName);
 			
 				//fileNameFetch(packageName);
-				removeDirectory(pathToDisAssembleCode);
-			//	break;
+				//removeDirectory(pathToDisAssembleCode);
+				break;
 
 			}
 			catch (Exception e)
@@ -123,9 +124,9 @@ public class StartingPoint {
 
 		
 	}
-	public static String modifiedApkGenerationAntiEmulator(String packageName) {
+	public static String modifiedApkGenerationAntiEmulator(String packageName, String fileNamePath) {
 		// TODO Auto-generated method stub
-		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+	//	String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 		
 		
@@ -163,9 +164,9 @@ public class StartingPoint {
 		
 	}
 	
-	public static String modifiedApkGenerationRootDetection(String packageName) {
+	public static String modifiedApkGenerationRootDetection(String packageName, String fileNamePath) {
 		// TODO Auto-generated method stub
-		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+	//	String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 		
 		
@@ -191,6 +192,8 @@ public class StartingPoint {
 			StartingPoint_RootDetection.main(pathToDisAssembleCode);
 
 			 modifiedApkPath=buildApk(packageName);
+				isModifiedApkGenerated(modifiedApkPath,packageName);
+
 			signApk(packageName, modifiedApkPath);
 			//fileNameFetch(packageName);
 			removeDirectory(pathToDisAssembleCode);
@@ -203,9 +206,9 @@ public class StartingPoint {
 		
 	}
 	
-	public static String modifiedApkGenerationAntiTampering(String packageName) {
+	public static String modifiedApkGenerationAntiTampering(String packageName, String fileNamePath) {
 		// TODO Auto-generated method stub
-		String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+	//	String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 		String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 		
 		
@@ -306,12 +309,36 @@ public class StartingPoint {
 				break;
 			}
 		}
+		if(flag==0)
+		{
+			//query the database to find the app
+			return null;
+		}
 
 		fullRSAfetch=fullRSAfetch.concat(line);
 		System.out.println(fullRSAfetch);
 
 		return fullRSAfetch;
 	}
+	
+	public static String fetchCertificateFromDatabase(String packageName, String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		String checkQuery="Select certificateDetails from "+tableName+" where packageName='"+packageName+"';";
+		System.out.println(checkQuery);
+		Statement statement1=DataBaseConnect.initialization();
+		ResultSet resultSet=statement1.executeQuery(checkQuery);
+		int flag=0;
+		String output="";
+		while(resultSet.next())
+		{
+			flag=1;
+			output=resultSet.getString(1);
+		}
+		return output;
+	
+
+	}
+
 
 	public static Process commandExecution(String string) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub

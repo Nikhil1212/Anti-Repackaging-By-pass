@@ -32,8 +32,8 @@ public class StaticInstallerVerification {
 			try
 			{
 				String packageName=scanner.next();
-				packageName="com.hdfc.toloans";
-				String fileNamePath=AppsPull.appDirectoryPrefix+packageName+"/base.apk";
+			//	packageName="com.hdfc.tomobile";
+				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
 
 				pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 
@@ -43,7 +43,7 @@ public class StaticInstallerVerification {
 				boolean result=codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
 				if(result)
 				isDumpGenerated.updateTable(packageName, "InstallerVerfication");
-				break;
+				//break;
 			}
 			catch (Exception e) {
 				// TODO: handle exception

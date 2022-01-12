@@ -32,7 +32,7 @@ public class AntiTampering {
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/AntiTamperingApps.txt";
+		String pathToApk="/home/nikhil/Documents/apps/RepackagedReRun.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -274,7 +274,11 @@ public class AntiTampering {
 		String installationCommandSingleDevice="";
 		if(count==1)
 		{
-			installationCommandSingleDevice=LogAnalysis.pathToadb+" -s "+deviceId +" install -g "+apkPath;
+			String destinationPath="/data/local/tmp/"+packageName+".apk";
+			String pushCommand=LogAnalysis.pathToadb+" -s "+ deviceId+ " push "+apkPath + " "+destinationPath; 
+			CommandExecute.commandExecution(pushCommand);
+			installationCommandSingleDevice=LogAnalysis.pathToadb+" -s "+deviceId +" shell pm install -g "+destinationPath;
+			
 		}
 		else
 		{

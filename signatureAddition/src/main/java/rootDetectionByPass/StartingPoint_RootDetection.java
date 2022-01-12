@@ -141,10 +141,12 @@ public class StartingPoint_RootDetection {
 		hashSetBinaries.add("daemonsu");
 		hashSetBinaries.add("busybox");
 		hashSetBinaries.add("frida");
+		hashSetBinaries.add("frida");
+		hashSetBinaries.add("frida");
 
-		hashSetBinaries.add("fridaserver");
+		hashSetBinaries.add("ro.debuggable");
 
-		hashSetBinaries.add("frida-server");
+		hashSetBinaries.add("ro.secure");
 
 		hashSetInitialize();
 		

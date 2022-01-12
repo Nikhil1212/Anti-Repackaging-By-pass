@@ -13,21 +13,27 @@ import java.util.Scanner;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 import signatureAddition.StartingPoint;
+import signatureAddition.PullApps.AppsPull;
 
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException {
 
-		String pathToFilePackageNames="/home/nikhil/Documents/apps/AppNoApkInMachine.txt";
+		String pathToFilePackageNames="/home/nikhil/Documents/apps/FinalDataset.txt";
 		File file=new File(pathToFilePackageNames);
 		Scanner scanner=new Scanner(file);
+		int count=0;
 		while(scanner.hasNext())
 		{
 			String packageName=scanner.next();
-			String pathToApk="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+			String pathToApk=AppsPull.appDirectoryPrefix+packageName+"/base.apk";
 			try {
 			
-				StartingPoint.disassembleApk(pathToApk, packageName);
+				count++;
+				if(count<1972)
+					continue;
+				System.out.println("Package count is :"+count);
+				disassembleApk(pathToApk, packageName);
 				String pathToDisAssembleCode="/home/nikhil/Documents/apps/"+packageName;
 				//Execute the find command
 				String findCommand="find "+ pathToDisAssembleCode+"/ -name *.RSA";
@@ -57,6 +63,13 @@ public class Main {
 			} 
 		}
 
+
+	}
+	public static void disassembleApk(String apkPath, String packageName) throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		String apktoolCommand="/usr/local/bin/apktool d -r -s "+apkPath+" -f -o /home/nikhil/Documents/apps/"+packageName;
+		System.out.println(apktoolCommand);
+		CommandExecute.commandExecutionSh(apktoolCommand);
 
 	}
 

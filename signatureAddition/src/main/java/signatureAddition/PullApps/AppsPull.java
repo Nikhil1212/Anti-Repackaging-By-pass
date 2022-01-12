@@ -17,14 +17,8 @@ import signatureAddition.CommandExecute;
  */
 public class AppsPull {
 	
-	//host=%5Busb%3A001%2C026%5D
-	//host=%5Busb%3A001%2C029%5D/Internal
-	//host=%5Busb%3A001%2C032%5D/Internal
-	//host=%5Busb%3A001%2C036%5D/Internal
-	//host=%5Busb%3A001%2C039%5D/Internal
-	//host=%5Busb%3A001%2C045%5D/Internal
-	public static String appDirectoryPrefix="/run/user/1000/gvfs/mtp:host\\=%5Busb%3A001%2C012%5D/Internal\\ shared\\ storage/dataset/";
-
+	public static String appDirectoryPrefix="/media/nikhil/Soumya\\ Jain\\ HDD/Nikhil/ResearchWork/dataset/";
+	public static String modifiedAppsDirectoryPath="/media/nikhil/Soumya\\ Jain\\ HDD/Nikhil/ResearchWork/ModifiedApps/";
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
 		String pathToApk="/home/nikhil/Documents/apps/PackageNames.txt";

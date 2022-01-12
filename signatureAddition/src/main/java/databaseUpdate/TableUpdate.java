@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 import Logs.LogAnalysis;
+import finalRun.isDumpGenerated;
 import signatureAddition.CommandExecute;
 import signatureAddition.DataBaseConnect;
 
@@ -21,7 +22,7 @@ public class TableUpdate {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String FilePath="/home/nikhil/Documents/apps/AppsTransfer.txt";
+		String FilePath="/home/nikhil/Documents/apps/ModifiedAppsAntiTampering.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		int count=0;
@@ -33,22 +34,25 @@ public class TableUpdate {
 				String packageName=scanner.next();
 				System.out.println(packageName);
 				//updateTable(packageName, 'Y', FilePath, packageName);
-			//	updateTable(packageName, 'Y', "Overwrite String values","TempFinalDataset");
-				updateTable(packageName,"FinalDataset");
+				//	updateTable(packageName, 'Y', "Overwrite String values","TempFinalDataset");
+
+				isDumpGenerated.updateTable(packageName, "ModifiedAntiTampering");
+
+				//			updateTable(packageName,'Y',"APK Generated","ModifiedAppsGenerated");
 
 			}
 			catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-				
+
+
+		}
 
 	}
 
-}
 
-
-	private static void updateTable(String packageName, String tableName) throws SQLException {
+	public static void updateTable(String packageName, String tableName) throws SQLException {
 		// TODO Auto-generated method stub
 		String checkQuery="Select * from "+tableName+" where packageName='"+packageName+"';";
 		System.out.println(checkQuery);
@@ -79,7 +83,7 @@ public class TableUpdate {
 
 	private static void updateTable(String packageName, char c, String remarks, String tableName) throws SQLException {
 		// TODO Auto-generated method stub
-		
+
 		String checkQuery="Select * from "+tableName+" where packageName='"+packageName+"';";
 		System.out.println(checkQuery);
 		Statement statement1=DataBaseConnect.initialization();
@@ -109,6 +113,6 @@ public class TableUpdate {
 		}
 
 
-		
+
 	}
 }

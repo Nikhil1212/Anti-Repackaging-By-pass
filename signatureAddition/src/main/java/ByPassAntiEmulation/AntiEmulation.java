@@ -31,7 +31,6 @@ public class AntiEmulation {
 		hashMap.put("BRAND","google");
 		hashMap.put("DEVICE","sunfish");
 		hashMap.put("HOST","vpea3.mtv.corp.google.com");
-
 		hashMap.put("RADIO","M8994F-2.6.22.0.56");
 	}
 	public  static void writeToFile(String ans, String destiantionPath) throws IOException {
@@ -51,6 +50,8 @@ public class AntiEmulation {
 		
 		System.out.println("File name is :"+filePath);
 		
+		String patternABIs=pattern+"SUPPORTED_ABIS";
+		
 			String outputContents="";
 			File file=new File(filePath);
 			Scanner scanner=new Scanner(file);
@@ -58,6 +59,9 @@ public class AntiEmulation {
 			{
 				String line=scanner.nextLine();
 				outputContents=outputContents+line+"\n";
+				if(line.contains(patternABIs))
+					continue;
+				
 				if(line.contains(pattern) && (line.contains("getSerial") || line.contains("getRadioVersion")))
 				{
 					//fetch register number

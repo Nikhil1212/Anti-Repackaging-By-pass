@@ -4,26 +4,29 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
 import Logs.LogAnalysis;
 import signatureAddition.AppLaunchAndDump;
+import signatureAddition.DataBaseConnect;
 
 /**
  * This class with the help of other method defined in another class, compares the dump of two files executed in two different environments. It also analyses the logs. Currently, it is designed for all the three different environments; anti-tampering, anti-emulation, root-detection. 
  * @author nikhil
  *
  */
-public class RunAnalysis {
+public class ModifiedRunAnalysis {
 	
-	public static String tableName[]= {"EmulatorDetection_Automation","RootDetection_Automation","AntiTampering_Automation"};
+	public static String tableName[]= {"ToolResult_ByPass_AntiTampering","ToolResult_ByPass_AntiEmulation","ToolResult_ByPass_RootDetection"};
 
 	public static void main(String[] args) throws IOException {
 
-		String filePath="/home/nikhil/Documents/apps/FinalDataset.txt";
+		String filePath="/home/nikhil/Documents/apps/AntiTamperCheckPresent.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 
@@ -31,43 +34,47 @@ public class RunAnalysis {
 		while(scanner.hasNext())
 		{
 			count++;
+			String packageName="";
 			try
 			{
 				int flag=0;
-				String packageName=scanner.next();
+				packageName=scanner.next();
 				System.out.println("Package count:"+count);
 				
 				String dumpdirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
 				String logDirectoryPath="/home/nikhil/Documents/apps/logs/"+packageName;
 
-				for(int i=1;i<=2;i++)
+				for(int i=4;i<=6;i++)
 				{
 				
-					i=3;
-					boolean result = isCheckPresentDump(packageName,dumpdirectoryPath,AppLaunchAndDump.deviceIdSynonym[i],tableName[i-1]);
+					boolean result = isDifferentDump(packageName,dumpdirectoryPath,AppLaunchAndDump.deviceIdSynonym[i],tableName[i-4]);
 					
 					if (result)
-						continue;  //if true, then we have updated the table inside the method only.
+					{
+						//continue;
+						break;
+					}
 					
 					String dumpPathReal=dumpdirectoryPath+"/real_BuiltIn.xml";
 
 					String dumpPathDiffEnvironment=dumpdirectoryPath+"/"+AppLaunchAndDump.deviceIdSynonym[i]+"_BuiltIn.xml";
 
-					/**
-					 * For checking whether the app was launched or not, instead of checking the process id.
-					 */
 					
-					result=isDifferentLogs(packageName, dumpPathReal, dumpPathDiffEnvironment,logDirectoryPath+"/original.txt" , logDirectoryPath+ "/"+AppLaunchAndDump.deviceIdSynonym[i]+".txt",tableName[i-1]) ;
+					result=isDifferentLogs(packageName, dumpPathReal, dumpPathDiffEnvironment,logDirectoryPath+"/original.txt" , logDirectoryPath+ "/"+AppLaunchAndDump.deviceIdSynonym[i]+".txt",tableName[i-4]) ;
 					
-					if(!result)
-						Main.updateTable(packageName, 'N', "No difference from log and uiautomator dump", tableName[i-1]);
+					if(result)
+						updateTable(packageName, 'N', "Different logs; no diff in resource-id", tableName[i-4]);
 					
+					else //logs are also same
+						updateTable(packageName, 'Y', "No difference from logs and uiautomator dump", tableName[i-4]);
+					break;
+
 				}
 				
 			}
 			catch (Exception e) {
 				// TODO: handle exception
-				
+				System.out.println("We got an exception for the package:"+packageName);
 				e.printStackTrace();
 			}
 
@@ -82,7 +89,7 @@ public class RunAnalysis {
 			fileContents=new String(Files.readAllBytes(Paths.get(filePathRunTime)));
 			if(!fileContents.contains(packageName))
 			{
-				Main.updateTable(packageName, 'Y', "App crashed Log Analysis", tableName);
+				updateTable(packageName, 'Y', "App crashed Log Analysis", tableName);
 				return true;
 			}
 				
@@ -91,28 +98,28 @@ public class RunAnalysis {
 		
 		if 	(LogAnalysis.differenceActiviyNameLogs(packageName, logPathOriginal, logPathRepackaged))
 		{
-			Main.updateTable(packageName, 'Y', "Difference Activity Observed Log Analysis", tableName);
+			updateTable(packageName, 'Y', "Difference Activity Observed Log Analysis", tableName);
 			return true;
 		}
 			
 		
 		if (LogAnalysis.checkDifferenceToastLogs(packageName, logPathOriginal, logPathRepackaged))
 		{
-			Main.updateTable(packageName, 'Y', "Difference Toast Message observed Log Analysis", tableName);
+			updateTable(packageName, 'Y', "Difference Toast Message observed Log Analysis", tableName);
 			return true;
 		}
 			
 		return false;
 	}
 
-	private static boolean isCheckPresentDump(String packageName, String dumpDirectoryPath, String environment, String tableName) throws SQLException, IOException {
+	private static boolean isDifferentDump(String packageName, String dumpDirectoryPath, String environment, String tableName) throws SQLException, IOException {
 		// TODO Auto-generated method stub
 
 		boolean result=	isDifferentResourceId(packageName,dumpDirectoryPath,"resource-id",environment);
 
 		if(result)
 		{
-			Main.updateTable(packageName, 'Y', "resource-id", tableName);
+			updateTable(packageName, 'N', "resource-id", tableName);
 			return true;
 		}
 
@@ -140,6 +147,47 @@ public class RunAnalysis {
 
 		return false;
 	}
+	
+	public static void updateTable(String packageName, char c, String remarks, String tableName) throws SQLException {
+		// TODO Auto-generated method stub
+		
+		String checkQuery="Select packagename from "+tableName+" where packageName ='"+packageName+"';";
+		System.out.println(checkQuery);
+		Statement statement1=DataBaseConnect.initialization();
+		ResultSet resultSet=statement1.executeQuery(checkQuery);
+		int flag=0;
+		String output="";
+		while(resultSet.next())
+		{
+			flag=1;
+			output=output+ resultSet.getString(1)+"\n";
+		}
+		if(flag==0)
+		{
+			String query="Insert into "+tableName+" values ('"+packageName+"','"+c+"','"+remarks+"');";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+			statement.close();
+		}
+		else
+		{
+			String query="Update "+tableName+" set IsByPassable ='"+c+"' , remarks ='"+remarks+"' where packageName='"+packageName+"';";
+			System.out.println(query);
+
+			Statement statement=DataBaseConnect.initialization();
+			statement.executeUpdate(query);
+			statement.close();
+		}
+		statement1.close();
+
+
+
+		
+	}
+	
+
 
 	private static boolean isDifferentContentDesc(String packageName, String directoryPath, String pattern,
 			String runVersion) throws IOException {

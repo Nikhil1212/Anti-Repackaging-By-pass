@@ -1,5 +1,6 @@
 package finalRun;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
@@ -11,12 +12,12 @@ import java.util.Scanner;
 
 import signatureAddition.DataBaseConnect;
 
-public class isDumpGenerated {
+public class SystemUI {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		// TODO Auto-generated method stub
-		String pathToApk="/home/nikhil/Documents/apps/FinalDataset.txt";
+		String pathToApk="/home/nikhil/Documents/apps/EmulatorCheckPresentTool.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -33,27 +34,22 @@ public class isDumpGenerated {
 			{
 				
 				packageName=scanner.next();
+				///home/nikhil/Documents/apps/uiautomator/rootEmulator/com.vpayBusiness.vgipl/modifiedEmulator_BuiltIn.xml
 				
-				String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/repackaged_BuiltIn.xml";
+				String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/modifiedEmulator_BuiltIn.xml";
 				
 				boolean results=checkFileExists(dumpPath);
 				if(!results)
 				{
-					updateTable(packageName,"ReRun_RepackagedApps");
+					updateTable(packageName,"systemUIEmulator");
 					continue;
 				}
 					
 				String fileContents=new String(Files.readAllBytes(Paths.get(dumpPath)));
-				if(!fileContents.contains(packageName))
-				{
-					
-					//check whether the log file is generated or not.
-					String logFilePath="/home/nikhil/Documents/apps/logs/"+packageName+"/repackaged.txt";
-					results=checkFileExists(logFilePath);
-					if(!results)
-					updateTable(packageName,"ReRun_RepackagedApps");
-				}
-				
+				if(fileContents.contains("System UI"))
+					updateTable(packageName,"systemUIEmulator");
+
+			
 			}
 			catch (Exception e) {
 				// TODO: handle exception
@@ -102,36 +98,5 @@ public class isDumpGenerated {
 
 			
 		}
-
-	public static void updateTable(String packageName, String tableName, char res) throws SQLException {
-		// TODO Auto-generated method stub
-		String checkQuery="Select packagename from "+tableName+" where packageName ='"+packageName+"';";
-		System.out.println(checkQuery);
-		Statement statement1=DataBaseConnect.initialization();
-		ResultSet resultSet=statement1.executeQuery(checkQuery);
-		int flag=0;
-		String output="";
-		while(resultSet.next())
-		{
-			flag=1;
-			output=output+ resultSet.getString(1)+"\n";
-		}
-		if(flag==0)
-		{
-			String query="Insert into "+tableName+" values ('"+packageName+"','"+res+"');";
-			System.out.println(query);
-
-			Statement statement=DataBaseConnect.initialization();
-			statement.executeUpdate(query);
-			statement.close();
-			statement1.close();
-		}
-		else
-		{
-			statement1.close();
-			return;
-		}
-		
-	}
 	
 }
