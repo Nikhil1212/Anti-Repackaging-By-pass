@@ -10,7 +10,6 @@ This work produces the **tampered version of the original app** in such a way th
 
 - Dynamic Instrumentation Framework Detection  
 
-Pre-requisite to us this tool is :
 Follwing tools/software needs to be setup:  
 
 
