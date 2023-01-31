@@ -17,7 +17,7 @@ public class SystemUI {
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		// TODO Auto-generated method stub
-		String pathToApk="/home/nikhil/Documents/apps/EmulatorCheckPresentTool.txt";
+		String pathToApk="/home/nikhil/Documents/apps/EDReRunApps.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -27,6 +27,7 @@ public class SystemUI {
 	//	lockUnlockPhone("1234", deviceId[2]);
 		
 		int count1=0;
+		String output="";
 		
 		while(scanner.hasNext())
 		{
@@ -36,19 +37,23 @@ public class SystemUI {
 				packageName=scanner.next();
 				///home/nikhil/Documents/apps/uiautomator/rootEmulator/com.vpayBusiness.vgipl/modifiedEmulator_BuiltIn.xml
 				
-				String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/modifiedEmulator_BuiltIn.xml";
+				String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/modifiedRoot_BuiltIn.xml";
 				
 				boolean results=checkFileExists(dumpPath);
 				if(!results)
 				{
-					updateTable(packageName,"systemUIEmulator");
+//					updateTable(packageName,"systemUIEmulator");
 					continue;
 				}
 					
 				String fileContents=new String(Files.readAllBytes(Paths.get(dumpPath)));
 				if(fileContents.contains("System UI"))
-					updateTable(packageName,"systemUIEmulator");
-
+				{
+					output=output+packageName+"\n";
+					break;
+	//				updateTable(packageName,"systemUIEmulator");
+				}
+					
 			
 			}
 			catch (Exception e) {
@@ -56,6 +61,8 @@ public class SystemUI {
 				e.printStackTrace();
 			}
 	}
+		
+		System.out.println(output);
 
 }
 

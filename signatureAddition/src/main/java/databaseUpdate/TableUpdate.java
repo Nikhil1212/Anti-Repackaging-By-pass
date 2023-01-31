@@ -22,7 +22,7 @@ public class TableUpdate {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String FilePath="/home/nikhil/Documents/apps/ModifiedAppsAntiTampering.txt";
+		String FilePath="/home/nikhil/Documents/apps/BankAppsNotPresent.txt";
 		File file=new File(FilePath);
 		Scanner scanner=new Scanner(file);
 		int count=0;
@@ -36,7 +36,7 @@ public class TableUpdate {
 				//updateTable(packageName, 'Y', FilePath, packageName);
 				//	updateTable(packageName, 'Y', "Overwrite String values","TempFinalDataset");
 
-				isDumpGenerated.updateTable(packageName, "ModifiedAntiTampering");
+				isDumpGenerated.updateTable(packageName, "verifyErrorsRoot3");
 
 				//			updateTable(packageName,'Y',"APK Generated","ModifiedAppsGenerated");
 

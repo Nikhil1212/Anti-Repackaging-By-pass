@@ -141,7 +141,7 @@ public class StartingPoint_RootDetection {
 		hashSetBinaries.add("daemonsu");
 		hashSetBinaries.add("busybox");
 		hashSetBinaries.add("frida");
-		hashSetBinaries.add("frida");
+		hashSetBinaries.add("fridaserver");
 		hashSetBinaries.add("frida");
 
 		hashSetBinaries.add("ro.debuggable");
@@ -292,7 +292,7 @@ public class StartingPoint_RootDetection {
 			{
 				//update contents variable
 				System.out.println("Overwriting :"+pattern);
-				contents=contents.substring(0,(contents.indexOf("\"")+1))+"SaiBaba"+"\"";
+				contents=contents.substring(0,(contents.indexOf("\"")+1))+"Some_random_string"+"\"";
 			}
 			output=output+contents+"\n";
 			

@@ -19,19 +19,21 @@ public class ByPassAntiEmulation {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String filePath="/home/nikhil/Documents/apps/RootModiffiedApkRemainingApps.txt";
+		String filePath="/home/nikhil/Documents/apps/EDReRunApps.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 		int packageCount=0;
+		String packageName="";
+		String	localBaseModifiedApkPath="";
 		while(scanner.hasNext())
 		{
 			try
 			{
-				String packageName=scanner.next();
+				 packageName=scanner.next();
 				//Refer the anti-tampering class
 
 				System.out.println("package Count is :"+(++packageCount));
-				if(packageCount < 138)
+				if(packageCount < 224)
 					continue;
 
 
@@ -46,7 +48,7 @@ public class ByPassAntiEmulation {
 				int count=isSplitApk(packageName,originalApkDirectory);
 
 				String modifiedAppsDirectory=AppsPull.modifiedAppsDirectoryPath+"RootEmulator/";
-				String localBaseModifiedApkPath="/home/nikhil/Documents/apps/"+packageName+".apk";
+				 localBaseModifiedApkPath="/home/nikhil/Documents/apps/"+packageName+".apk";
 
 				//	String modifiedApkLocalPath=
 				String modifiedApkPathHD=modifiedAppsDirectory+"modified_"+packageName+".apk";
@@ -86,7 +88,19 @@ public class ByPassAntiEmulation {
 			}
 
 			catch (Exception e) {
+				try {
+					CommandExecute.commandExecution("rm -r /home/nikhil/Documents/apps/"+packageName);
+					CommandExecute.commandExecution("rm "+localBaseModifiedApkPath);
 
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			
 				e.printStackTrace();
 
 			}

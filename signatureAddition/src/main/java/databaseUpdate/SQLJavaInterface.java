@@ -42,73 +42,24 @@ public class SQLJavaInterface {
 		// TODO Auto-generated method stub
 	
 		int arr[]=new int[4];
-	//	String filePath="/home/nikhil/Documents/apps/few.txt";
-	//	.File fileInput=new File(filePath);
-		//Scanner scanner=new Scanner(fileInput);
-		
-		String query ="Select packageName from AntiTampering_Automation where isCheckPresent ='Y' and packageName in (Select packageName from appsCertificate);";
+		String query ="Select * from ForeignBanks;";
 		
 		ResultSet resultSet=statement.executeQuery(query);
 		
 		
-		String FileContents="";
-
-		
+		String packageNames="";
 		while(resultSet.next())
 		{
-			FileContents=FileContents +resultSet.getString(1)+"\n";
+			packageNames=packageNames +resultSet.getString(1)+"\n";
 		}
-/*		while(scanner.hasNext())
-		{
-			try
-			{
-				String packageName=scanner.next();
-			//	String query ="Select * from PlayStoreAppDownload where packageName='"+packageName+"'";
-				
-				//ResultSet resultSet=statement.executeQuery(query);
-				if(resultSet.next()) {
-					
-					String remarks=resultSet.getString(3);
-
-					if(remarks.contains("removed"))
-						arr[0]++;
-					
-					else if(remarks.contains("Premium"))
-						arr[1]++;
-					
-					else if(remarks.contains("country"))
-						arr[2]++;
-					
-					else if(remarks.contains("Hope"))
-						arr[3]++;
-					
-					String res=resultSet.getString(2);
-					System.out.println(res);
-			
-					
-					
-				if(res.contains("Y"))
-					{
-						FileContents=FileContents+"\n"+packageName;
-					}
-					System.out.println(packageName);
-					
-				}
-			}
-			catch (Exception e) {
 	
-				e.printStackTrace();
-			}
-			
-		}*/
 		
-		
-		String outputFilePath="/home/nikhil/Documents/apps/ATv2.txt";
+		String outputFilePath="/home/nikhil/Documents/apps/ForeignBanks_FinalDatset.txt";
 		
 		FileWriter fileWriter=new FileWriter(outputFilePath);
-		fileWriter.write(FileContents);
+		fileWriter.write(packageNames);
 		fileWriter.close();
-
+	
 	}
 
 }

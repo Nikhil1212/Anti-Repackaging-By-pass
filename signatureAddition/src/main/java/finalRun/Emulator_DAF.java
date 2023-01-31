@@ -33,7 +33,7 @@ public class Emulator_DAF {
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/Last1000.txt";
+		String pathToApk="/home/nikhil/Documents/apps/hookingF.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -53,7 +53,8 @@ public class Emulator_DAF {
 				//packageName="in.org.npci.upiapp";
 				count1++;
 				System.out.println("Package Number count  :"+count1);
-			
+				if(count1<50)
+					continue;
 				
 				uninstallApp(packageName, deviceId[1]);
 				String logPathHook="/home/nikhil/Documents/apps/logs/"+packageName+"/hooking.txt";

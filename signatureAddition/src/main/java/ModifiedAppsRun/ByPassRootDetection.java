@@ -26,85 +26,105 @@ public class ByPassRootDetection {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		String filePath="/home/nikhil/Documents/apps/RootModiffiedApkRemainingApps.txt";
+		String filePath="/home/nikhil/Documents/apps/verifyErrorApps.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 		int packageCount=0;
+		String packageName="";
+		String localBaseModifiedApkPath="";
 		while(scanner.hasNext())
 		{
 			try
 			{
-				String packageName=scanner.next();
+				packageName=scanner.next();
 				//Refer the anti-tampering class
-				
+
 				System.out.println("package Count is :"+(++packageCount));
-			//	if(packageCount<960)
+			//	if(packageCount<129)
 				//	continue;
-				
+
 				String originalApkDirectory=AppsPull.appDirectoryPrefix+packageName+"/";
 
 				String dumpPathDirectory="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
 
-			//	Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
-				
+				//	Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
+
 				String logPathModifed="/home/nikhil/Documents/apps/logs/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[6]+".txt";
-				
+
 				int count=isSplitApk(packageName,originalApkDirectory);
-				
-				String modifiedAppsDirectory=AppsPull.modifiedAppsDirectoryPath+"RootEmulator/";
-				String localBaseModifiedApkPath="/home/nikhil/Documents/apps/"+packageName+".apk";
-				
-			//	String modifiedApkLocalPath=
+
+				String modifiedAppsDirectory=AppsPull.modifiedAppsDirectoryPath+"RootEmulator/OnlyRoot/";
+				localBaseModifiedApkPath="/home/nikhil/Documents/apps/"+packageName+".apk";
+
+				//	String modifiedApkLocalPath=
 				String modifiedApkPathHD=modifiedAppsDirectory+"modified_"+packageName+".apk";
 
-				
-				
+
+
 				String	copyCommand="cp "+modifiedApkPathHD+" "+localBaseModifiedApkPath;
-				
+
 				CommandExecute.commandExecutionSh(copyCommand);
 
 				File file2=new File(localBaseModifiedApkPath);
 				if(!file2.exists())
 					continue;
-				
-			//	String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName,originalApkDirectory+"/base.apk");
-				
-				
-					
+
+				//	String modifiedApkPath=StartingPoint.modifiedApkGenerationAntiTampering(packageName,originalApkDirectory+"/base.apk");
+
+
+
 				String installationCommand=finalRun.AntiTampering.getInstallationCommand(packageName,localBaseModifiedApkPath,count,AppLaunchAndDump.deviceId[2]);
-				
+
 				RootDetection.takeDumpOnDevice(AppLaunchAndDump.deviceId[2], AppLaunchAndDump.deviceIdSynonym[6],installationCommand,count,packageName,dumpPathDirectory,originalApkDirectory);
 
-				
+
 				String pidModified=FetchProcessIdDumpsys.retrievePID(packageName, AppLaunchAndDump.deviceId[2]);
-				
+
 				LogAnalysis.usingLogcat(packageName, pidModified, logPathModifed,AppLaunchAndDump.deviceId[2]);
-				
+
 				finalRun.AntiTampering.uninstallApp(packageName,AppLaunchAndDump.deviceId[2]);
-				
+
 				CommandExecute.commandExecution("rm -r /home/nikhil/Documents/apps/"+packageName);
-				
+
 				CommandExecute.commandExecution("rm "+localBaseModifiedApkPath);
-				
+
 			}
-			
+
 			catch (Exception e) {
-				
-				
+
+				try {
+					CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+AppLaunchAndDump.deviceId[2]+" shell rm /data/local/tmp/"+packageName);
+
+					CommandExecute.commandExecution("rm -r /home/nikhil/Documents/apps/"+packageName);
+
+					CommandExecute.commandExecution("rm "+localBaseModifiedApkPath);
+
+
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+
+
 				e.printStackTrace();
-			
+
 			}
-			
-			
+
+
 		}
 
 	}
 
 	public static int isSplitApk(String packageName, String originalApkDirectory) throws IOException, InterruptedException {
 		int count=0;
-		
+
 		Process process=CommandExecute.commandExecutionSh(AntiTampering.pathToLS+" "+originalApkDirectory);
-		
+
 		//fetchPermissionRequested.grantPermissions("com.phonepe.app", pathToApk);
 		BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String line=bufferedReader.readLine();

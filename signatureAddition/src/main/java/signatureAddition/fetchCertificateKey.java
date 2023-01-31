@@ -20,7 +20,7 @@ public class fetchCertificateKey {
 		String pathToRSA="/home/nikhil/Documents/apps/dataset/com.sbi.SBIFreedomPlus/final/original/META-INF/SBFREEDO.RSA";
 		getCertificateInHex(pathToRSA, "com.sbi.SBIFreedomPlus");
 		System.exit(0);
-		String packageName="com.jio.myjio";
+		String packageName="com.upi.axispay";
 		String pathToCert="/home/nikhil/"+packageName+".pem";
 		String commandToFetchCertificateFromRSA="openssl pkcs7 -in "+ pathToRSA+ " -inform DER -print_certs -out "+pathToCert;
 		Process pr = Runtime.getRuntime().exec(commandToFetchCertificateFromRSA);

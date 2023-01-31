@@ -242,14 +242,18 @@ public class RootDetection {
 		
 		installAndGrantPermission(installationCommand, count, packageName, appPathDirectory, deviceId);
 		
+		destinationPath="/data/local/tmp/"+packageName+".apk";
+
+		
 		if(!RootEmulation.isAppInstalled(packageName, deviceId))
 		{
+			CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+deviceId+" shell rm "+destinationPath);
+
 			TableUpdate.updateTable(packageName, "isAppInstalled");
 			return;
 			
 		}
 		
-		destinationPath="/data/local/tmp/"+packageName+".apk";
 		CommandExecute.commandExecution(LogAnalysis.pathToadb+" -s "+deviceId+" shell rm "+destinationPath);
 		
 		

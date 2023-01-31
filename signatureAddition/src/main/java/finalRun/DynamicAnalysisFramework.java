@@ -33,7 +33,7 @@ public class DynamicAnalysisFramework {
 
 	public static void main(String[] args) throws Exception {
 
-		String pathToApk="/home/nikhil/Documents/apps/FinalDataset.txt";
+		String pathToApk="/home/nikhil/Documents/apps/hookingF.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
@@ -54,8 +54,8 @@ public class DynamicAnalysisFramework {
 				count1++;
 				System.out.println("Package Number count  :"+count1);
 			
-				if(count1<125)
-					continue;
+			//	if(count1<1100)
+				//	continue;
 				uninstallApp(packageName, deviceId[2]);
 				String logPathHooking="/home/nikhil/Documents/apps/logs/"+packageName+"/hooking.txt";
 

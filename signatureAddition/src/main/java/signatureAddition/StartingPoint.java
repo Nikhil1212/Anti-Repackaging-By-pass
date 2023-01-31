@@ -19,7 +19,7 @@ public class StartingPoint {
 	public static void main(String[] args) throws Exception {
 
 		int i=0;
-		String pathToApk="/home/nikhil/Documents/apps/RemainingApps.txt";
+		String pathToApk="/home/nikhil/Documents/apps/FridaReRun.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
@@ -28,9 +28,11 @@ public class StartingPoint {
 			{
 
 				String packageName=scanner.next();
+//				packageName="com.hdfc.totablet";
 			//	packageName="com.khaalijeb.inkdrops";
-				packageName="com.YONOMUApp";
+				//packageName="com.YONOMUApp";
 				String fileNamePath="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+//				fileNamePath="/home/nikhil/Documents/apps/MSApps/Teams/base.apk";
 				//below few lines are the code which is used to generate the final package name
 				//String packageName=getPackageName(fileNamePath);
 				//System.out.println("Checking whehther you can see me over github");
@@ -59,7 +61,7 @@ public class StartingPoint {
 				String modifiedApkPath=buildApk(packageName);
 				signApk(packageName, modifiedApkPath);
 				
-				isModifiedApkGenerated(modifiedApkPath,packageName);
+			//	isModifiedApkGenerated(modifiedApkPath,packageName);
 			
 				//fileNameFetch(packageName);
 				//removeDirectory(pathToDisAssembleCode);
@@ -138,14 +140,14 @@ public class StartingPoint {
 			//package name is retrieved using aapt 
 			disassembleApk(fileNamePath,packageName);
 
-			String fullRSAfetch= fetchRSAName(packageName);
+		//	String fullRSAfetch= fetchRSAName(packageName);
 
-			String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
-			System.out.println(signCertificateKey);
+			//String signCertificateKey=fetchCertificateKey.getCertificateInHex(fullRSAfetch, packageName);
+			//System.out.println(signCertificateKey);
 
-			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
+		//	FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
 
-			StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+			//StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
 			//
 			StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
@@ -227,7 +229,7 @@ public class StartingPoint {
 
 			FileNamesForSignatureAddition.codeInjectionProcess(signCertificateKey, pathToDisAssembleCode);
 
-			StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
+		//	StartingPoint_IntsallerVerification.codeInjectionByPassIntallerVerification(pathToDisAssembleCode);
 			//
 //			StartingPoint_AntiEmulation.codeInjectionByPassAntiEmulation(pathToDisAssembleCode);
 
@@ -236,7 +238,7 @@ public class StartingPoint {
 			 modifiedApkPath=buildApk(packageName);
 			signApk(packageName, modifiedApkPath);
 			//fileNameFetch(packageName);
-			removeDirectory(pathToDisAssembleCode);
+		//	removeDirectory(pathToDisAssembleCode);
 		}
 		catch (Exception e) {
 			

@@ -242,6 +242,6 @@ public class RootEmulation {
 		String launchableActivityCommand=LogAnalysis.pathToadb+" -s "+deviceId+" shell monkey -p "+packageName+" -c android.intent.category.LAUNCHER 1";
 		
 		CommandExecute.commandExecution(launchableActivityCommand);
-		Thread.sleep(60000);
+		Thread.sleep(30000);
 	}
 }

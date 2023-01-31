@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import Logs.LogAnalysis;
+import finalRun.isDumpGenerated;
 import signatureAddition.AppLaunchAndDump;
 
 /**
@@ -18,8 +19,8 @@ import signatureAddition.AppLaunchAndDump;
  *
  */
 public class RunAnalysis {
-	
-	public static String tableName[]= {"EmulatorDetection_Automation","RootDetection_Automation","AntiTampering_Automation"};
+
+	public static String tableName[]= {"EmulatorDetection_Automation","RootDetection_Automation","AntiTampering_Automation","HookingDetection_Automation"};
 
 	public static void main(String[] args) throws IOException {
 
@@ -36,19 +37,27 @@ public class RunAnalysis {
 				int flag=0;
 				String packageName=scanner.next();
 				System.out.println("Package count:"+count);
-				
+
 				String dumpdirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
 				String logDirectoryPath="/home/nikhil/Documents/apps/logs/"+packageName;
 
 				for(int i=1;i<=2;i++)
 				{
+
+					i=4;
+					String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[i]+"_BuiltIn.xml";
+					
+					boolean results=isDumpGenerated.checkFileExists(dumpPath);
+					if(results)
+					{
+						boolean result = isCheckPresentDump(packageName,dumpdirectoryPath,AppLaunchAndDump.deviceIdSynonym[i],tableName[i-1]);
+
+						if (result)
+							continue;
+					}
 				
-					i=3;
-					boolean result = isCheckPresentDump(packageName,dumpdirectoryPath,AppLaunchAndDump.deviceIdSynonym[i],tableName[i-1]);
-					
-					if (result)
-						continue;  //if true, then we have updated the table inside the method only.
-					
+					  //if true, then we have updated the table inside the method only.
+
 					String dumpPathReal=dumpdirectoryPath+"/real_BuiltIn.xml";
 
 					String dumpPathDiffEnvironment=dumpdirectoryPath+"/"+AppLaunchAndDump.deviceIdSynonym[i]+"_BuiltIn.xml";
@@ -56,18 +65,18 @@ public class RunAnalysis {
 					/**
 					 * For checking whether the app was launched or not, instead of checking the process id.
 					 */
-					
-					result=isDifferentLogs(packageName, dumpPathReal, dumpPathDiffEnvironment,logDirectoryPath+"/original.txt" , logDirectoryPath+ "/"+AppLaunchAndDump.deviceIdSynonym[i]+".txt",tableName[i-1]) ;
-					
+
+					boolean	result= isDifferentLogs(packageName, dumpPathReal, dumpPathDiffEnvironment,logDirectoryPath+"/original.txt" , logDirectoryPath+ "/"+AppLaunchAndDump.deviceIdSynonym[i]+".txt",tableName[i-1]) ;
+
 					if(!result)
 						Main.updateTable(packageName, 'N', "No difference from log and uiautomator dump", tableName[i-1]);
-					
+
 				}
-				
+
 			}
 			catch (Exception e) {
 				// TODO: handle exception
-				
+
 				e.printStackTrace();
 			}
 
@@ -75,7 +84,7 @@ public class RunAnalysis {
 	}
 	public static boolean isDifferentLogs(String packageName, String filePathReal, String filePathRunTime,
 			String logPathOriginal, String logPathRepackaged, String tableName) throws SQLException, IOException {
-		
+
 		String fileContents=new String(Files.readAllBytes(Paths.get(filePathReal)));
 		if(fileContents.contains(packageName))
 		{
@@ -85,23 +94,23 @@ public class RunAnalysis {
 				Main.updateTable(packageName, 'Y', "App crashed Log Analysis", tableName);
 				return true;
 			}
-				
+
 		}
-		
-		
+
+
 		if 	(LogAnalysis.differenceActiviyNameLogs(packageName, logPathOriginal, logPathRepackaged))
 		{
 			Main.updateTable(packageName, 'Y', "Difference Activity Observed Log Analysis", tableName);
 			return true;
 		}
-			
-		
+
+
 		if (LogAnalysis.checkDifferenceToastLogs(packageName, logPathOriginal, logPathRepackaged))
 		{
 			Main.updateTable(packageName, 'Y', "Difference Toast Message observed Log Analysis", tableName);
 			return true;
 		}
-			
+
 		return false;
 	}
 
@@ -116,7 +125,7 @@ public class RunAnalysis {
 			return true;
 		}
 
-	/*	result=	isDifferentClass(packageName,dumpDirectoryPath,"class",environment);
+		/*	result=	isDifferentClass(packageName,dumpDirectoryPath,"class",environment);
 		if(result)
 		{
 			Main.updateTable(packageName, 'Y', "class", tableName);
@@ -171,14 +180,14 @@ public class RunAnalysis {
 		//	pattern="content-desc";
 		HashSet<String> textDiffEnvironment=TextAnalysis.nonEmptyText(packageName, filePathDiffEnvironment,pattern);
 
-		
+
 		if(textReal.size()!=textDiffEnvironment.size())
 		{
 			return true;
 		}
 
 		Iterator<String> iterator=textDiffEnvironment.iterator();
-		
+
 		while(iterator.hasNext())
 		{
 			String item=iterator.next().toLowerCase();

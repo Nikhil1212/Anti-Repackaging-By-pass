@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import signatureAddition.AppLaunchAndDump;
 import signatureAddition.DataBaseConnect;
 
 public class isDumpGenerated {
@@ -16,10 +17,11 @@ public class isDumpGenerated {
 	public static void main(String[] args) throws FileNotFoundException {
 		
 		// TODO Auto-generated method stub
-		String pathToApk="/home/nikhil/Documents/apps/FinalDataset.txt";
+		String pathToApk="/home/nikhil/Documents/apps/EDApps.txt";
 		File file=new File(pathToApk);
 		Scanner scanner=new Scanner(file);
 		String packageName="";
+//		file.getTotalSpace()
 		
 	//	lockUnlockPhone("1995", deviceId[2]);
 		
@@ -34,25 +36,25 @@ public class isDumpGenerated {
 				
 				packageName=scanner.next();
 				
-				String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/repackaged_BuiltIn.xml";
+		/*		String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[5]+"_BuiltIn.xml";
 				
 				boolean results=checkFileExists(dumpPath);
 				if(!results)
 				{
-					updateTable(packageName,"ReRun_RepackagedApps");
+					updateTable(packageName,"ReRun_ModifiedEmulatorDump");
 					continue;
 				}
-					
-				String fileContents=new String(Files.readAllBytes(Paths.get(dumpPath)));
-				if(!fileContents.contains(packageName))
-				{
+					*/
+			//	String fileContents=new String(Files.readAllBytes(Paths.get(dumpPath)));
+				//if(!fileContents.contains(packageName))
+				//{
 					
 					//check whether the log file is generated or not.
-					String logFilePath="/home/nikhil/Documents/apps/logs/"+packageName+"/repackaged.txt";
-					results=checkFileExists(logFilePath);
+					String logFilePath="/home/nikhil/Documents/apps/logs/"+packageName+"/hooking.txt";
+		boolean			results=checkFileExists(logFilePath);
 					if(!results)
-					updateTable(packageName,"ReRun_RepackagedApps");
-				}
+					updateTable(packageName,"ReRun_ModifiedEmulatorLogs");
+				//}
 				
 			}
 			catch (Exception e) {
@@ -63,7 +65,7 @@ public class isDumpGenerated {
 
 }
 
-	private static boolean checkFileExists(String filePath) {
+	public static boolean checkFileExists(String filePath) {
 		// TODO Auto-generated method stub
 		
 		File file=new File(filePath);

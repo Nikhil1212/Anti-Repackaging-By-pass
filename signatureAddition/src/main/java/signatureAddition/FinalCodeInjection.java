@@ -73,6 +73,8 @@ public class FinalCodeInjection {
 
 		System.out.println("Value of localsCount is : "+localsCountInteger);
 
+	//	if(localsCountInteger>14)
+		//	localsCountInteger=14;
 		codeToWrite=codeToWrite+(localsCountInteger+1)+"\n";
 
 				/**
@@ -116,6 +118,8 @@ public class FinalCodeInjection {
 		{
 			int availableRegisterNumber=findRegister(fromLocaltoSignatureMethodInvoke);
 
+			if(availableRegisterNumber>15)
+				availableRegisterNumber=15;
 			signRelatedCode=modifyingCode(registerName, availableRegisterNumber, key);
 
 			/**
@@ -354,6 +358,8 @@ public class FinalCodeInjection {
 		{
 			int availableRegisterNumber=findRegister(fromLocaltoSignatureMethodInvoke);
 
+			if(availableRegisterNumber>15)
+				availableRegisterNumber=15;
 			signRelatedCode=modifyingCode(registerName, availableRegisterNumber, key);
 			/**
 			 * Find the variable name that stores the string from .locals till signature->method(). Once we got, store the contents to the file  and let's scan it line by line. 

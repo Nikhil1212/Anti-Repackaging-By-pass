@@ -16,13 +16,16 @@ public class CertificateDetailsCode {
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
 
-		String pathToFilePackageNames="/home/nikhil/Documents/apps/AppNoApkInMachine.txt";
+		String pathToFilePackageNames="/home/nikhil/Documents/apps/FridaReRun.txt";
 		File file=new File(pathToFilePackageNames);
 		Scanner scanner=new Scanner(file);
 		while(scanner.hasNext())
 		{
 			String packageName=scanner.next();
-			String pathToApk="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+			//String pathToApk="/home/nikhil/Documents/apps/dataset/"+packageName+"/base.apk";
+			String pathToApk="/home/nikhil/AndroidStudioProjects/BasicSmali/app/build/outputs/apk/debug/app-debug.apk";
+			
+			
 			try
 			{
 				StartingPoint.disassembleApk(pathToApk, packageName);

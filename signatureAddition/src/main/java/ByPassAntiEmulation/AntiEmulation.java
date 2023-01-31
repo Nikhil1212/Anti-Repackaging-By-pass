@@ -59,7 +59,7 @@ public class AntiEmulation {
 			{
 				String line=scanner.nextLine();
 				outputContents=outputContents+line+"\n";
-				if(line.contains(patternABIs))
+				if(line.contains(patternABIs)  || line.contains("["))
 					continue;
 				
 				if(line.contains(pattern) && (line.contains("getSerial") || line.contains("getRadioVersion")))

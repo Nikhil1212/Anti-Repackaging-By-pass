@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import Logs.LogAnalysis;
+import finalRun.isDumpGenerated;
 import signatureAddition.AppLaunchAndDump;
 import signatureAddition.DataBaseConnect;
 
@@ -22,11 +23,11 @@ import signatureAddition.DataBaseConnect;
  */
 public class ModifiedRunAnalysis {
 	
-	public static String tableName[]= {"ToolResult_ByPass_AntiTampering","ToolResult_ByPass_AntiEmulation","ToolResult_ByPass_RootDetection"};
+	public static String tableName[]= {"ToolResult_ByPass_AntiTampering","ToolResult_ByPass_AntiEmulation","ToolResult_ByPass_RootDetection","ToolResult_ByPass_AntiHooking"};
 
 	public static void main(String[] args) throws IOException {
 
-		String filePath="/home/nikhil/Documents/apps/AntiTamperCheckPresent.txt";
+		String filePath="/home/nikhil/Documents/apps/HookingAppsCritical.txt";
 		File file=new File(filePath);
 		Scanner scanner=new Scanner(file);
 
@@ -44,9 +45,14 @@ public class ModifiedRunAnalysis {
 				String dumpdirectoryPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName;
 				String logDirectoryPath="/home/nikhil/Documents/apps/logs/"+packageName;
 
-				for(int i=4;i<=6;i++)
+				for(int i=5;i<=6;i++)
 				{
-				
+					i=7;
+					String dumpPath="/home/nikhil/Documents/apps/uiautomator/rootEmulator/"+packageName+"/"+AppLaunchAndDump.deviceIdSynonym[i]+"_BuiltIn.xml";
+					
+				boolean results=isDumpGenerated.checkFileExists(dumpPath);
+				if(results)
+				{
 					boolean result = isDifferentDump(packageName,dumpdirectoryPath,AppLaunchAndDump.deviceIdSynonym[i],tableName[i-4]);
 					
 					if (result)
@@ -54,13 +60,16 @@ public class ModifiedRunAnalysis {
 						//continue;
 						break;
 					}
+				}
+				
+					
 					
 					String dumpPathReal=dumpdirectoryPath+"/real_BuiltIn.xml";
 
 					String dumpPathDiffEnvironment=dumpdirectoryPath+"/"+AppLaunchAndDump.deviceIdSynonym[i]+"_BuiltIn.xml";
 
 					
-					result=isDifferentLogs(packageName, dumpPathReal, dumpPathDiffEnvironment,logDirectoryPath+"/original.txt" , logDirectoryPath+ "/"+AppLaunchAndDump.deviceIdSynonym[i]+".txt",tableName[i-4]) ;
+				boolean	result=isDifferentLogs(packageName, dumpPathReal, dumpPathDiffEnvironment,logDirectoryPath+"/original.txt" , logDirectoryPath+ "/"+AppLaunchAndDump.deviceIdSynonym[i]+".txt",tableName[i-4]) ;
 					
 					if(result)
 						updateTable(packageName, 'N', "Different logs; no diff in resource-id", tableName[i-4]);
@@ -83,18 +92,20 @@ public class ModifiedRunAnalysis {
 	public static boolean isDifferentLogs(String packageName, String filePathReal, String filePathRunTime,
 			String logPathOriginal, String logPathRepackaged, String tableName) throws SQLException, IOException {
 		
-		String fileContents=new String(Files.readAllBytes(Paths.get(filePathReal)));
-		if(fileContents.contains(packageName))
+		if(isDumpGenerated.checkFileExists(filePathRunTime) && isDumpGenerated.checkFileExists(filePathReal))
 		{
-			fileContents=new String(Files.readAllBytes(Paths.get(filePathRunTime)));
-			if(!fileContents.contains(packageName))
+			String fileContents=new String(Files.readAllBytes(Paths.get(filePathReal)));
+			if(fileContents.contains(packageName))
 			{
-				updateTable(packageName, 'Y', "App crashed Log Analysis", tableName);
-				return true;
+				fileContents=new String(Files.readAllBytes(Paths.get(filePathRunTime)));
+				if(!fileContents.contains(packageName))
+				{
+					updateTable(packageName, 'Y', "App crashed Log Analysis", tableName);
+					return true;
+				}
+					
 			}
-				
 		}
-		
 		
 		if 	(LogAnalysis.differenceActiviyNameLogs(packageName, logPathOriginal, logPathRepackaged))
 		{
